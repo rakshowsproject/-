@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Style Guide – Rak Shovon</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta name="description" content="UI reference of buttons, forms and typography used across Rak Shovon's portfolio." />
+
+  <!-- Performance & Fonts -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+
+  <!-- Page‑specific tweaks -->
+  <style>
+    /* Glass nav */
+    #nav.scrolled{box-shadow:0 1px 12px rgba(0,0,0,.25);}  
+
+    /* Headline tweaks */
+    h1,h2,h3,h4,h5{font-weight:700;letter-spacing:0.03em;}
+
+    /* Gradient primary button */
+    .button.primary, .btn-primary{
+      background:linear-gradient(135deg,#2fbaff,#007bff);
+      border:none;
+      color:#fff !important;
+    }
+    .button.primary:hover, .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,123,255,.35);}  
+
+    /* Form improv */
+    input,textarea,select{border-radius:8px;border:1px solid #d0d0d0;padding:.75em;}
+    input:focus,textarea:focus,select:focus{border-color:#2fbaff;box-shadow:0 0 0 2px rgba(47,186,255,.25);}  
+
+    /* Table zebra */
+    table.alt tbody tr:nth-child(odd){background:#fafafa;}
+  </style>
+</head>
+<body class="is-preload">
+
+  <div id="wrapper" class="fade-in">
+    <!-- Header -->
+    <header id="header"><h1 class="logo"><a href="index.html">Rak’s Playground</a></h1></header>
+
+    <!-- Nav -->
+    <nav id="nav" aria-label="Main">
+      <ul class="links">
+        <li><a href="index.html">Projects</a></li>
+        <li><a href="generic.html">About Me</a></li>
+        <li class="active"><a href="elements.html">Style Guide</a></li>
+      </ul>
+      <ul class="icons">
+        <li><a href="https://www.facebook.com/rakibulhasanshovon/" target="_blank" rel="noopener" class="icon brands fa-facebook-f" aria-label="Facebook"></a></li>
+        <li><a href="https://www.instagram.com/rak_lives_to_tell_the_tale/" target="_blank" rel="noopener" class="icon brands fa-instagram" aria-label="Instagram"></a></li>
+        <li><a href="https://github.com/shovonhasan1" target="_blank" rel="noopener" class="icon brands fa-github" aria-label="GitHub"></a></li>
+        <li><a href="https://www.linkedin.com/in/rakibul-shovon-6474691b3" target="_blank" rel="noopener" class="icon brands fa-linkedin" aria-label="LinkedIn"></a></li>
+      </ul>
+    </nav>
+
+    <!-- Main -->
+    <div id="main">
+      <section class="post">
+        <header class="major">
+          <h1>Style & Component<br />Reference</h1>
+          <p>A quick peek at every headline, button and form element used across this site—handy when prototyping new pages.</p>
+        </header>
+
+        <!-- Typography -->
+        <h2>Typography</h2>
+        <p>This is <strong>bold</strong>, <em>italic</em>, <u>underlined</u>, <sup>superscript</sup>, <sub>subscript</sub>, and <a href="#">a link</a>.</p>
+        <h2>Heading Level 2</h2>
+        <h3>Heading Level 3</h3>
+        <h4>Heading Level 4</h4>
+
+        <hr />
+
+        <!-- Buttons -->
+        <h2>Buttons</h2>
+        <ul class="actions">
+          <li><a class="button primary" href="#">Primary</a></li>
+          <li><a class="button" href="#">Default</a></li>
+          <li><a class="button small" href="#">Small</a></li>
+          <li><span class="button primary disabled">Disabled</span></li>
+        </ul>
+
+        <hr />
+
+        <!-- Form -->
+        <h2>Form</h2>
+        <form method="post" action="#">
+          <div class="row gtr-uniform">
+            <div class="col-6 col-12-xsmall"><input type="text" name="name" placeholder="Name" /></div>
+            <div class="col-6 col-12-xsmall"><input type="email" name="email" placeholder="Email" /></div>
+            <div class="col-12"><textarea name="message" rows="6" placeholder="Message"></textarea></div>
+            <div class="col-12"><ul class="actions"><li><input type="submit" value="Send" class="primary" /></li></ul></div>
+          </div>
+        </form>
+
+        <hr />
+
+        <!-- Table -->
+        <h2>Table</h2>
+        <div class="table-wrapper">
+          <table class="alt">
+            <thead><tr><th>Name</th><th>Description</th><th>Price</th></tr></thead>
+            <tbody>
+              <tr><td>Item 1</td><td>Lorem ipsum dolor</td><td>$29.99</td></tr>
+              <tr><td>Item 2</td><td>Dolor sit amet</td><td>$19.99</td></tr>
+              <tr><td>Item 3</td><td>Consectetur</td><td>$24.99</td></tr>
+            </tbody>
+            <tfoot><tr><td colspan="2"></td><td>$74.97</td></tr></tfoot>
+          </table>
+        </div>
+      </section>
+    </div><!-- /main -->
+
+    <!-- Universal footer include -->
+    <!--#include virtual="footer.html" -->
+  </div><!-- /wrapper -->
+
+  <!-- Scripts -->
+  <script src="assets/js/jquery.min.js" defer></script>
+  <script src="assets/js/browser.min.js" defer></script>
+  <script src="assets/js/breakpoints.min.js" defer></script>
+  <script src="assets/js/util.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+  <script>window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>10));</script>
+</body>
+</html>
