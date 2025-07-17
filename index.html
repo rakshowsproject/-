@@ -1,207 +1,745 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>RakShow</title>
+  <title>RakShow – Portfolio</title>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-
-  <!-- SEO & Social -->
-  <meta name="description" content="Rak Shovon – data-driven storyteller turning messy data into marketing magic." />
-  <meta property="og:title" content="Rak Shovon – The Storyteller" />
-  <meta property="og:image" content="images/og-preview.jpg" />
-
-  <!-- Performance & Fonts -->
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-  <!-- Preload font to avoid FOUT -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="assets/css/main.css" />
-  <link rel="stylesheet" href="assets/css/footer.css" />
-  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" />
-
-  <!-- Tech-vibe extras -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
   <style>
-    /* Glassmorphism nav */
-    #nav {background:rgba(255,255,255,0.08);backdrop-filter:blur(8px) saturate(180%);border:1px solid rgba(255,255,255,0.2);transition:box-shadow .3s ease;}
-    #nav.scrolled{box-shadow:0 1px 12px rgba(0,0,0,.25);}  
-    /* Neon social hover */
-    #footer .icons.alt li a:hover{transform:translateY(-2px) scale(1.1);box-shadow:0 0 8px #45f0ff,0 0 16px #45f0ff;}
+    :root {
+      --bg: #fafaf8;
+      --fg: #23231f;
+      --accent: #75bda5;
+      --muted: #e9e8e2;
+      --shadow: 0 14px 48px #23231f08;
+      --radius: 2.4vw;
+      --glass: rgba(255,255,255,0.96);
+      --hire: #7ecbb4;
+      --hire-dark: #5e9181;
+    }
+    html, body {
+      margin: 0; padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: clamp(1.04rem, 2vw, 1.25rem);
+      min-height: 100vh;
+      scroll-behavior: smooth;
+      position: relative;
+    }
+    body { overflow-x: hidden; }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 2vw 3vw 1vw 3vw;
+      background: transparent;
+      z-index: 100;
+      pointer-events: none;
+      mix-blend-mode: multiply;
+    }
+    .nav-logo {
+      font-size: 2.5vw;
+      font-weight: 900;
+      letter-spacing: -1.2px;
+      color: var(--fg);
+      pointer-events: auto;
+      cursor: pointer;
+      user-select: none;
+      transition: color .18s;
+    }
+    .nav-logo:hover { color: var(--accent); }
+    .nav-menu {
+      display: flex; gap: 3vw;
+      pointer-events: auto;
+    }
+    .nav-link {
+      font-size: 1.12vw;
+      font-weight: 600;
+      color: var(--fg);
+      letter-spacing: 1.1px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: .6vw 1.3vw;
+      border-radius: 3vw;
+      opacity: 0.74;
+      transition: background .18s, color .18s, opacity .15s;
+    }
+    .nav-link.active,
+    .nav-link:hover {
+      background: var(--muted);
+      color: var(--accent);
+      opacity: 1;
+    }
+
+    #doorOverlay {
+      position: fixed; inset: 0; z-index: 3000;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(14px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .65s cubic-bezier(.72,0,.25,1);
+    }
+    #doorOverlay.open {
+      opacity: 1; pointer-events: auto;
+      transition: opacity .13s cubic-bezier(.72,0,.25,1);
+    }
+
+    .cursor-dot {
+      position: fixed;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: rgba(34,45,54,0.11);
+      border: 2.5px solid var(--fg);
+      pointer-events: none;
+      z-index: 3200;
+      mix-blend-mode: multiply;
+      transform: translate(-50%, -50%);
+      transition: background .2s, border .2s, width .2s, height .2s;
+    }
+    .cursor-dot.active {
+      background: var(--accent);
+      border-color: var(--hire-dark);
+      width: 34px; height: 34px;
+      opacity: .85;
+    }
+
+    .cursor-float {
+      position: fixed;
+      width: 38px; height: 38px;
+      pointer-events: none;
+      z-index: 3199;
+      opacity: 0.17;
+      transition: opacity .22s;
+      mix-blend-mode: multiply;
+    }
+
+    .hero {
+      display: flex;
+      align-items: center;
+      min-height: 88vh;
+      padding-top: 9vw;
+      padding-bottom: 5vw;
+      padding-left: 7vw;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-content {
+      max-width: 900px;
+      width: 100%;
+    }
+    .hero-title {
+     font-size: clamp(2.8rem, 7vw, 6.6rem);
+     line-height: 1.05;
+     font-weight: 900;
+     letter-spacing: -2.5px;
+     margin-bottom: 0.5em;      
+     color: var(--fg);
+     position: relative;
+     z-index: 2;
+     text-shadow: 0 8px 40px #23231f09;
+     min-height: 3em;           
+}
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      40% { opacity: 0; }
+    }
+    .typewriter-cursor {
+      display: inline-block;
+      width: 0.12em;
+      height: 1em;
+      margin-left: 0.11em;
+      background: #23231f;
+      animation: blink 1s infinite;
+      vertical-align: -0.06em;
+      border-radius: 2px;
+    }
+
+    .hero-desc {
+      font-size: clamp(1.3rem, 2vw, 1.6rem);
+      max-width: 900px;
+      color: #333;
+      line-height: 1.34;
+      margin-bottom: 3vw;
+      font-weight: 400;
+      z-index: 2;
+    }
+    .hero-links {
+      display: flex; gap: 2vw; align-items: center;
+      margin-top: 2vw;
+    }
+    .hero-link {
+      color: var(--fg);
+      font-size: 1.6vw;
+      text-decoration: none;
+      opacity: .75;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: .5vw;
+      font-weight: 600;
+      transition: color .16s, opacity .15s;
+    }
+    .hero-link:hover { color: var(--accent); opacity: 1; }
+
+    .section {
+      padding: 7vw 0 6vw 0;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .section-title {
+      font-size: clamp(2.1rem, 3vw, 2.8rem);
+      font-weight: 900;
+      letter-spacing: -.9px;
+      margin-bottom: 2vw;
+      color: var(--fg);
+      padding-left: 1vw;
+    }
+    .projects-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3vw;
+    }
+    @media (max-width: 900px) {
+      .projects-list { grid-template-columns: 1fr; }
+    }
+    .project-card {
+      background: var(--glass);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2vw 2vw 2.5vw 2vw;
+      min-height: 19vw;
+      transition: box-shadow .17s, transform .12s;
+      border: 1.5px solid var(--muted);
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+    .project-card img {
+      width: 100%; 
+      border-radius: 1.5vw;
+      margin-bottom: 1vw;
+      max-height: 230px;
+      object-fit: cover;
+      background: #f2f2f2;
+      display: block;
+    }
+    .project-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: .4vw;
+      color: var(--fg);
+    }
+    .project-desc {
+      font-size: 1.01rem;
+      color: #555;
+      margin-bottom: 1.5vw;
+      line-height: 1.45;
+      flex: 1;
+    }
+    .project-card .actions {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 1vw;
+    }
+    .project-link, .project-card .button, .project-card .actions .button {
+      color: #fff;
+      background: var(--accent);
+      font-weight: 700;
+      font-size: 1.03rem;
+      text-decoration: none;
+      padding: 0.78em 2em;
+      border-radius: 100px;
+      transition: background .13s, color .13s;
+      box-shadow: 0 3px 12px #75bda524;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: inline-block;
+      text-align: center;
+      margin-left: 0;
+    }
+    .project-link:hover, .project-card .button:hover, .project-card .actions .button:hover { 
+      background: var(--fg); color: var(--accent);
+    }
+
+    /* About Section */
+    .about-flex {
+     display: flex;
+     flex-direction: row;
+     align-items: flex-start;
+     justify-content: center;
+     gap: 1.5vw;    /* Was 3vw, now tighter */
+     max-width: 1100px; /* (see next step) */
+     margin: 0 auto;
+     padding: 2vw 0 0 0;
+     position: relative;
+     z-index: 2;
+}
+
+    .about-photo {
+     position: relative;
+    width: 310px;           /* width */
+    height: 580px;          /* height (makes it portrait/vertical) */
+    min-width: 320px;
+    max-width: 460px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+.about-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 28px;   /* Strong soft corners, like your sample */
+    box-shadow: 0 6px 36px #111a;
+    border: none;
+    background: #fafaf8;
+}
+
+    .about-hire-btn {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--hire);
+      color: var(--fg);
+      border: none;
+      border-radius: 3em;
+      font-size: 1.16em;
+      font-weight: 900;
+      box-shadow: 0 3px 22px #bdd9c732;
+      cursor: pointer;
+      letter-spacing: 1.2px;
+      min-width: 170px;
+      padding: 1em 0;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 2;
+    }
+    .about-hire-btn:hover { background: var(--fg); color: var(--hire); }
+    .about-blurb {
+      .about-blurb {
+        flex: 3;              
+        padding: 0 1vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        max-width: 70px;     
+}
+
+    }
+    .about-blurb h2 {
+      font-size: 2.2rem; font-weight: 900;
+      margin-bottom: .7em;
+      color: var(--fg);
+    }
+    .about-blurb p {
+      font-size: 1.13rem; color: var(--fg); line-height: 1.7; margin-bottom: 1em; opacity: .97;
+    }
+    .about-blurb .project-link {
+      margin-top: 1vw;
+      color: var(--accent);
+      background: none;
+      text-decoration: underline;
+      padding: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    @media (max-width: 900px) {
+      .projects-list { grid-template-columns: 1fr; }
+      .about-flex {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.6vw;
+      }
+      .about-photo {
+        margin-bottom: 2vw;
+      }
+      .about-blurb {
+        padding: 0 1vw;
+        text-align: center;
+      }
+      .about-blurb h2 { font-size: 1.6rem;}
+    }
+
+    .workauth-flex {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 3vw;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: 2vw;
+      min-height: 320px;
+      position: relative;
+      z-index: 2;
+    }
+    .workauth-content {
+      flex: 2;
+      padding: 2vw 0 1vw 1vw;
+      font-size: 1.3rem;
+    }
+    .workauth-side {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      min-width: 330px;
+      min-height: 220px;
+      height: 220px;
+      position: relative;
+    }
+    .hire-btn {
+     position: absolute;
+     top: 25%; left: 50%;
+     transform: translate(-50%, 0);
+     padding: 1.3em 3em;
+     background: var(--hire);
+     color: var(--fg);
+     border: none;
+     border-radius: 2em;
+     font-size: 1.2rem;
+     font-weight: 900;
+     box-shadow: 0 3px 24px #bdd9c732;
+     cursor: pointer;
+     letter-spacing: 1.2px;
+     transition: background .13s, color .13s, transform .13s;
+     min-width: 210px;
+     outline: none;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     text-align: center;
+     text-decoration: none;   
+}
+.hire-btn:hover { background: var(--fg); color: var(--hire); transform: scale(1.07);}
+
+    .svg-wave {
+      position: absolute;
+      left: 0; top: -38px;
+      width: 100vw; height: 60px;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .footer {
+      padding: 3vw 0 1vw 0;
+      text-align: center;
+      color: #7b7b76;
+      font-size: 1em;
+      z-index: 10;
+      position: relative;
+    }
+    #bg-shapes {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
   </style>
 </head>
-<body class="is-preload">
-
-  <!-- Wrapper -->
-  <div id="wrapper" class="fade-in">
-
-    <!-- Intro -->
-    <div id="intro">
-      <h1>Rak Shovon<br />The Storyteller</h1>
-      <p>I turn noisy data and human chaos into dashboards, decisions, and the occasional marketing miracle<br />
-        Marketing strategist meets analytics nerd – Storytelling included, Theatrics optional</p>
-      <ul class="icons">
-        <li><a href="https://www.linkedin.com/in/rakibul-shovon-6474691b3/" target="_blank" rel="noopener" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
-      </ul>
+<body>
+  <canvas id="bg-shapes"></canvas>
+  <div id="doorOverlay"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <svg class="cursor-float" id="cursorFloat" width="38" height="38">
+    <polygon points="19,3 35,32 3,32" fill="#bdd9c7"/>
+  </svg>
+  <nav>
+    <span class="nav-logo" onclick="gotoSection('hero')">RakShow</span>
+    <div class="nav-menu">
+      <button class="nav-link active" onclick="gotoSection('projects', event)">Projects</button>
+      <button class="nav-link" onclick="gotoSection('about', event)">About</button>
+      <button class="nav-link" onclick="gotoSection('workauth', event)">Work Authorization</button>
     </div>
+  </nav>
 
-    <!-- Header -->
-    <header id="header">
-      <h1 class="logo"><a href="index.html">Rak's Playground</a></h1>
-    </header>
-
-    <!-- Nav -->
-    <nav id="nav" aria-label="Main">
-      <ul class="links">
-        <li class="active"><a href="index.html">Projects</a></li>
-        <li><a href="generic.html">About Me</a></li>
-      </ul>
-      <ul class="icons">
-        <li><a href="https://www.facebook.com/rakibulhasanshovon/" target="_blank" rel="noopener" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-        <li><a href="https://www.instagram.com/rak_lives_to_tell_the_tale/" target="_blank" rel="noopener" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-        <li><a href="https://github.com/shovonhasan1" target="_blank" rel="noopener" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-      </ul>
-    </nav>
-
-
-				<!-- Main -->
-					<div id="main">
-
-						<!-- Featured Post -->
-							<article class="post featured">
-								<header class="major">
-									<h2><a href="#">CHATGPT: FRIEND, FRAUD OR FUTURE?<br />
-									</a></h2>
-									<p>Picture a lecture hall filled with Gen Z skeptics and dreamers, each holding a survey that asks whether ChatGPT is their secret study buddy, a digital imposter, or the conscience in their group chat; my project turns those pages into data, then into a narrative that charts their trust, anxiety, shortcuts, and ambitions, revealing how they weave identity, academic strategy, and social belonging around one conversational AI.</p>
-								</header>
-								<a href="#" class="image main"><img src="images/PIcture 1.png" alt="" /></a>
-								<ul class="actions special">
-									<li><a href="https://github.com/shovonhasan1/chatgpt-perception-project" class="button large">View Project</a></li>
-								</ul>
-							</article>
-
-						<!-- Posts -->
-							<section class="posts">
-								<article>
-									<header>
-										
-										<h2><a href="#">Social Media Marketing Impact – From Scroll to Purchase<br />
-										</a></h2>
-									</header>
-									<a href="#" class="image fit"><img src="images/Social_media.png" alt="" /></a>
-									<p>From the first scroll on Instagram or TikTok to the final tap on a checkout button, this study follows the entire consumer journey by mining survey responses with machine-learning models that predict who buys and why. A transparent logistic-regression pipeline turns platform habits, demographics, and content preferences into clear churn-to-purchase scores, and the results appear in a Power BI dashboard that highlights the user traits and creative formats most likely to spark conversion, giving marketers a direct line from engagement metrics to revenue action plans.</p>
-									<ul class="actions special">
-										<li><a href="https://github.com/shovonhasan1/social-media-purchase-analysis" class="button">View Project</a></li>
-									</ul>
-								</article>
-								<article>
-									<header>
-										
-										<h2><a href="#">Orange Telecom Churn Prediction – Data-Driven Retention Strategy<br />
-										
-									</header>
-									<a href="#" class="image fit"><img src="images/Telecom Churn.png" alt="" /></a>
-									<p>Orange Telecom needed a way to see churn coming before subscribers walked out the door, so I trained a transparent logistic-regression model on service usage, contract details, demographics, and behavior patterns to score the risk profile of every customer. Those probabilities flow into a Power BI dashboard where retention teams can filter by region, plan type, or tenure, instantly spotting which accounts deserve preventive offers and which parts of the portfolio drive the highest attrition. By turning raw network logs into clear action cues, the project shifts churn from an after-the-fact loss to a measurable opportunity for engagement and growth.</p>
-									<ul class="actions special">
-										<li><a href="https://github.com/shovonhasan1/Orange-telecom-Churn" class="button">View Project</a></li>
-									</ul>
-								</article>
-								<article>
-									<header>
-										
-										<h2><a href="#">WALMART ECONOMIC SENSITIVITY RADAR – CLUSTERING STORES BY MACRO IMPACT<br />
-									
-									</header>
-									<a href="#" class="image fit"><img src="images/Walmart-iStock.com-Alexander-Farnsworth.jpg" alt="" /></a>
-									<p>Each Walmart store acts like a weather vane for the economy, and my analysis listens closely to how its weekly sales shift when inflation climbs, unemployment moves, or fuel prices jump. First, I assign every location a sensitivity score through regression, showing exactly how much each variable nudges revenue. Then an unsupervised model groups the forty-five stores into three personas: Highly Sensitive, Moderately Sensitive, and Resilient. The finished dashboard lets planners trim inventory where customers pinch pennies, adjust prices where shoppers stay steady, and rely on the strongest performers when markets turn rough, giving Walmart a clear map for smarter stocking and targeted promotions in any economic climate.</p>
-									<ul class="actions special">
-										<li><a href="https://github.com/shovonhasan1/walmart-store-analysis" class="button">View Project</a></li>
-									</ul>
-								</article>
-								<article>
-									<header>
-									
-										<h2><a href="#">ELECTRIC VEHICLE ANALYTICS SUITE –<br /> CLUSTER, COMPARE & CHARGE SMARTER<br />
-									
-									</header>
-									<a href="#" class="image fit"><img src="images/EV.png" alt="" /></a>
-									<p>I built this analytics suite to read the 2025 EV market like a novel: first I used K Means to group every model into clear buyer personas, then I ranked those models by kilometres per kilowatt hour to spotlight true value, and finally I plotted battery size against fast-charge power to reveal which cars might still leave drivers waiting on the roadside. Together these three layers form the opening chapter of my project, inviting makers, planners, and drivers to see electric vehicles through one compelling story..</p>
-									<ul class="actions special">
-										<li><a href="https://github.com/shovonhasan1/ev-market-intelligence-suite" class="button">View Project</a></li>
-									</ul>
-								</article>
-								<article>
-									<header>
-										
-										<h2><a href="#">Tesla Community Pulse: A Full Stack Data Story<br />
-										
-									</header>
-									<a href="#" class="image fit"><img src="images\tesla.jpg" alt="" /></a>
-									<p>In this project, I scraped thousands of Tesla-related comments from Reddit, cleaned and prepared the data, then used Tableau to analyze sentiment and visualize key discussion themes. The interactive dashboard reveals how community mood and engagement shift across different topics, providing business-ready insights from raw social data.</p>
-									<ul class="actions special">
-										<li><a href="https://github.com/rakshowsproject/Tesla-Sentiment-Analysis" class="button">View Project</a></li>
-									</ul>
-								</article>
-
-
-									</ul>
-								</article>
-							</section>
-
-						
-
-					</div>
-
-				<!-- Footer -->
-				<!-- Footer -->
-<footer id="footer">
-  <!-- Contact & Social -->
-  <section class="footer-content">
-    <div class="footer-grid">
-      <div class="footer-cell">
-        <h3>Location</h3>
-        <p>Milwaukee, WI, United States</p>
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-title" id="typewriter"></div>
+      <div class="hero-desc">
+       As a graduating analytics professional, I transform raw data into a clear roadmap for decision-makers.
+       No detours. No distractions. Just a direct path to actionable answers.
       </div>
-      <div class="footer-cell">
-        <h3>Phone</h3>
-        <p><a href="tel:4147881989">+1&nbsp;(414)&nbsp;788‑1989</a></p>
-      </div>
-      <div class="footer-cell">
-        <h3>Email</h3>
-        <p><a href="mailto:rhshovon@uwm.edu">rhshovon@uwm.edu</a></p>
+      <div class="hero-links">
+        <a class="hero-link" href="mailto:rhshovon@uwm.edu">Email</a>
+        <a class="hero-link" href="https://linkedin.com/in/rakibul-shovon-6474691b3" target="_blank">LinkedIn</a>
+        <a class="hero-link" href="https://github.com/shovonhasan1" target="_blank">GitHub</a>
       </div>
     </div>
-
-    <ul class="icons alt footer-icons">
-      <li><a href="https://www.linkedin.com/in/rakibul-shovon-6474691b3" target="_blank" rel="noopener" class="icon brands fa-linkedin" aria-label="LinkedIn"></a></li>
-      <li><a href="https://www.facebook.com/rakibulhasanshovon/" target="_blank" rel="noopener" class="icon brands fa-facebook-f" aria-label="Facebook"></a></li>
-      <li><a href="https://www.instagram.com/rak_lives_to_tell_the_tale/" target="_blank" rel="noopener" class="icon brands fa-instagram" aria-label="Instagram"></a></li>
-      <li><a href="https://github.com/shovonhasan1" target="_blank" rel="noopener" class="icon brands fa-github" aria-label="GitHub"></a></li>
-    </ul>
   </section>
 
-  <div class="footer-bottom">
-    <p>
-  </div>
-</footer>
+  <section class="section" id="projects">
+    <div class="section-title">Projects</div>
+    <div class="projects-list">
+      <div class="project-card">
+        <img src="images/PIcture 1.png" alt="CHATGPT Project"/>
+        <div class="project-title">CHATGPT: Friend, Fraud or Future?</div>
+        <div class="project-desc">
+          Picture a lecture hall filled with Gen Z skeptics and dreamers, each holding a survey that asks whether ChatGPT is their secret study buddy, a digital imposter, or the conscience in their group chat; my project turns those pages into data, then into a narrative that charts their trust, anxiety, shortcuts, and ambitions, revealing how they weave identity, academic strategy, and social belonging around one conversational AI.
+        </div>
+        <div class="actions">
+          <a href="https://github.com/shovonhasan1/chatgpt-perception-project" class="button" target="_blank">View Project</a>
+        </div>
+      </div>
+      <div class="project-card">
+        <img src="images/Social_media.png" alt="Social Media Marketing Impact"/>
+        <div class="project-title">Social Media Marketing Impact – From Scroll to Purchase</div>
+        <div class="project-desc">
+          From the first scroll on Instagram or TikTok to the final tap on a checkout button, this study follows the entire consumer journey by mining survey responses with machine-learning models that predict who buys and why. A transparent logistic-regression pipeline turns platform habits, demographics, and content preferences into clear churn-to-purchase scores, and the results appear in a Power BI dashboard that highlights the user traits and creative formats most likely to spark conversion, giving marketers a direct line from engagement metrics to revenue action plans.
+        </div>
+        <div class="actions">
+          <a href="https://github.com/shovonhasan1/social-media-purchase-analysis" class="button" target="_blank">View Project</a>
+        </div>
+      </div>
+      <div class="project-card">
+        <img src="images/Telecom Churn.png" alt="Orange Telecom"/>
+        <div class="project-title">Orange Telecom Churn Prediction – Data-Driven Retention Strategy</div>
+        <div class="project-desc">
+          Orange Telecom needed a way to see churn coming before subscribers walked out the door, so I trained a transparent logistic-regression model on service usage, contract details, demographics, and behavior patterns to score the risk profile of every customer. Those probabilities flow into a Power BI dashboard where retention teams can filter by region, plan type, or tenure, instantly spotting which accounts deserve preventive offers and which parts of the portfolio drive the highest attrition. By turning raw network logs into clear action cues, the project shifts churn from an after-the-fact loss to a measurable opportunity for engagement and growth.
+        </div>
+        <div class="actions">
+          <a href="https://github.com/shovonhasan1/Orange-telecom-Churn" class="button" target="_blank">View Project</a>
+        </div>
+      </div>
+      <div class="project-card">
+        <img src="images/Walmart-iStock.com-Alexander-Farnsworth.jpg" alt="Walmart Sensitivity"/>
+        <div class="project-title">Walmart Economic Sensitivity Radar – Clustering Stores by Macro Impact</div>
+        <div class="project-desc">
+          Each Walmart store acts like a weather vane for the economy, and my analysis listens closely to how its weekly sales shift when inflation climbs, unemployment moves, or fuel prices jump. First, I assign every location a sensitivity score through regression, showing exactly how much each variable nudges revenue. Then an unsupervised model groups the forty-five stores into three personas: Highly Sensitive, Moderately Sensitive, and Resilient. The finished dashboard lets planners trim inventory where customers pinch pennies, adjust prices where shoppers stay steady, and rely on the strongest performers when markets turn rough, giving Walmart a clear map for smarter stocking and targeted promotions in any economic climate.
+        </div>
+        <div class="actions">
+          <a href="https://github.com/shovonhasan1/walmart-store-analysis" class="button" target="_blank">View Project</a>
+        </div>
+      </div>
+      <div class="project-card">
+        <img src="images/EV.png" alt="EV Analytics"/>
+        <div class="project-title">Electric Vehicle Analytics Suite – Cluster, Compare & Charge Smarter</div>
+        <div class="project-desc">
+          I built this analytics suite to read the 2025 EV market like a novel: first I used K Means to group every model into clear buyer personas, then I ranked those models by kilometres per kilowatt hour to spotlight true value, and finally I plotted battery size against fast-charge power to reveal which cars might still leave drivers waiting on the roadside. Together these three layers form the opening chapter of my project, inviting makers, planners, and drivers to see electric vehicles through one compelling story.
+        </div>
+        <div class="actions">
+          <a href="https://github.com/shovonhasan1/ev-market-intelligence-suite" class="button" target="_blank">View Project</a>
+        </div>
+      </div>
+      <div class="project-card">
+        <img src="images/tesla.jpg" alt="Tesla Sentiment"/>
+        <div class="project-title">Tesla Community Pulse: A Full Stack Data Story</div>
+        <div class="project-desc">
+          In this project, I scraped thousands of Tesla-related comments from Reddit, cleaned and prepared the data, then used Tableau to analyze sentiment and visualize key discussion themes. The interactive dashboard reveals how community mood and engagement shift across different topics, providing business-ready insights from raw social data.
+        </div>
+        <div class="actions">
+          <a href="https://github.com/rakshowsproject/Tesla-Sentiment-Analysis" class="button" target="_blank">View Project</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <!-- Scripts -->
-    <script src="assets/js/jquery.min.js" defer></script>
-    <script src="assets/js/jquery.scrollex.min.js" defer></script>
-    <script src="assets/js/jquery.scrolly.min.js" defer></script>
-    <script src="assets/js/browser.min.js" defer></script>
-    <script src="assets/js/breakpoints.min.js" defer></script>
-    <script src="assets/js/util.js" defer></script>
-    <script src="assets/js/main.js" defer></script>
+  <section class="section" id="about">
+    <div class="section-title">About Me</div>
+    <div class="about-flex">
+      <div class="about-photo">
+        <img src="images/502415591_10223039982908103_9008122845678656848_n.jpg" alt="Rak Shovon" />
+      </div>
+      <div class="about-blurb">
+        <p>
+          Hi, I’m <b>Rakibul Hasan Shovon</b> (just call me Rak). I blend marketing strategy, behavioral science, and analytics into stories that move markets and minds. From classrooms to corporate focus groups, I turn signals into insight—and occasionally a marketing miracle or two.
 
-  </body>
+<p> My academic journey spans an <b>M.A. in Linguistics</b>, an <b>MBA</b>, an <b>M.Sc. (STEM) in Marketing and Management</b>, and a <b>Graduate Certificate in Business Analytics</b>. I don’t just analyze numbers; I speak their language fluently. For me, pattern recognition isn't just a skill, it’s practically written into my DNA. </p> <p> I craft dashboards, build predictive models, and tell compelling stories that explain not only what happened, but precisely what to do next. If you're looking for evidence delivered with empathy, clarity, and strategic flair, you've landed exactly where you need to be. </p>
+        </p>
+        <a href="Rakibul%20Hasan%20Shovon_resume__.pdf" target="_blank" class="project-link">Download Resume</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="workauth" style="padding-top:0;">
+    <svg class="svg-wave" viewBox="0 0 1440 60" preserveAspectRatio="none">
+      <path id="wavePath" d="M0,36 Q480,60 960,36 T1440,36 L1440,60 L0,60Z" fill="#f7f8f9">
+        <animate attributeName="d" dur="6s" repeatCount="indefinite"
+          values="
+            M0,36 Q480,60 960,36 T1440,36 L1440,60 L0,60Z;
+            M0,38 Q480,20 960,44 T1440,36 L1440,60 L0,60Z;
+            M0,36 Q480,60 960,36 T1440,36 L1440,60 L0,60Z
+          " />
+      </path>
+    </svg>
+    <div class="section-title" style="padding-top: 2vw;">Work Authorization</div>
+    <div class="workauth-flex">
+      <div class="workauth-content">
+        <b>Ready to be hired. No bureaucracy. No delays.</b><br>
+        <br>
+        I am authorized to work in the United States for up to <b>three years (STEM OPT)</b>,no employer sponsorship required.<br><br>
+        You hire, I start.<br>
+        <br>
+        <b>Translation:</b> I’m not just eligible, I’m plug-and-play.
+      </div>
+      <div class="workauth-side">
+        <a class="hire-btn" href="https://linkedin.com/in/rakibul-shovon-6474691b3" target="_blank">Hire Me</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    &copy; 2025 Rak Shovon. All rights reserved.<br>
+    Milwaukee, WI &middot; <a href="mailto:rhshovon@uwm.edu">rhshovon@uwm.edu</a>
+  </footer>
+
+  <script>
+    // Page transitions - door overlay
+    function openDoorOverlay(cb) {
+      const overlay = document.getElementById('doorOverlay');
+      overlay.classList.add('open');
+      setTimeout(() => {
+        overlay.classList.remove('open');
+        if (typeof cb === 'function') cb();
+      }, 720);
+    }
+    function gotoSection(id, e) {
+      if(e) e.preventDefault();
+      document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+      const map = { projects: 0, about: 1, workauth: 2 };
+      if (id in map) document.querySelectorAll('.nav-link')[map[id]].classList.add('active');
+      openDoorOverlay(() => {
+        document.getElementById(id).scrollIntoView({behavior:'smooth'});
+      });
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      openDoorOverlay();
+    });
+
+    // Custom cursor and floating geom
+    const cursorDot = document.getElementById('cursorDot');
+    const cursorFloat = document.getElementById('cursorFloat');
+    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+    let floatX = mouseX, floatY = mouseY;
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      cursorDot.style.left = mouseX + 'px';
+      cursorDot.style.top = mouseY + 'px';
+    });
+    function lerp(a, b, n) { return a + (b - a) * n; }
+    function animateCursor() {
+      floatX = lerp(floatX, mouseX, 0.10);
+      floatY = lerp(floatY, mouseY, 0.10);
+      cursorFloat.style.left = (floatX - 19) + 'px';
+      cursorFloat.style.top = (floatY - 19) + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+    // Cursor active on Hire Me button hover (About & WorkAuth)
+    document.querySelectorAll('.hire-btn, .about-hire-btn').forEach(btn=>{
+      btn.addEventListener('mouseenter',()=>cursorDot.classList.add('active'));
+      btn.addEventListener('mouseleave',()=>cursorDot.classList.remove('active'));
+    });
+
+    // Typewriter effect for hero title
+    const typewriterTexts = [
+      "Chaos in,",
+      "Clarity out."
+    ];
+    const typewriterElem = document.getElementById('typewriter');
+    const cursorHTML = `<span class="typewriter-cursor"></span>`;
+
+    let charIndex = 0;
+    let showingLine = 0;
+
+    function typeWriterLine(line, cb) {
+      typewriterElem.innerHTML = 
+        typewriterTexts.slice(0, showingLine).join('<br>') +
+        (showingLine ? '<br>' : '') +
+        line.slice(0, charIndex) + cursorHTML;
+      if (charIndex < line.length) {
+        charIndex++;
+        setTimeout(() => typeWriterLine(line, cb), 58);
+      } else {
+        setTimeout(cb, 500);
+      }
+    }
+    function runTypewriter() {
+      if (showingLine < typewriterTexts.length) {
+        charIndex = 0;
+        typeWriterLine(typewriterTexts[showingLine], () => {
+          showingLine++;
+          runTypewriter();
+        });
+      } else {
+        typewriterElem.innerHTML = typewriterTexts.join('<br>') + cursorHTML;
+      }
+    }
+    runTypewriter();
+
+    // Geometric background animation (canvas-based)
+    const shapes = [];
+    const colors = ["#e9e8e2","#bdd9c7","#b9b5aa","#5956e0"];
+    function rand(a,b){return Math.random()*(b-a)+a;}
+    for(let i=0;i<16;i++){
+      shapes.push({
+        x: rand(0,window.innerWidth),
+        y: rand(0,window.innerHeight),
+        dx: rand(-0.23,0.23),
+        dy: rand(-0.23,0.23),
+        size: rand(28,80),
+        type: ["circle","rect","triangle"][Math.floor(Math.random()*3)],
+        color: colors[Math.floor(Math.random()*colors.length)],
+        a: rand(0,360)
+      });
+    }
+    function drawBG(){
+      const c = document.getElementById('bg-shapes');
+      const ctx = c.getContext('2d');
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      ctx.clearRect(0,0,c.width,c.height);
+      shapes.forEach(s=>{
+        ctx.save();
+        ctx.globalAlpha = 0.22;
+        ctx.translate(s.x,s.y);
+        ctx.rotate(s.a * Math.PI / 180);
+        ctx.fillStyle = s.color;
+        if(s.type==="circle"){
+          ctx.beginPath(); ctx.arc(0,0,s.size/2,0,Math.PI*2); ctx.fill();
+        }else if(s.type==="rect"){
+          ctx.fillRect(-s.size/2,-s.size/2,s.size,s.size);
+        }else if(s.type==="triangle"){
+          ctx.beginPath();
+          ctx.moveTo(0,-s.size/2);
+          ctx.lineTo(-s.size/2,s.size/2);
+          ctx.lineTo(s.size/2,s.size/2);
+          ctx.closePath(); ctx.fill();
+        }
+        ctx.restore();
+      });
+    }
+    function animateBG(){
+      shapes.forEach(s=>{
+        s.x+=s.dx;
+        s.y+=s.dy;
+        if(s.x<-100) s.x=window.innerWidth+100;
+        if(s.x>window.innerWidth+100) s.x=-100;
+        if(s.y<-100) s.y=window.innerHeight+100;
+        if(s.y>window.innerHeight+100) s.y=-100;
+        s.a += rand(-0.09,0.09);
+      });
+      drawBG();
+      requestAnimationFrame(animateBG);
+    }
+    window.addEventListener('resize', drawBG);
+    drawBG(); animateBG();
+  </script>
+</body>
 </html>
-<script>
-  // Add scroll effect to nav
-  document.addEventListener('scroll', function() {
-	const nav = document.getElementById('nav');
-	if (window.scrollY > 50) {
-	  nav.classList.add('scrolled');
-	} else {
-	  nav.classList.remove('scrolled');
-	}
-  });

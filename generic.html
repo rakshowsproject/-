@@ -2,132 +2,200 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>About Rak Shovon – Data‑Driven Storyteller</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <meta name="description" content="Get to know Rak Shovon – marketer, business analyst and storyteller blending behavioral science with data‑driven strategy." />
-
-  <!-- Performance & Fonts -->
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="assets/css/main.css" />
-  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-
-  <!-- Page‑specific tweaks -->
+  <title>About | Rak Shovon</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Get to know Rak Shovon – marketer, analyst, and data storyteller blending science with strategy." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
-    /* Glass nav shadow when scrolled */
-    #nav.scrolled { box-shadow: 0 1px 12px rgba(0,0,0,.25); }
-
-    /* About layout */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 360px;
-      gap: 3rem;
-      align-items: start;
+    html, body { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',Arial,sans-serif; background:#111; color:#fff;}
+    *, *::before, *::after { box-sizing: inherit; }
+    /* Navbar */
+    .navbar {
+      width:100vw; position:fixed; top:0; left:0; z-index:99;
+      padding:38px 56px 28px 56px;
+      display:flex; justify-content:space-between; align-items:center;
+      background:transparent; pointer-events:none;
     }
-    @media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; } }
-
-    .profile-img {
-      width: 100%;
-      border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(0,0,0,.18);
+    .navbar .logo {
+      font-weight:900; font-size:2.1rem; letter-spacing:-2px; color:#fff;
+      text-transform:uppercase; pointer-events:auto;
     }
-
-    /* Fancy button */
-    .btn-primary {
-      display: inline-block;
-      padding: 0.85em 2.2em;
-      border-radius: 40px;
-      font-weight: 600;
-      background: linear-gradient(135deg,#2fbaff,#007bff);
-      color: #fff !important;
-      transition: transform .25s ease, box-shadow .25s ease;
+    .navbar .menu {
+      display:flex; gap:2.2em; font-size:1.09rem; font-weight:700; pointer-events:auto;
     }
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0,123,255,.4);
+    .navbar .menu a {
+      color:#fff; text-decoration:none; letter-spacing:1.5px; text-transform:uppercase;
+      transition:color .17s;
     }
+    .navbar .menu a.active, .navbar .menu a:hover { color:#F9332D; }
+    @media (max-width:700px) {
+      .navbar {padding:20px 14px;}
+      .navbar .logo{font-size:1.12rem;}
+      .navbar .menu{gap:.7em;}
+    }
+    /* About Hero */
+    .about-hero {
+      min-height:100vh;
+      width:100vw;
+      max-width:1600px;
+      margin:0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 7vw 0 7vw;
+      position:relative;
+    }
+    .about-blurb {
+      flex:1.2;
+      max-width:620px;
+      padding:0;
+      z-index:2;
+    }
+    .about-blurb h1 {
+      font-size:clamp(2.6rem,7vw,6.2rem);
+      font-weight:900;
+      letter-spacing:-0.06em;
+      margin:0 0 .27em 0;
+      line-height:0.95;
+      color:#fff;
+      text-shadow:0 7px 30px #000c;
+    }
+    .headline-red { color:#F9332D; }
+    .about-blurb .tagline {
+      font-size:clamp(1.25rem,2.3vw,2.1rem);
+      opacity:.75;
+      font-weight:700;
+      margin-bottom:2.2em;
+      margin-top:.2em;
+      display:block;
+      letter-spacing:0.07em;
+    }
+    .about-blurb p {
+      font-size:1.16rem;
+      line-height:1.65;
+      color:#eee;
+      margin:0 0 1.25em 0;
+      font-weight:400;
+      letter-spacing:0.01em;
+    }
+    .about-blurb .btn {
+      display:inline-block;
+      background:#F9332D;
+      color:#fff;
+      font-weight:900;
+      font-size:1.12rem;
+      text-transform:uppercase;
+      padding:.85em 2.2em;
+      border-radius:80px;
+      border:none;
+      letter-spacing:2px;
+      margin-top:2em;
+      cursor:pointer;
+      box-shadow:0 2px 24px #f9332d44;
+      text-decoration:none;
+      transition:background .16s, color .15s, transform .18s;
+    }
+    .about-blurb .btn:hover {
+      background:#fff; color:#F9332D; transform:scale(1.06);
+    }
+    /* About Photo */
+    .about-photo-outer {
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-width:320px;
+      min-height:420px;
+      position:relative;
+      z-index:1;
+    }
+    .about-photo {
+      width:100%;
+      max-width:390px;
+      border-radius:1.4em;
+      box-shadow:0 12px 64px #000c;
+      object-fit:cover;
+      border:8px solid #222;
+      background:#222;
+      aspect-ratio:3/4;
+      transition:box-shadow .21s, border .18s;
+    }
+    .about-photo:hover, .about-photo:focus {
+      border:8px solid #fff;
+      box-shadow:0 16px 80px #F9332D88;
+    }
+    @media (max-width:1100px) {
+      .about-hero { flex-direction:column; padding:0 5vw; justify-content:center;}
+      .about-blurb {max-width:100vw; text-align:center;}
+      .about-photo-outer{margin-top:2.7em; min-width:0;}
+    }
+    @media (max-width:700px) {
+      .about-hero {padding:60px 0 0 0;}
+      .about-blurb h1{font-size:2.1rem;}
+      .about-blurb .tagline{font-size:1.08rem;}
+      .about-photo{max-width:82vw;}
+    }
+    /* Footer Icons */
+    .footer {
+      width:100vw; text-align:center; padding:3em 0 1.5em 0; background: #111; border-top:1px solid #222; margin-top:0;
+    }
+    .footer .social {
+      display:flex; justify-content:center; gap:2em; margin-bottom:1.2em; list-style:none; padding:0;
+    }
+    .footer .social a {
+      color:#fff; font-size:2.1em; transition:color .17s, transform .18s;
+    }
+    .footer .social a:hover { color:#F9332D; transform:translateY(-4px) scale(1.14);}
+    .footer small{color:#888; font-size:1em;letter-spacing:0.2px;}
+    /* Fade-in on load */
+    .fade-in { animation: fadein .85s cubic-bezier(.44,.84,.67,1) both; }
+    @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
   </style>
 </head>
-<body class="is-preload">
+<body class="fade-in">
 
-  <!-- Wrapper -->
-  <div id="wrapper" class="fade-in">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">RAKSHOW</div>
+    <div class="menu">
+      <a href="index.html">Work</a>
+      <a href="#" class="active">About</a>
+      <a href="#">Contact</a>
+    </div>
+  </nav>
 
-    <!-- Header -->
-    <header id="header">
-      <h1 class="logo"><a href="index.html">Rak’s Playground</a></h1>
-    </header>
-
-    <!-- Nav -->
-    <nav id="nav" aria-label="Main">
-      <ul class="links">
-        <li><a href="index.html">Projects</a></li>
-        <li class="active"><a href="generic.html">About Me</a></li>
-      </ul>
-      <ul class="icons">
-        <li><a href="https://www.facebook.com/rakibulhasanshovon/" target="_blank" rel="noopener" class="icon brands fa-facebook-f" aria-label="Facebook"></a></li>
-        <li><a href="https://www.instagram.com/rak_lives_to_tell_the_tale/" target="_blank" rel="noopener" class="icon brands fa-instagram" aria-label="Instagram"></a></li>
-        <li><a href="https://github.com/shovonhasan1" target="_blank" rel="noopener" class="icon brands fa-github" aria-label="GitHub"></a></li>
-        <li><a href="https://www.linkedin.com/in/rakibul-shovon-6474691b3" target="_blank" rel="noopener" class="icon brands fa-linkedin" aria-label="LinkedIn"></a></li>
-      </ul>
-    </nav>
-
-    <!-- Main -->
-    <div id="main">
-      <section class="wrapper style1 fade-up">
-        <div class="inner about-grid">
-          <div>
-            <h2>About Me</h2>
-            <p>Hello, I’m <strong>Rakibul Hasan Shovon</strong> — call me Rak. I’m an aspiring marketing strategist and business analyst who loves turning messy signals into neat narratives. My playground sits where empathy meets evidence, and storytelling meets SQL.</p>
-
-            <p><em>Rakibul</em> literally means <strong>“Watcher”</strong>, so dissecting patterns is basically destiny. Whether decoding a dataset or a cultural meme, pattern recognition is my compass.</p>
-
-            <p>I’m fluent in more than one professional tongue: a <strong>MA in Linguistics</strong> taught me word‑power, an <strong>MBA</strong> taught decision‑power, and an ongoing <strong>MSc in Marketing (STEM)</strong> with a <strong>Business Analytics Certificate</strong> at UW‑Milwaukee lets me crunch numbers without dulling creativity.</p>
-
-            <p>From <em>Strategic Affairs Officer</em> at North South University to a <em>Graduate Teaching Assistant</em> at UWM, via Nielsen focus groups, I’ve helped audiences from boardrooms to classrooms translate insight into action.</p>
-
-            <p>Today I blend behavioral science with BI. I build models that explain consumer decisions and dashboards that reveal what words cannot. Consider this site my live portfolio—feel free to explore.</p>
-
-            <a href="Rakibul Hasan Shovon_resume__.pdf" class="btn-primary" target="_blank" rel="noopener">Download My Resume</a>
-          </div>
-
-          <picture>
-          
-            <img src="images/502415591_10223039982908103_9008122845678656848_n.jpg" alt="Rak Shovon smiling in a blazer" class="profile-img" />
-          </picture>
-        </div>
-      </section>
-    </div><!-- /main -->
-
-</div>
-
-    <ul class="icons alt footer-icons">
-      <li><a href="https://www.linkedin.com/in/rakibul-shovon-6474691b3" target="_blank" rel="noopener" class="icon brands fa-linkedin" aria-label="LinkedIn"></a></li>
-      <li><a href="https://www.facebook.com/rakibulhasanshovon/" target="_blank" rel="noopener" class="icon brands fa-facebook-f" aria-label="Facebook"></a></li>
-      <li><a href="https://www.instagram.com/rak_lives_to_tell_the_tale/" target="_blank" rel="noopener" class="icon brands fa-instagram" aria-label="Instagram"></a></li>
-      <li><a href="https://github.com/shovonhasan1" target="_blank" rel="noopener" class="icon brands fa-github" aria-label="GitHub"></a></li>
-    </ul>
+  <!-- About "Hero" -->
+  <section class="about-hero">
+    <div class="about-blurb">
+      <h1>
+        Data Storyteller<br>
+        <span class="headline-red">With Bite.</span>
+      </h1>
+      <span class="tagline">Strategy. Empathy. Analytics. All on one page.</span>
+      <p>Hello, I’m <strong>Rakibul Hasan Shovon</strong> — call me Rak. I’m an aspiring marketing strategist and business analyst who loves turning messy signals into neat narratives. My playground sits where empathy meets evidence, and storytelling meets SQL.</p>
+      <p><strong>Rakibul</strong> literally means <span class="headline-red">Watcher</span>, so dissecting patterns is basically destiny. Whether decoding a dataset or a cultural meme, pattern recognition is my compass.</p>
+      <p>I’m fluent in more than one professional tongue: a <strong>MA in Linguistics</strong> taught me word‑power, an <strong>MBA</strong> taught decision‑power, and an ongoing <strong>MSc in Marketing (STEM)</strong> with a <strong>Business Analytics Certificate</strong> at UW‑Milwaukee lets me crunch numbers without dulling creativity.</p>
+      <p>From <strong>Strategic Affairs Officer</strong> at North South University to a <strong>Graduate Teaching Assistant</strong> at UWM, via Nielsen focus groups, I’ve helped audiences from boardrooms to classrooms translate insight into action.</p>
+      <p>Today I blend behavioral science with BI. I build models that explain consumer decisions and dashboards that reveal what words cannot. Consider this site my live portfolio—feel free to explore.</p>
+      <a href="Rakibul Hasan Shovon_resume__.pdf" class="btn" target="_blank" rel="noopener">Download My Resume</a>
+    </div>
+    <div class="about-photo-outer">
+      <img src="images/502415591_10223039982908103_9008122845678656848_n.jpg" alt="Rak Shovon smiling in a blazer" class="about-photo" />
+    </div>
   </section>
 
-    
-
-    <!-- Include existing universal footer via server‑side include or duplicate here if needed -->
-  </div><!-- /wrapper -->
-
-  <!-- Scripts -->
-  <script src="assets/js/jquery.min.js" defer></script>
-  <script src="assets/js/browser.min.js" defer></script>
-  <script src="assets/js/breakpoints.min.js" defer></script>
-  <script src="assets/js/util.js" defer></script>
-  <script src="assets/js/main.js" defer></script>
-  <script>
-
-    
-    // Tiny scroll shadow for nav
-    window.addEventListener('scroll',()=>{
-      document.getElementById('nav').classList.toggle('scrolled',window.scrollY>10);
-    });
-  </script>
+  <!-- Footer Icons -->
+  <div class="footer">
+    <ul class="social">
+      <li><a href="https://www.linkedin.com/in/rakibul-shovon-6474691b3" target="_blank"><i class="fab fa-linkedin"></i></a></li>
+      <li><a href="https://www.facebook.com/rakibulhasanshovon/" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+      <li><a href="https://www.instagram.com/rak_lives_to_tell_the_tale/" target="_blank"><i class="fab fa-instagram"></i></a></li>
+      <li><a href="https://github.com/shovonhasan1" target="_blank"><i class="fab fa-github"></i></a></li>
+    </ul>
+    <small>&copy; 2025 Rak Shovon. All Rights Reserved.</small>
+  </div>
 </body>
 </html>
+>

@@ -2,39 +2,205 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Style Guide – Rak Shovon</title>
+  <title>Netflix-Style Guide – Rak Shovon</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <meta name="description" content="UI reference of buttons, forms and typography used across Rak Shovon's portfolio." />
-
-  <!-- Performance & Fonts -->
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="assets/css/main.css" />
-  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-
-  <!-- Page‑specific tweaks -->
+  <meta name="description" content="Netflix-style interactive UI showcase for Rak Shovon's portfolio." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
   <style>
-    /* Glass nav */
-    #nav.scrolled{box-shadow:0 1px 12px rgba(0,0,0,.25);}  
-
-    /* Headline tweaks */
-    h1,h2,h3,h4,h5{font-weight:700;letter-spacing:0.03em;}
-
-    /* Gradient primary button */
-    .button.primary, .btn-primary{
-      background:linear-gradient(135deg,#2fbaff,#007bff);
-      border:none;
-      color:#fff !important;
+    :root {
+      --netflix-red: #e50914;
+      --netflix-dark: #141414;
+      --glass-bg: rgba(34,34,34,0.88);
+      --nav-blur: blur(10px);
     }
-    .button.primary:hover, .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,123,255,.35);}  
-
-    /* Form improv */
-    input,textarea,select{border-radius:8px;border:1px solid #d0d0d0;padding:.75em;}
-    input:focus,textarea:focus,select:focus{border-color:#2fbaff;box-shadow:0 0 0 2px rgba(47,186,255,.25);}  
-
-    /* Table zebra */
-    table.alt tbody tr:nth-child(odd){background:#fafafa;}
+    html,body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #18181b 0%, #23272f 100%);
+      color: #fff;
+    }
+    body {
+      min-height: 100vh;
+      background-size: cover;
+    }
+    /* Glassy Netflix Nav */
+    #nav {
+      background: var(--glass-bg);
+      backdrop-filter: var(--nav-blur);
+      box-shadow: 0 1px 12px rgba(0,0,0,0.22);
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      transition: box-shadow .3s;
+      z-index: 100;
+      position: sticky;
+      top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8em 2em;
+      font-size: 1.1em;
+    }
+    #nav ul.links {
+      display: flex;
+      gap: 2em;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    #nav ul.links li.active a,
+    #nav ul.links li a:hover {
+      color: var(--netflix-red);
+      border-bottom: 2px solid var(--netflix-red);
+      transition: color .2s, border .2s;
+    }
+    #nav ul.links li a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      padding-bottom: 2px;
+    }
+    #nav ul.icons {
+      display: flex;
+      gap: 1.3em;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    #nav ul.icons li a {
+      color: #fff;
+      font-size: 1.15em;
+      transition: color 0.15s;
+    }
+    #nav ul.icons li a:hover { color: var(--netflix-red); }
+    /* Logo */
+    .logo a {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--netflix-red);
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      text-shadow: 0 2px 14px #e509143a;
+    }
+    /* Netflix Project Grid */
+    .netflix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 2.3em;
+      padding: 3em 2vw;
+      margin-top: 2.5em;
+      margin-bottom: 3em;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .n-card {
+      position: relative;
+      background: var(--glass-bg);
+      border-radius: 1.3em;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.35);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .23s cubic-bezier(.33,.73,.45,1.5), box-shadow .18s;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: 350px;
+      outline: 0 solid var(--netflix-red);
+    }
+    .n-card:hover {
+      transform: scale(1.06) translateY(-8px);
+      box-shadow: 0 16px 45px #e509142a, 0 2px 16px 0px #e5091440;
+      outline-width: 4px;
+    }
+    .n-card img {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      border-top-left-radius: 1.3em;
+      border-top-right-radius: 1.3em;
+      filter: brightness(0.97) saturate(1.06);
+      transition: filter 0.33s;
+    }
+    .n-card:hover img { filter: brightness(1.1) saturate(1.20); }
+    .n-card-content {
+      padding: 1.5em 1.2em;
+      background: linear-gradient(0deg, #18181b 85%, transparent 100%);
+      position: relative;
+      z-index: 1;
+    }
+    .n-card h3 {
+      margin: 0 0 .5em 0;
+      color: var(--netflix-red);
+      font-size: 1.28em;
+      font-weight: 700;
+    }
+    .n-card p {
+      margin: 0 0 .6em 0;
+      color: #dadada;
+      font-size: 1.03em;
+      min-height: 44px;
+    }
+    .n-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6em;
+      margin-bottom: .5em;
+    }
+    .n-tag {
+      background: var(--netflix-red);
+      color: #fff;
+      padding: 0.3em 1.1em;
+      border-radius: 999px;
+      font-size: 0.95em;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      box-shadow: 0 2px 8px #e5091444;
+      transition: background .22s;
+    }
+    .n-card .n-btn {
+      background: var(--netflix-red);
+      color: #fff;
+      border: none;
+      padding: 0.6em 1.8em;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.02em;
+      margin-top: .8em;
+      margin-bottom: 0.2em;
+      box-shadow: 0 2px 12px #e509146a;
+      cursor: pointer;
+      transition: background .18s, color .17s;
+      outline: none;
+    }
+    .n-card .n-btn:hover { background: #fff; color: var(--netflix-red); }
+    /* Section Headers */
+    h1,h2,h3,h4,h5 { font-weight: 700; letter-spacing: 0.03em; }
+    h1 { font-size: 2.6em; }
+    /* Responsive */
+    @media (max-width: 800px) {
+      .netflix-grid { grid-template-columns: 1fr; gap: 1.5em; }
+      #nav { flex-direction: column; padding: 0.6em 0.5em;}
+    }
+    /* Table tweaks */
+    table.alt tbody tr:nth-child(odd){background:#1b1c20;}
+    /* Animations */
+    .fade-in { animation: fadein .8s cubic-bezier(.44,.84,.67,1) both; }
+    @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+    /* Gradient border for fun */
+    .n-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 1.3em;
+      pointer-events: none;
+      box-shadow: 0 0 0 0px #e50914;
+      transition: box-shadow .3s;
+    }
+    .n-card:hover::after {
+      box-shadow: 0 0 16px 2px #e5091485;
+    }
   </style>
 </head>
 <body class="is-preload">
@@ -58,7 +224,12 @@
       </ul>
     </nav>
 
-    <!-- Main -->
+    <!-- Main Netflix-Style Project Grid -->
+    <div class="netflix-grid" id="portfolioGrid">
+      <!-- JS will inject cards here -->
+    </div>
+
+    <!-- Main (rest of your style guide below) -->
     <div id="main">
       <section class="post">
         <header class="major">
@@ -119,12 +290,75 @@
     <!--#include virtual="footer.html" -->
   </div><!-- /wrapper -->
 
-  <!-- Scripts -->
-  <script src="assets/js/jquery.min.js" defer></script>
-  <script src="assets/js/browser.min.js" defer></script>
-  <script src="assets/js/breakpoints.min.js" defer></script>
-  <script src="assets/js/util.js" defer></script>
-  <script src="assets/js/main.js" defer></script>
-  <script>window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>10));</script>
+  <!-- Netflix-Style Portfolio JS -->
+  <script>
+    // Example project items – swap in your own!
+    const projects = [
+      {
+        title: "Stranger Things Dashboard",
+        desc: "A React + D3.js dashboard visualizing Netflix data. Supernatural charting meets '80s vibes.",
+        tags: ["React", "D3.js", "API"],
+        img: "https://i.imgur.com/UePbdph.jpg",
+        url: "#"
+      },
+      {
+        title: "Money Heist Analytics",
+        desc: "A Power BI report revealing heist data trends. Data storytelling with red jumpsuits.",
+        tags: ["Power BI", "Data Viz", "Python"],
+        img: "https://i.imgur.com/jyI8E4t.jpg",
+        url: "#"
+      },
+      {
+        title: "Squid Game UI Challenge",
+        desc: "A Figma UI concept—immersive, minimalist, dangerous. Green light for good design.",
+        tags: ["Figma", "UI/UX"],
+        img: "https://i.imgur.com/wVnBhmE.jpg",
+        url: "#"
+      },
+      {
+        title: "Bridgerton Social Analyzer",
+        desc: "Scrapes and visualizes Twitter buzz for Bridgerton with Python and NLP.",
+        tags: ["Python", "NLP", "Scraping"],
+        img: "https://i.imgur.com/QdZbX4V.jpg",
+        url: "#"
+      }
+    ];
+
+    // Render interactive Netflix cards
+    const grid = document.getElementById('portfolioGrid');
+    projects.forEach(proj => {
+      const card = document.createElement('div');
+      card.className = 'n-card';
+      card.tabIndex = 0;
+      card.innerHTML = `
+        <img src="${proj.img}" alt="${proj.title} Poster"/>
+        <div class="n-card-content">
+          <h3>${proj.title}</h3>
+          <p>${proj.desc}</p>
+          <div class="n-tags">
+            ${proj.tags.map(tag => `<span class="n-tag">${tag}</span>`).join('')}
+          </div>
+          <button class="n-btn">View Project</button>
+        </div>
+      `;
+      card.querySelector('.n-btn').onclick = () => window.open(proj.url, '_blank');
+      // Animate card on click (zoom)
+      card.addEventListener('click', e => {
+        if (!e.target.classList.contains('n-btn')) {
+          card.animate([
+            { transform: 'scale(1)' },
+            { transform: 'scale(1.12) translateY(-12px)' },
+            { transform: 'scale(1)' }
+          ], { duration: 420, easing: 'cubic-bezier(.33,.73,.45,1.5)' });
+        }
+      });
+      grid.appendChild(card);
+    });
+  </script>
+  <script>
+    // Make nav glass shadow on scroll
+    window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>10));
+  </script>
+  <!-- Your other JS scripts (if needed) -->
 </body>
 </html>
