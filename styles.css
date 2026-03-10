@@ -231,14 +231,17 @@ button { cursor: pointer; font-family: inherit; }
     justify-content: center;
     transform: translateY(-100%);
     opacity: 0;
-    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+    visibility: hidden;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease, visibility 0s 0.6s;
     pointer-events: none;
 }
 
 .mobile-menu.active {
     transform: translateY(0);
     opacity: 1;
+    visibility: visible;
     pointer-events: all;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease, visibility 0s 0s;
 }
 
 .mobile-menu-inner { text-align: center; }
@@ -301,6 +304,7 @@ button { cursor: pointer; font-family: inherit; }
     z-index: 0;
     pointer-events: none;
     transition: opacity 0.4s ease;
+    opacity: 0.35;
 }
 
 #threeCanvas {
@@ -313,8 +317,33 @@ button { cursor: pointer; font-family: inherit; }
     bottom: 0;
     left: 0;
     right: 0;
-    height: 250px;
+    height: 300px;
     background: linear-gradient(to top, var(--cream), transparent);
+    pointer-events: none;
+}
+
+/* Side + top fades for canvas blending into cream background */
+.canvas-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100%;
+    background: linear-gradient(to right, var(--cream), transparent);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.canvas-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(to bottom, var(--cream), transparent);
+    z-index: 1;
     pointer-events: none;
 }
 

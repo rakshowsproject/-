@@ -22,16 +22,17 @@
             alpha: true,
             antialias: true,
         });
+        renderer.setClearColor(0x000000, 0); // fully transparent background
         renderer.setSize(canvas.clientWidth, canvas.clientHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
         // Sculpted dodecahedron — feels like a Wes Anderson set piece
         const geo = new THREE.DodecahedronGeometry(2.4, 0);
         const mat = new THREE.MeshPhysicalMaterial({
-            color: 0xd4a0a0, // dusty rose
-            metalness: 0.15,
-            roughness: 0.6,
-            clearcoat: 0.2,
+            color: 0xdbb5b5, // lighter dusty rose
+            metalness: 0.05,
+            roughness: 0.55,
+            clearcoat: 0.15,
             clearcoatRoughness: 0.4,
         });
         const mesh = new THREE.Mesh(geo, mat);
@@ -40,26 +41,26 @@
         // Wireframe overlay — brutalist grid
         const wireGeo = new THREE.DodecahedronGeometry(2.45, 0);
         const wireMat = new THREE.MeshBasicMaterial({
-            color: 0x1a1714,
+            color: 0x8a7a6a,
             wireframe: true,
             transparent: true,
-            opacity: 0.12,
+            opacity: 0.18,
         });
         const wireMesh = new THREE.Mesh(wireGeo, wireMat);
         scene.add(wireMesh);
 
-        // Warm lighting to match palette
-        scene.add(new THREE.AmbientLight(0xf5f0e8, 0.6));
+        // Warm lighting — bright enough to render pastel tones
+        scene.add(new THREE.AmbientLight(0xffffff, 0.8));
 
-        const keyLight = new THREE.DirectionalLight(0xc4a77d, 0.9); // mustard
+        const keyLight = new THREE.DirectionalLight(0xfff5e6, 1.2); // warm white
         keyLight.position.set(4, 5, 5);
         scene.add(keyLight);
 
-        const fillLight = new THREE.PointLight(0xd4a0a0, 0.6, 80); // dusty rose
+        const fillLight = new THREE.PointLight(0xd4a0a0, 0.8, 80); // dusty rose
         fillLight.position.set(-4, 2, 3);
         scene.add(fillLight);
 
-        const rimLight = new THREE.PointLight(0xa0b8a0, 0.4, 60); // sage
+        const rimLight = new THREE.PointLight(0xa0b8a0, 0.5, 60); // sage
         rimLight.position.set(2, -3, -4);
         scene.add(rimLight);
 
@@ -74,10 +75,10 @@
         }
         pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
         const pMat = new THREE.PointsMaterial({
-            size: 0.02,
-            color: 0x1a1714,
+            size: 0.025,
+            color: 0xb8a090,
             transparent: true,
-            opacity: 0.2,
+            opacity: 0.35,
         });
         const particles = new THREE.Points(pGeo, pMat);
         scene.add(particles);
