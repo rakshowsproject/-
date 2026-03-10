@@ -1,352 +1,2099 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketing Analytics & Data Science | Rakibul Hasan Shovon</title>
-    <meta name="description" content="Marketing analytics and data science professional focused on understanding consumer behavior through data. Specializing in Python, SQL, Power BI, Tableau, and statistical modeling.">
-    <meta name="author" content="Rakibul Hasan Shovon">
-    <meta name="keywords" content="Marketing Analytics,Data Science,Business Intelligence,Machine Learning,Python,SQL,Power BI,Tableau">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Marketing Analytics & Data Science | Rakibul Hasan Shovon">
-    <meta property="og:description" content="Marketing analytics and data science professional focused on understanding consumer behavior through data.">
-    <meta property="og:type" content="website">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rakibul Shovon — A Wes Anderson Production</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --budapest-pink: #E6A0C4;
+  --budapest-lavender: #C6CDF7;
+  --budapest-peach: #D8A499;
+  --budapest-blue: #7294D4;
+  --mustard: #F1BB7B;
+  --coral: #FD6467;
+  --burgundy: #5B1A18;
+  --amber: #D67236;
+  --cream: #FAEFD1;
+  --sage: #899DA4;
+  --zissou-teal: #3B9AB2;
+  --zissou-sky: #78B7C5;
+  --zissou-yellow: #EBCC2A;
+  --fox-orange: #E1AF00;
+  --moonrise-blue: #85D4E3;
+  --moonrise-pink: #F4B5BD;
+  --darjeeling-teal: #0B775E;
+  --darjeeling-red: #F2300F;
+  --bg-cream: #FAF3E0;
+  --bg-warm: #FFF8EE;
+  --ink: #2C1810;
+  --border-thick: 4px solid var(--ink);
+  --border-brutal: 6px solid var(--ink);
+  --shadow-brutal: 8px 8px 0px var(--ink);
+  --shadow-brutal-lg: 12px 12px 0px var(--ink);
+  --shadow-brutal-color: 8px 8px 0px var(--coral);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+::selection {
+  background: var(--budapest-pink);
+  color: var(--ink);
+}
+
+html {
+  scroll-behavior: smooth;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='10' fill='none' stroke='%235B1A18' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23FD6467'/%3E%3C/svg%3E") 12 12, auto;
+}
+
+body {
+  font-family: 'Libre Baskerville', serif;
+  background: var(--bg-cream);
+  color: var(--ink);
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+/* ========== NOISE OVERLAY ========== */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 10000;
+}
+
+/* ========== CUSTOM SCROLLBAR ========== */
+::-webkit-scrollbar { width: 14px; }
+::-webkit-scrollbar-track { background: var(--cream); border-left: var(--border-thick); }
+::-webkit-scrollbar-thumb { background: var(--mustard); border: 3px solid var(--ink); }
+::-webkit-scrollbar-thumb:hover { background: var(--coral); }
+
+/* ========== LOADING SCREEN ========== */
+#loading-screen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: var(--mustard);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+#loading-screen.fade-out {
+  opacity: 0;
+  transform: scale(1.1);
+  pointer-events: none;
+}
+
+#loading-screen h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+.loading-bar-container {
+  width: 300px;
+  height: 12px;
+  border: var(--border-thick);
+  background: var(--cream);
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-bar {
+  height: 100%;
+  background: var(--coral);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.loading-subtitle {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 1.5rem;
+  color: var(--burgundy);
+}
+
+/* ========== FILM STRIP BORDER ========== */
+.film-strip-top, .film-strip-bottom {
+  position: fixed;
+  left: 0; width: 100%;
+  height: 32px;
+  background: var(--ink);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.film-strip-top { top: 0; }
+.film-strip-bottom { bottom: 0; }
+
+.film-hole {
+  width: 18px; height: 12px;
+  background: var(--bg-cream);
+  border-radius: 2px;
+  margin: 0 14px;
+  flex-shrink: 0;
+}
+
+/* ========== NAVIGATION ========== */
+nav {
+  position: fixed;
+  top: 32px;
+  left: 0; right: 0;
+  background: var(--cream);
+  border-bottom: var(--border-brutal);
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 60px;
+}
+
+nav .logo {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 1.1rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+nav .logo span {
+  color: var(--coral);
+}
+
+nav .nav-links {
+  display: flex;
+  gap: 0;
+}
+
+nav .nav-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  padding: 0.8rem 1.2rem;
+  border-left: 2px solid var(--ink);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+nav .nav-links a:hover {
+  background: var(--coral);
+  color: var(--cream);
+}
+
+nav .nav-links a::after {
+  content: attr(data-number);
+  position: absolute;
+  top: 4px; right: 6px;
+  font-size: 0.5rem;
+  opacity: 0.4;
+}
+
+/* ========== CHAPTER LABEL ========== */
+.chapter-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chapter-label::before {
+  content: '';
+  width: 40px;
+  height: 2px;
+  background: var(--sage);
+}
+
+/* ========== HERO SECTION ========== */
+#hero {
+  min-height: 100vh;
+  padding: 120px 4rem 4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  position: relative;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 60px,
+      rgba(44,24,16,0.03) 60px,
+      rgba(44,24,16,0.03) 61px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 60px,
+      rgba(44,24,16,0.03) 60px,
+      rgba(44,24,16,0.03) 61px
+    );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.hero-content h1 .line {
+  display: block;
+  overflow: hidden;
+}
+
+.hero-content h1 .line span {
+  display: inline-block;
+  transform: translateY(110%);
+  animation: slideUp 0.8s ease forwards;
+}
+
+.hero-content h1 .line:nth-child(2) span { animation-delay: 0.15s; }
+.hero-content h1 .line:nth-child(3) span { animation-delay: 0.3s; }
+
+@keyframes slideUp {
+  to { transform: translateY(0); }
+}
+
+.hero-content h1 .accent {
+  color: var(--coral);
+  font-style: italic;
+  position: relative;
+}
+
+.hero-content h1 .accent::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  width: 100%;
+  height: 12px;
+  background: var(--mustard);
+  z-index: -1;
+  opacity: 0.5;
+}
+
+.hero-subtitle {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 2rem;
+  padding-left: 3rem;
+  border-left: 3px solid var(--coral);
+}
+
+.hero-description {
+  font-size: 1.05rem;
+  max-width: 500px;
+  color: var(--burgundy);
+  opacity: 0;
+  animation: fadeIn 1s ease 0.6s forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.hero-cta-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  opacity: 0;
+  animation: fadeIn 1s ease 0.8s forwards;
+}
+
+.btn-brutal {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 1rem 2rem;
+  border: var(--border-thick);
+  background: var(--coral);
+  color: var(--cream);
+  box-shadow: var(--shadow-brutal);
+  transition: all 0.15s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.btn-brutal:hover {
+  transform: translate(4px, 4px);
+  box-shadow: 4px 4px 0px var(--ink);
+}
+
+.btn-brutal:active {
+  transform: translate(8px, 8px);
+  box-shadow: none;
+}
+
+.btn-brutal.outline {
+  background: var(--cream);
+  color: var(--ink);
+}
+
+.btn-brutal.outline:hover {
+  background: var(--mustard);
+}
+
+/* Hero right side - WebGL canvas */
+.hero-visual {
+  position: relative;
+  height: 500px;
+  border: var(--border-brutal);
+  background: var(--ink);
+  box-shadow: var(--shadow-brutal-lg);
+  overflow: hidden;
+}
+
+.hero-visual canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.hero-visual-label {
+  position: absolute;
+  bottom: -1px;
+  left: -1px;
+  right: -1px;
+  background: var(--mustard);
+  border-top: var(--border-thick);
+  padding: 0.6rem 1rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: center;
+  z-index: 5;
+}
+
+/* ========== SYMMETRY LINE ========== */
+.symmetry-line {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 100vh;
+  background: rgba(44,24,16,0.06);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ========== MARQUEE BANNER ========== */
+.marquee-banner {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 1rem 0;
+  border-top: var(--border-thick);
+  border-bottom: var(--border-thick);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee-track {
+  display: inline-flex;
+  animation: marquee 25s linear infinite;
+}
+
+.marquee-track span {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0 2rem;
+}
+
+.marquee-track .dot {
+  color: var(--coral);
+  font-size: 1.4rem;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ========== PROFILE CARD ========== */
+#about {
+  padding: 6rem 4rem;
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 4rem;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.profile-card {
+  border: var(--border-brutal);
+  background: var(--cream);
+  box-shadow: var(--shadow-brutal-lg);
+  padding: 0;
+  position: sticky;
+  top: 120px;
+}
+
+.profile-card-header {
+  background: var(--budapest-pink);
+  border-bottom: var(--border-thick);
+  padding: 0.6rem 1rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.profile-photo-wrapper {
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-bottom: var(--border-thick);
+  position: relative;
+  background: var(--budapest-lavender);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-photo-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.85) contrast(1.05);
+  transition: filter 0.4s ease;
+}
+
+.profile-photo-wrapper:hover img {
+  filter: saturate(1.2) contrast(1.1);
+}
+
+.profile-photo-placeholder {
+  font-family: 'Playfair Display', serif;
+  font-size: 6rem;
+  font-weight: 900;
+  color: var(--ink);
+  opacity: 0.15;
+}
+
+.profile-card-body {
+  padding: 1.5rem;
+}
+
+.profile-card-body h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+}
+
+.profile-card-body .role {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-bottom: 1rem;
+}
+
+.profile-card-body .bio {
+  font-size: 0.85rem;
+  color: var(--burgundy);
+  line-height: 1.8;
+}
+
+.profile-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px dashed var(--sage);
+}
+
+.profile-tags span {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.7rem;
+  border: 2px solid var(--ink);
+  background: var(--bg-warm);
+  transition: all 0.15s ease;
+}
+
+.profile-tags span:hover {
+  background: var(--mustard);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0px var(--ink);
+}
+
+/* About right column */
+.about-content {
+  padding-top: 1rem;
+}
+
+.about-content h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 900;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.about-content h2::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 6px;
+  background: var(--coral);
+  margin-top: 1rem;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 2.5rem 0;
+}
+
+.stat-card {
+  border: var(--border-thick);
+  padding: 1.5rem;
+  text-align: center;
+  background: var(--bg-warm);
+  transition: all 0.2s ease;
+}
+
+.stat-card:nth-child(1) { background: var(--moonrise-blue); }
+.stat-card:nth-child(2) { background: var(--moonrise-pink); }
+.stat-card:nth-child(3) { background: var(--zissou-yellow); }
+
+.stat-card:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: var(--shadow-brutal);
+}
+
+.stat-card .number {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+  display: block;
+}
+
+.stat-card .label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.skills-section {
+  margin-top: 2.5rem;
+}
+
+.skills-section h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.skill-bar-item {
+  margin-bottom: 1.2rem;
+}
+
+.skill-bar-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.skill-bar-track {
+  height: 16px;
+  border: 2px solid var(--ink);
+  background: var(--cream);
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-bar-fill {
+  height: 100%;
+  transition: width 1.5s ease;
+  width: 0%;
+}
+
+.skill-bar-item:nth-child(1) .skill-bar-fill { background: var(--coral); }
+.skill-bar-item:nth-child(2) .skill-bar-fill { background: var(--zissou-teal); }
+.skill-bar-item:nth-child(3) .skill-bar-fill { background: var(--mustard); }
+.skill-bar-item:nth-child(4) .skill-bar-fill { background: var(--budapest-pink); }
+.skill-bar-item:nth-child(5) .skill-bar-fill { background: var(--darjeeling-teal); }
+.skill-bar-item:nth-child(6) .skill-bar-fill { background: var(--fox-orange); }
+
+/* ========== PROJECTS SECTION ========== */
+#projects {
+  padding: 6rem 4rem;
+  background:
+    linear-gradient(135deg, var(--cream) 25%, transparent 25%) -50px 0,
+    linear-gradient(225deg, var(--cream) 25%, transparent 25%) -50px 0,
+    linear-gradient(315deg, var(--cream) 25%, transparent 25%),
+    linear-gradient(45deg, var(--cream) 25%, transparent 25%);
+  background-size: 100px 100px;
+  background-color: var(--bg-warm);
+}
+
+#projects > .chapter-label,
+#projects > h2 {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#projects > h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 900;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.projects-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 2rem;
+}
+
+.project-card {
+  border: var(--border-brutal);
+  background: var(--cream);
+  box-shadow: var(--shadow-brutal);
+  overflow: hidden;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.project-card:hover {
+  transform: translate(-6px, -6px);
+  box-shadow: 14px 14px 0px var(--ink);
+}
+
+.project-card-image {
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  border-bottom: var(--border-thick);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.project-card:hover .project-card-image img {
+  transform: scale(1.08);
+}
+
+.project-card-image .placeholder-art {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  font-weight: 900;
+  opacity: 0.2;
+}
+
+.project-card-number {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.8rem;
+  width: 36px;
+  height: 36px;
+  background: var(--ink);
+  color: var(--cream);
+  border: 2px solid var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  z-index: 3;
+}
+
+.project-card-tag {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  background: var(--mustard);
+  border: 2px solid var(--ink);
+  padding: 0.2rem 0.6rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  z-index: 3;
+}
+
+.project-card-body {
+  padding: 1.5rem;
+}
+
+.project-card-body h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.project-card-body p {
+  font-size: 0.85rem;
+  color: var(--burgundy);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.project-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.project-tech span {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.5rem;
+  border: 2px solid var(--ink);
+  background: var(--bg-warm);
+}
+
+/* Project card color accents */
+.project-card:nth-child(1) .project-card-image { background: var(--zissou-sky); }
+.project-card:nth-child(2) .project-card-image { background: var(--moonrise-pink); }
+.project-card:nth-child(3) .project-card-image { background: var(--mustard); }
+.project-card:nth-child(4) .project-card-image { background: var(--budapest-lavender); }
+.project-card:nth-child(5) .project-card-image { background: var(--zissou-yellow); }
+.project-card:nth-child(6) .project-card-image { background: var(--budapest-pink); }
+
+/* ========== GAME SECTION ========== */
+#game {
+  padding: 6rem 4rem;
+  background: var(--ink);
+  color: var(--cream);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+#game::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(250,239,209,0.03) 2px,
+      rgba(250,239,209,0.03) 4px
+    );
+  pointer-events: none;
+}
+
+#game .chapter-label {
+  color: var(--sage);
+  justify-content: center;
+}
+
+#game .chapter-label::before {
+  background: var(--sage);
+}
+
+#game h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+}
+
+#game .game-subtitle {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 2rem;
+}
+
+#game-canvas-wrapper {
+  max-width: 700px;
+  margin: 0 auto;
+  border: var(--border-brutal);
+  border-color: var(--cream);
+  background: #1a0f0a;
+  position: relative;
+  box-shadow: 0 0 60px rgba(253,100,103,0.15);
+}
+
+#game-canvas {
+  display: block;
+  width: 100%;
+  image-rendering: pixelated;
+}
+
+.game-hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  border-bottom: 3px solid var(--cream);
+  background: rgba(250,239,209,0.05);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.game-hud .score-display {
+  color: var(--zissou-yellow);
+}
+
+.game-controls-info {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--sage);
+  margin-top: 1.5rem;
+}
+
+/* ========== CONTACT SECTION ========== */
+#contact {
+  padding: 6rem 4rem;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#contact h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 900;
+  margin-bottom: 1rem;
+}
+
+#contact p {
+  font-size: 1rem;
+  color: var(--burgundy);
+  margin-bottom: 2.5rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.contact-card {
+  border: var(--border-thick);
+  padding: 2rem 1rem;
+  background: var(--cream);
+  text-decoration: none;
+  color: var(--ink);
+  transition: all 0.2s ease;
+}
+
+.contact-card:nth-child(1) { background: var(--budapest-lavender); }
+.contact-card:nth-child(2) { background: var(--moonrise-blue); }
+.contact-card:nth-child(3) { background: var(--mustard); }
+
+.contact-card:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: var(--shadow-brutal);
+}
+
+.contact-card .icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.contact-card .contact-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.contact-card .contact-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-top: 0.3rem;
+}
+
+/* ========== FOOTER ========== */
+footer {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 3rem 4rem;
+  text-align: center;
+  border-top: var(--border-brutal);
+  margin-bottom: 32px;
+}
+
+footer .footer-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+footer .footer-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+/* ========== SCROLL REVEAL ========== */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+
+/* ========== FLOATING DECORATIVE ELEMENTS ========== */
+.deco-cross {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  opacity: 0.08;
+}
+
+.deco-cross::before, .deco-cross::after {
+  content: '';
+  position: absolute;
+  background: var(--ink);
+}
+
+.deco-cross::before {
+  width: 100%;
+  height: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.deco-cross::after {
+  width: 4px;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 900px) {
+  #hero {
+    grid-template-columns: 1fr;
+    padding: 120px 2rem 2rem;
+  }
+  .hero-visual { height: 350px; }
+  #about { grid-template-columns: 1fr; padding: 4rem 2rem; }
+  .profile-card { position: static; max-width: 350px; margin: 0 auto; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .contact-grid { grid-template-columns: 1fr; max-width: 300px; margin: 0 auto 3rem; }
+  .projects-grid { grid-template-columns: 1fr; }
+  #experience > div:last-child { grid-template-columns: 1fr !important; }
+  nav { padding: 0 1rem; }
+  nav .nav-links a { padding: 0.8rem 0.7rem; font-size: 0.6rem; }
+}
+
+/* ========== DECORATIVE TAPE STRIP ========== */
+.tape-strip {
+  display: inline-block;
+  background: var(--mustard);
+  padding: 0.3rem 1.5rem;
+  border: 2px solid var(--ink);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transform: rotate(-2deg);
+  position: relative;
+}
+
+.tape-strip::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 12px;
+  background: rgba(241,187,123,0.6);
+  border: 1px solid rgba(44,24,16,0.2);
+}
+</style>
 </head>
 <body>
 
-    <!-- Film Grain Overlay -->
-    <div class="grain" aria-hidden="true"></div>
+<!-- Loading Screen -->
+<div id="loading-screen">
+  <h1>A Portfolio</h1>
+  <div class="loading-bar-container">
+    <div class="loading-bar" id="loading-bar"></div>
+  </div>
+  <div class="loading-subtitle">A Rakibul Shovon Production — Loading Reel No. 1</div>
+</div>
 
-    <!-- Progress Bar -->
-    <div id="nprogress">
-        <div class="bar"></div>
+<!-- Film Strip Borders -->
+<div class="film-strip-top" id="film-top"></div>
+<div class="film-strip-bottom" id="film-bottom"></div>
+
+<!-- Symmetry Guide -->
+<div class="symmetry-line"></div>
+
+<!-- Navigation -->
+<nav>
+  <div class="logo">Rakibul <span>Shovon</span></div>
+  <div class="nav-links">
+    <a href="#hero" data-number="01">Overture</a>
+    <a href="#about" data-number="02">Character</a>
+    <a href="#experience" data-number="03">Dossier</a>
+    <a href="#projects" data-number="04">Acts</a>
+    <a href="#game" data-number="05">Intermission</a>
+    <a href="#contact" data-number="06">Curtain</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section id="hero">
+  <div class="hero-content">
+    <div class="chapter-label">Chapter I — The Introduction</div>
+    <h1>
+      <div class="line"><span>Rakibul</span></div>
+      <div class="line"><span class="accent">Shovon</span></div>
+      <div class="line"><span>Researcher & Analyst</span></div>
+    </h1>
+    <div class="hero-subtitle">MS Management & Business Analytics — UW–Milwaukee</div>
+    <p class="hero-description">
+      A researcher at the intersection of marketing science, consumer behavior, 
+      and data analytics — exploring algorithmic recommendation systems, 
+      digital consumer behavior, and sustainable consumption through 
+      quantitative rigor and a touch of curiosity.
+    </p>
+    <div class="hero-cta-row">
+      <a href="#projects" class="btn-brutal">View the Acts</a>
+      <a href="#contact" class="btn-brutal outline">Send a Telegram</a>
+    </div>
+  </div>
+  <div class="hero-visual" id="webgl-container">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-visual-label">Exhibit A — Interactive 3D Centerpiece — Move Your Mouse</div>
+  </div>
+</section>
+
+<!-- Marquee Banner -->
+<div class="marquee-banner">
+  <div class="marquee-track">
+    <span>Python</span><span class="dot">✦</span>
+    <span>R</span><span class="dot">✦</span>
+    <span>SQL</span><span class="dot">✦</span>
+    <span>SPSS</span><span class="dot">✦</span>
+    <span>Econometrics</span><span class="dot">✦</span>
+    <span>Behavioral Modeling</span><span class="dot">✦</span>
+    <span>Regression Analysis</span><span class="dot">✦</span>
+    <span>Experimental Design</span><span class="dot">✦</span>
+    <span>Consumer Analytics</span><span class="dot">✦</span>
+    <span>NLP</span><span class="dot">✦</span>
+    <span>Python</span><span class="dot">✦</span>
+    <span>R</span><span class="dot">✦</span>
+    <span>SQL</span><span class="dot">✦</span>
+    <span>SPSS</span><span class="dot">✦</span>
+    <span>Econometrics</span><span class="dot">✦</span>
+    <span>Behavioral Modeling</span><span class="dot">✦</span>
+    <span>Regression Analysis</span><span class="dot">✦</span>
+    <span>Experimental Design</span><span class="dot">✦</span>
+    <span>Consumer Analytics</span><span class="dot">✦</span>
+    <span>NLP</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+  <div class="profile-card reveal">
+    <div class="profile-card-header">Personnel File — Exhibit B</div>
+    <div class="profile-photo-wrapper">
+      <img src="images/502415591_10223039982908103_9008122845678656848_n.jpg" alt="Profile Photo" 
+           onerror="this.style.display='none'; this.parentElement.querySelector('.profile-photo-placeholder').style.display='flex';">
+      <div class="profile-photo-placeholder" style="display:none; width:100%; height:100%; align-items:center; justify-content:center;">P</div>
+    </div>
+    <div class="profile-card-body">
+      <h3>Rakibul Shovon</h3>
+      <div class="role">Researcher · Marketing Science & Business Analytics</div>
+      <p class="bio">
+        A detail-oriented researcher with expertise in consumer behavior, 
+        marketing analytics, and quantitative methods. Currently completing 
+        an MS in Management & Business Analytics at UW–Milwaukee with 
+        research interests spanning algorithmic recommendation systems, 
+        digital consumer behavior, and sustainable consumption.
+      </p>
+      <div class="profile-tags">
+        <span>Python</span>
+        <span>R</span>
+        <span>SQL</span>
+        <span>SPSS</span>
+        <span>Econometrics</span>
+        <span>Consumer Behavior</span>
+        <span>NLP</span>
+        <span>Experimental Design</span>
+        <span>Behavioral Modeling</span>
+        <span>Survey Methods</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-content">
+    <div class="chapter-label reveal">Chapter II — The Character Study</div>
+    <h2 class="reveal">About the <br>Protagonist</h2>
+    <p class="reveal" style="margin-bottom: 2rem; color: var(--burgundy);">
+      With three master's degrees, experience at Nielsen, and a teaching 
+      assistantship at UW–Milwaukee's Lubar College of Business, Rakibul 
+      brings a rare blend of academic rigor, industry insight, and 
+      cross-cultural perspective to every research question. His work 
+      spans from behavioral choice architecture to digital consumer 
+      well-being — always grounded in data, always curious.
+    </p>
+
+    <div class="stat-grid">
+      <div class="stat-card reveal reveal-delay-1">
+        <span class="number">3</span>
+        <span class="label">Master's Degrees</span>
+      </div>
+      <div class="stat-card reveal reveal-delay-2">
+        <span class="number">147+</span>
+        <span class="label">Focus Groups Led</span>
+      </div>
+      <div class="stat-card reveal reveal-delay-3">
+        <span class="number">3.73</span>
+        <span class="label">GPA at UWM</span>
+      </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <a class="logo" aria-label="Go to home page" href="#home">
-            <span class="logo-bracket">[</span>
-            <span class="logo-text">RHS</span>
-            <span class="logo-bracket">]</span>
-        </a>
-        <ul class="nav-links">
-            <li class="nav-item active">
-                <span class="nav-num">01</span>
-                <a href="#home">Home</a>
-            </li>
-            <li class="nav-divider">&mdash;</li>
-            <li class="nav-item">
-                <span class="nav-num">02</span>
-                <a href="#about">About</a>
-            </li>
-            <li class="nav-divider">&mdash;</li>
-            <li class="nav-item">
-                <span class="nav-num">03</span>
-                <a href="#work">Work</a>
-            </li>
-            <li class="nav-divider">&mdash;</li>
-            <li class="nav-item">
-                <span class="nav-num">04</span>
-                <a href="#contact">Contact</a>
-            </li>
-        </ul>
-        <span class="hamburger" id="hamburgerMenu">
-            <span class="h-line"></span>
-            <span class="h-line"></span>
-            <span class="h-line"></span>
-        </span>
-    </nav>
+    <div class="skills-section reveal">
+      <h3>Technical Repertoire</h3>
+      <div class="skill-bar-item">
+        <div class="skill-bar-label"><span>Python / R / Statistical Computing</span><span>90%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="90"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-label"><span>Regression / Econometrics / Causal Inference</span><span>92%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="92"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-label"><span>Survey Design / Experimental Methods</span><span>88%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="88"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-label"><span>SPSS / Behavioral Modeling</span><span>85%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="85"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-label"><span>SQL / Data Management</span><span>85%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="85"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-label"><span>Qualitative Research / Thematic Analysis</span><span>95%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="95"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-inner">
-            <div class="mobile-chapter">MENU</div>
-            <ul class="mobile-links">
-                <li><span class="mob-num">01.</span><a href="#home">Home</a></li>
-                <li><span class="mob-num">02.</span><a href="#about">About</a></li>
-                <li><span class="mob-num">03.</span><a href="#work">Work</a></li>
-                <li><span class="mob-num">04.</span><a href="#contact">Contact</a></li>
-            </ul>
+<!-- ============ EXPERIENCE & RESEARCH ============ -->
+<section id="experience" style="padding: 5rem 4rem; max-width: 1200px; margin: 0 auto;">
+  <div class="chapter-label reveal" style="justify-content:center;">Chapter II½ — The Career Dossier</div>
+  <h2 class="reveal" style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 900; text-align: center; margin-bottom: 3rem;">Experience & Research</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    
+    <!-- Work Experience -->
+    <div class="reveal" style="border: var(--border-brutal); background: var(--cream); box-shadow: var(--shadow-brutal); overflow: hidden;">
+      <div style="background: var(--zissou-teal); border-bottom: var(--border-thick); padding: 0.7rem 1.2rem; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; text-align: center; color: var(--cream);">Work Experience</div>
+      <div style="padding: 1.5rem;">
+        <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 2px dashed var(--sage);">
+          <div style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1rem;">Graduate Teaching Assistant</div>
+          <div style="font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--coral); text-transform: uppercase; margin: 0.3rem 0;">UW–Milwaukee, Lubar College of Business</div>
+          <div style="font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--sage);">Sep 2025 – Dec 2025</div>
+          <p style="font-size: 0.8rem; color: var(--burgundy); margin-top: 0.5rem; line-height: 1.7;">Delivered lectures and full sessions for 150+ students in Business, Marketing, and Buyer Behavior. Designed assessments and facilitated applied learning activities.</p>
         </div>
-    </div>
-
-    <!-- 3D Canvas -->
-    <div class="canvas-wrap" id="canvasWrap">
-        <canvas id="threeCanvas"></canvas>
-        <div class="canvas-fade"></div>
-    </div>
-
-    <main>
-
-        <!-- ============ HERO ============ -->
-        <section class="hero" id="home">
-            <div class="hero-frame">
-                <div class="hero-chapter">
-                    <span class="chapter-line"></span>
-                    <span class="chapter-label">Chapter I</span>
-                    <span class="chapter-line"></span>
-                </div>
-                <div class="hero-titles">
-                    <div class="title-row">
-                        <span class="title-top" data-words='["Marketing","Data","Business","Consumer"]'>Marketing</span>
-                    </div>
-                    <div class="title-subtitle-row">
-                        <span class="subtitle-word">Analytics</span>
-                        <span class="subtitle-rotate" data-words='["Data Science","Business Intelligence","Machine Learning","Statistical Modeling"]'>Data Science</span>
-                        <span class="subtitle-word">Professional</span>
-                    </div>
-                    <div class="title-row">
-                        <span class="title-bottom" data-words='["Analytics","Science","Intelligence","Insights"]'>Analytics</span>
-                    </div>
-                </div>
-                <div class="hero-scroll">
-                    <div class="scroll-line"></div>
-                    <span>Scroll to explore</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============ ABOUT ============ -->
-        <section class="about" id="about">
-            <div class="section-header">
-                <div class="section-header-line"></div>
-                <span class="section-number">02</span>
-                <span class="section-label">About</span>
-                <div class="section-header-line"></div>
-            </div>
-
-            <div class="about-card">
-                <div class="about-card-border">
-                    <div class="about-greeting">
-                        <h2>
-                            <span class="greeting-word">Hey!</span>
-                            <span class="greeting-word"> I'm</span>
-                            <br>
-                            <span class="greeting-name">Rakibul Hasan Shovon</span>
-                        </h2>
-                        <div class="about-rule"></div>
-                        <p class="about-bio">I'm a marketing analytics and data science professional focused on understanding consumer behavior through data. My work blends machine learning, business intelligence, and storytelling to uncover insights that drive smarter decisions.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="about-grid">
-                <div class="about-photo-frame">
-                    <div class="photo-label">Fig. A &mdash; Portrait</div>
-                    <div class="photo-border">
-                        <img src="images/502415591_10223039982908103_9008122845678656848_n.jpg" alt="Rakibul Hasan Shovon" loading="eager">
-                    </div>
-                </div>
-                <div class="about-details">
-                    <div class="about-intro-text">
-                        <p class="intro-line"><span>And yup,</span></p>
-                        <p class="intro-line"><span>I analyze data</span></p>
-                        <p class="intro-line"><span>and build models like</span></p>
-                        <p class="intro-line"><span>a work of art...</span></p>
-                    </div>
-                    <div class="skills-box">
-                        <div class="skills-label">
-                            <span class="skills-label-tag">TOOLS &amp; TECHNOLOGIES</span>
-                        </div>
-                        <div class="skills-grid">
-                            <span class="skill">Python</span>
-                            <span class="skill">SQL</span>
-                            <span class="skill">Power BI</span>
-                            <span class="skill">Tableau</span>
-                            <span class="skill">Machine Learning</span>
-                            <span class="skill">Statistical Modeling</span>
-                            <span class="skill">R</span>
-                            <span class="skill">Excel</span>
-                            <span class="skill">Consumer Analytics</span>
-                            <span class="skill">AI-Driven Marketing</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============ WORK ============ -->
-        <section class="work" id="work">
-            <div class="section-header">
-                <div class="section-header-line"></div>
-                <span class="section-number">03</span>
-                <span class="section-label">Work</span>
-                <div class="section-header-line"></div>
-            </div>
-
-            <div class="projects">
-
-                <a class="project" href="https://github.com/shovonhasan1/chatgpt-perception-project" target="_blank" style="--accent: #C4A77D; --shadow: #C4A77D;">
-                    <div class="project-num">I</div>
-                    <div class="project-info">
-                        <h3 class="project-title">ChatGPT Perception Project</h3>
-                        <p class="project-cat">NLP, Sentiment Analysis</p>
-                    </div>
-                    <div class="project-img-wrap">
-                        <img src="images/PIcture 1.png" alt="ChatGPT Perception Project" loading="lazy">
-                    </div>
-                    <div class="project-border-bottom"></div>
-                </a>
-
-                <a class="project" href="https://github.com/shovonhasan1/social-media-purchase-analysis" target="_blank" style="--accent: #D4A0A0; --shadow: #D4A0A0;">
-                    <div class="project-num">II</div>
-                    <div class="project-info">
-                        <h3 class="project-title">Social Media Purchase Analysis</h3>
-                        <p class="project-cat">Consumer Analytics, ML</p>
-                    </div>
-                    <div class="project-img-wrap">
-                        <img src="images/Social_media.png" alt="Social Media Purchase Analysis" loading="lazy">
-                    </div>
-                    <div class="project-border-bottom"></div>
-                </a>
-
-                <a class="project" href="https://github.com/shovonhasan1/Orange-telecom-Churn" target="_blank" style="--accent: #A0B8A0; --shadow: #A0B8A0;">
-                    <div class="project-num">III</div>
-                    <div class="project-info">
-                        <h3 class="project-title">Orange Telecom Churn Prediction</h3>
-                        <p class="project-cat">Predictive Modeling, Classification</p>
-                    </div>
-                    <div class="project-img-wrap">
-                        <img src="images/Telecom Churn.png" alt="Orange Telecom Churn Prediction" loading="lazy">
-                    </div>
-                    <div class="project-border-bottom"></div>
-                </a>
-
-                <a class="project" href="https://github.com/shovonhasan1/walmart-store-analysis" target="_blank" style="--accent: #B8A0C8; --shadow: #B8A0C8;">
-                    <div class="project-num">IV</div>
-                    <div class="project-info">
-                        <h3 class="project-title">Walmart Store Sales Analysis</h3>
-                        <p class="project-cat">Business Intelligence, EDA</p>
-                    </div>
-                    <div class="project-img-wrap">
-                        <img src="images/Walmart-iStock.com-Alexander-Farnsworth.jpg" alt="Walmart Store Sales Analysis" loading="lazy">
-                    </div>
-                    <div class="project-border-bottom"></div>
-                </a>
-
-                <a class="project" href="https://github.com/shovonhasan1/ev-market-intelligence-suite" target="_blank" style="--accent: #A0B0C8; --shadow: #A0B0C8;">
-                    <div class="project-num">V</div>
-                    <div class="project-info">
-                        <h3 class="project-title">EV Market Intelligence Suite</h3>
-                        <p class="project-cat">Market Analysis, Dashboard</p>
-                    </div>
-                    <div class="project-img-wrap">
-                        <img src="images/EV.png" alt="EV Market Intelligence Suite" loading="lazy">
-                    </div>
-                    <div class="project-border-bottom"></div>
-                </a>
-
-                <a class="project" href="https://github.com/rakshowsproject/Tesla-Sentiment-Analysis" target="_blank" style="--accent: #C8B8A0; --shadow: #C8B8A0;">
-                    <div class="project-num">VI</div>
-                    <div class="project-info">
-                        <h3 class="project-title">Tesla Sentiment Analysis</h3>
-                        <p class="project-cat">NLP, Social Media Analytics</p>
-                    </div>
-                    <div class="project-img-wrap">
-                        <img src="images/tesla.jpg" alt="Tesla Sentiment Analysis" loading="lazy">
-                    </div>
-                    <div class="project-border-bottom"></div>
-                </a>
-
-            </div>
-        </section>
-
-        <!-- ============ CONTACT ============ -->
-        <section class="contact" id="contact">
-            <div class="section-header">
-                <div class="section-header-line"></div>
-                <span class="section-number">04</span>
-                <span class="section-label">Contact</span>
-                <div class="section-header-line"></div>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-card-inner">
-                    <h2 class="contact-heading">Don't be a stranger</h2>
-                    <p class="contact-sub">Ready to start your project? Let's build something legendary together!</p>
-                    <div class="contact-rule"></div>
-
-                    <div class="contact-email-row">
-                        <a href="mailto:rhshovon@uwm.edu" class="email-link" target="_blank" rel="noopener noreferrer">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="22" height="22"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
-                            rhshovon@uwm.edu
-                        </a>
-                        <span class="copy-btn" onclick="copyEmail()">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18" height="18"><path d="M0 0h24v24H0z" stroke="none"/><path d="M8 10a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2z"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
-                            <span class="copy-label">Copy</span>
-                        </span>
-                    </div>
-
-                    <div class="contact-window">
-                        <div class="window-titlebar">
-                            <span class="window-dot dot-red"></span>
-                            <span class="window-dot dot-yellow"></span>
-                            <span class="window-dot dot-green"></span>
-                            <span class="window-title">terminal &mdash; contact</span>
-                        </div>
-                        <div class="window-body">
-                            <div class="avail-row">
-                                <span class="avail-dot"></span>
-                                <span>Available for Opportunities</span>
-                            </div>
-                            <div class="window-prompt">
-                                <span class="prompt-symbol">$</span>
-                                <span>What would you like to do next?</span>
-                            </div>
-                            <button class="contact-action" onclick="window.open('mailto:rhshovon@uwm.edu')">
-                                <span class="action-arrow">&rarr;</span>
-                                Send me a message
-                            </button>
-                            <a href="documents/resume.pdf" target="_blank" class="contact-action">
-                                <span class="action-arrow">&rarr;</span>
-                                Download Resume
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="contact-socials">
-                        <a href="https://linkedin.com/in/rakibul-shovon-6474691b3" target="_blank" aria-label="LinkedIn" class="social-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M19 0H5a5 5 0 0 0-5 5v14a5 5 0 0 0 5 5h14a5 5 0 0 0 5-5V5a5 5 0 0 0-5-5zM8 19H5V8h3v11zM6.5 6.732c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zM20 19h-3v-5.604c0-3.368-4-3.113-4 0V19h-3V8h3v1.765c1.396-2.586 7-2.777 7 2.476V19z"/></svg>
-                            LinkedIn
-                        </a>
-                        <a href="https://github.com/rakshowsproject" target="_blank" aria-label="GitHub" class="social-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                            GitHub
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-inner">
-            <div class="footer-rule"></div>
-            <div class="footer-grid">
-                <p class="footer-credit">Designed and developed by Rakibul Hasan Shovon &copy; 2026</p>
-                <div class="footer-contact">
-                    <span class="footer-label">General Inquiries</span>
-                    <span>rhshovon@uwm.edu</span>
-                </div>
-                <div class="footer-social-row">
-                    <a href="https://linkedin.com/in/rakibul-shovon-6474691b3" target="_blank" aria-label="LinkedIn">LI</a>
-                    <a href="https://github.com/rakshowsproject" target="_blank" aria-label="GitHub">GH</a>
-                </div>
-            </div>
+        <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 2px dashed var(--sage);">
+          <div style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1rem;">Coordination Affairs Officer</div>
+          <div style="font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--coral); text-transform: uppercase; margin: 0.3rem 0;">North South University</div>
+          <div style="font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--sage);">Sep 2021 – Jan 2023</div>
+          <p style="font-size: 0.8rem; color: var(--burgundy); margin-top: 0.5rem; line-height: 1.7;">Coordinated operations across university units, managed 500+ confidential records, and supported decision-making through data analysis.</p>
         </div>
-    </footer>
+        <div style="margin-bottom: 1rem;">
+          <div style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1rem;">Qualitative Research Assistant</div>
+          <div style="font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--coral); text-transform: uppercase; margin: 0.3rem 0;">Nielsen Bangladesh Limited</div>
+          <div style="font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--sage);">Mar 2017 – Dec 2019</div>
+          <p style="font-size: 0.8rem; color: var(--burgundy); margin-top: 0.5rem; line-height: 1.7;">Conducted 147 focus groups and 50+ in-depth interviews across telecom and FMCG sectors. Performed thematic coding and synthesized findings into client deliverables.</p>
+        </div>
+      </div>
+    </div>
 
-    <!-- Scroll to top -->
-    <button aria-label="Scroll to top" class="scroll-top" id="scrollTopBtn">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="20" height="20"><path d="M12 5v14M18 11l-6-6-6 6"/></svg>
-    </button>
+    <!-- Research & Education -->
+    <div class="reveal reveal-delay-2" style="border: var(--border-brutal); background: var(--cream); box-shadow: var(--shadow-brutal); overflow: hidden;">
+      <div style="background: var(--budapest-pink); border-bottom: var(--border-thick); padding: 0.7rem 1.2rem; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; text-align: center; color: var(--ink);">Research & Education</div>
+      <div style="padding: 1.5rem;">
+        <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 2px dashed var(--sage);">
+          <div style="font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); margin-bottom: 0.5rem;">Manuscripts in Preparation (2026)</div>
+          <p style="font-size: 0.85rem; color: var(--ink); font-family: 'Libre Baskerville', serif; line-height: 1.8; font-style: italic; margin-bottom: 0.8rem;">From Variety Seeking to Repetition: Behavioral Dynamics in Online Grocery Shopping</p>
+          <p style="font-size: 0.85rem; color: var(--ink); font-family: 'Libre Baskerville', serif; line-height: 1.8; font-style: italic;">Echoes of Reality: How Social Media Shapes Perceptions of Truth and Well-Being Across Generations</p>
+        </div>
+        <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 2px dashed var(--sage);">
+          <div style="font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); margin-bottom: 0.5rem;">Research Interests</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+            <span style="font-family: 'DM Mono', monospace; font-size: 0.55rem; padding: 0.25rem 0.5rem; border: 2px solid var(--ink); background: var(--moonrise-blue);">Recommendation Systems</span>
+            <span style="font-family: 'DM Mono', monospace; font-size: 0.55rem; padding: 0.25rem 0.5rem; border: 2px solid var(--ink); background: var(--moonrise-pink);">Consumer Well-being</span>
+            <span style="font-family: 'DM Mono', monospace; font-size: 0.55rem; padding: 0.25rem 0.5rem; border: 2px solid var(--ink); background: var(--zissou-yellow);">Hidden Markov Models</span>
+            <span style="font-family: 'DM Mono', monospace; font-size: 0.55rem; padding: 0.25rem 0.5rem; border: 2px solid var(--ink); background: var(--mustard);">Circular Economy</span>
+            <span style="font-family: 'DM Mono', monospace; font-size: 0.55rem; padding: 0.25rem 0.5rem; border: 2px solid var(--ink); background: var(--budapest-lavender);">Mimetic Desire</span>
+            <span style="font-family: 'DM Mono', monospace; font-size: 0.55rem; padding: 0.25rem 0.5rem; border: 2px solid var(--ink); background: var(--budapest-pink);">Digital Literacy</span>
+            <span style="font-family: 'DM Mono', monospace; font-size: 0.55rem; padding: 0.25rem 0.5rem; border: 2px solid var(--ink); background: var(--zissou-sky);">Behavioral Choice Architecture</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); margin-bottom: 0.5rem;">Education</div>
+          <div style="font-size: 0.8rem; color: var(--burgundy); line-height: 1.9;">
+            <strong>MS</strong> Management & Business Analytics — UWM (3.73)<br>
+            <strong>MBA</strong> Business Administration — North South Univ. (3.39)<br>
+            <strong>MA</strong> Applied Linguistics & ELT — Jahangirnagar Univ.<br>
+            <strong>BA</strong> Arts & Humanities — Jahangirnagar Univ.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script src="script.js"></script>
+<!-- ============ PROJECTS ============ -->
+<section id="projects">
+  <div class="chapter-label reveal" style="justify-content:center;">Chapter III — The Feature Presentations</div>
+  <h2 class="reveal">Selected Works</h2>
+  <div class="projects-grid">
+
+    <div class="project-card reveal reveal-delay-1">
+      <div class="project-card-image">
+        <div class="project-card-number">01</div>
+        <div class="project-card-tag">Research</div>
+        <img src="images/PIcture 1.png" alt="ChatGPT Perception Project"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="placeholder-art" style="display:none;">AI</div>
+      </div>
+      <div class="project-card-body">
+        <h3>ChatGPT Perception Project</h3>
+        <p>Exploring public perceptions and trust dynamics around AI chatbots through survey research, sentiment analysis, and behavioral framing.</p>
+        <div class="project-tech">
+          <span>Python</span><span>NLP</span><span>Survey Design</span><span>Sentiment Analysis</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal reveal-delay-2">
+      <div class="project-card-image">
+        <div class="project-card-number">02</div>
+        <div class="project-card-tag">Analytics</div>
+        <img src="images/Social_media.png" alt="Social Media Purchase Analysis"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="placeholder-art" style="display:none;">SM</div>
+      </div>
+      <div class="project-card-body">
+        <h3>Social Media Purchase Analysis</h3>
+        <p>Investigating the influence of social media engagement on consumer purchasing behavior using regression modeling and digital consumer analytics.</p>
+        <div class="project-tech">
+          <span>Python</span><span>Regression</span><span>Consumer Behavior</span><span>Social Analytics</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal reveal-delay-3">
+      <div class="project-card-image">
+        <div class="project-card-number">03</div>
+        <div class="project-card-tag">ML</div>
+        <img src="images/Telecom Churn.png" alt="Orange Telecom Churn"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="placeholder-art" style="display:none;">OT</div>
+      </div>
+      <div class="project-card-body">
+        <h3>Orange Telecom Churn Prediction</h3>
+        <p>Predicting customer churn for a telecom provider using classification models and feature engineering — informed by Rakibul's FMCG and telecom research at Nielsen.</p>
+        <div class="project-tech">
+          <span>Python</span><span>Classification</span><span>Feature Eng.</span><span>Predictive Modeling</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal reveal-delay-1">
+      <div class="project-card-image">
+        <div class="project-card-number">04</div>
+        <div class="project-card-tag">Forecasting</div>
+        <img src="images/Walmart-iStock.com-Alexander-Farnsworth.jpg" alt="Walmart Store Sales"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="placeholder-art" style="display:none;">WM</div>
+      </div>
+      <div class="project-card-body">
+        <h3>Walmart Store Sales Forecasting</h3>
+        <p>Time-series forecasting of weekly sales across multiple stores using regression, econometric methods, and panel data analysis.</p>
+        <div class="project-tech">
+          <span>Time Series</span><span>Econometrics</span><span>Panel Data</span><span>Python</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal reveal-delay-2">
+      <div class="project-card-image">
+        <div class="project-card-number">05</div>
+        <div class="project-card-tag">Dashboard</div>
+        <img src="images/EV.png" alt="EV Market Intelligence"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="placeholder-art" style="display:none;">EV</div>
+      </div>
+      <div class="project-card-body">
+        <h3>EV Market Intelligence Suite</h3>
+        <p>Comprehensive market analytics dashboard tracking electric vehicle adoption trends, competitive positioning, and sustainable consumption patterns.</p>
+        <div class="project-tech">
+          <span>Market Analysis</span><span>Data Viz</span><span>SQL</span><span>Sustainability</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal reveal-delay-3">
+      <div class="project-card-image">
+        <div class="project-card-number">06</div>
+        <div class="project-card-tag">NLP</div>
+        <img src="images/tesla.jpg" alt="Tesla Sentiment Analysis"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="placeholder-art" style="display:none;">TS</div>
+      </div>
+      <div class="project-card-body">
+        <h3>Tesla Sentiment Analysis</h3>
+        <p>Mining and analyzing public sentiment towards Tesla from social media and news using NLP — examining how digital discourse shapes brand perception.</p>
+        <div class="project-tech">
+          <span>NLP</span><span>Sentiment Analysis</span><span>Social Media</span><span>Python</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ GAME SECTION ============ -->
+<section id="game">
+  <div class="chapter-label">Intermission — A Brief Diversion</div>
+  <h2 class="reveal">The Grand Data Catcher</h2>
+  <p class="game-subtitle reveal">Catch the falling data points. Avoid the anomalies.</p>
+
+  <div id="game-canvas-wrapper" class="reveal">
+    <div class="game-hud">
+      <div>Lives: <span id="game-lives">♥♥♥</span></div>
+      <div class="score-display">Score: <span id="game-score">0</span></div>
+      <div>Level: <span id="game-level">1</span></div>
+    </div>
+    <canvas id="game-canvas" width="700" height="420"></canvas>
+  </div>
+  <p class="game-controls-info reveal">← → Arrow Keys or A/D to Move &nbsp;|&nbsp; Press SPACE to Start</p>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact">
+  <div class="chapter-label reveal" style="justify-content:center;">Chapter V — The Correspondence</div>
+  <h2 class="reveal">Let's Collaborate</h2>
+  <p class="reveal">Every good story benefits from collaboration. Reach out for research partnerships, marketing analytics projects, or simply to discuss behavioral choice architecture over a well-organized dataset.</p>
+  
+  <div class="contact-grid">
+    <a href="mailto:rhshovon@uwm.edu" class="contact-card reveal reveal-delay-1">
+      <div class="icon">✉</div>
+      <div class="contact-label">Electronic Mail</div>
+      <div class="contact-value">rhshovon@uwm.edu</div>
+    </a>
+    <a href="https://www.linkedin.com/in/rakibul-shovon" class="contact-card reveal reveal-delay-2" target="_blank">
+      <div class="icon">◉</div>
+      <div class="contact-label">LinkedIn</div>
+      <div class="contact-value">Rakibul Shovon</div>
+    </a>
+    <a href="https://rakshowsproject.github.io/-" class="contact-card reveal reveal-delay-3" target="_blank">
+      <div class="icon">⟐</div>
+      <div class="contact-label">Website</div>
+      <div class="contact-value">rakshowsproject.github.io</div>
+    </a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-text">Fin.</div>
+  <div class="footer-sub">A Rakibul Shovon Production — Wes Anderson × Neo-Brutalist Design — Milwaukee, 2026</div>
+</footer>
+
+<!-- ============ THREE.JS ============ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+// ============================
+// FILM STRIP HOLES
+// ============================
+function populateFilmStrip(el) {
+  const count = Math.ceil(window.innerWidth / 46);
+  el.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const hole = document.createElement('div');
+    hole.className = 'film-hole';
+    el.appendChild(hole);
+  }
+}
+populateFilmStrip(document.getElementById('film-top'));
+populateFilmStrip(document.getElementById('film-bottom'));
+
+// ============================
+// LOADING SCREEN
+// ============================
+const loadingBar = document.getElementById('loading-bar');
+let loadProgress = 0;
+const loadInterval = setInterval(() => {
+  loadProgress += Math.random() * 15 + 5;
+  if (loadProgress >= 100) {
+    loadProgress = 100;
+    loadingBar.style.width = '100%';
+    clearInterval(loadInterval);
+    setTimeout(() => {
+      document.getElementById('loading-screen').classList.add('fade-out');
+      setTimeout(() => {
+        document.getElementById('loading-screen').style.display = 'none';
+      }, 800);
+    }, 400);
+  }
+  loadingBar.style.width = loadProgress + '%';
+}, 200);
+
+// ============================
+// SCROLL REVEAL
+// ============================
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ============================
+// SKILL BAR ANIMATION
+// ============================
+const skillObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width + '%';
+      });
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.skills-section').forEach(el => skillObserver.observe(el));
+
+// ============================
+// THREE.JS 3D CENTERPIECE
+// ============================
+(function() {
+  const container = document.getElementById('webgl-container');
+  const canvas = document.getElementById('hero-canvas');
+  
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x2C1810);
+  scene.fog = new THREE.FogExp2(0x2C1810, 0.008);
+  
+  const camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 0.1, 1000);
+  camera.position.set(0, 2, 18);
+  
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+
+  // Wes Anderson palette for 3D objects
+  const palette = [0xE6A0C4, 0xC6CDF7, 0xFD6467, 0xF1BB7B, 0x7294D4, 0x85D4E3, 0x3B9AB2, 0xEBCC2A, 0xF4B5BD, 0xD67236];
+  
+  // Lighting - cinematic like Wes Anderson
+  const ambientLight = new THREE.AmbientLight(0xFAEFD1, 0.4);
+  scene.add(ambientLight);
+  
+  const keyLight = new THREE.DirectionalLight(0xFAEFD1, 0.9);
+  keyLight.position.set(5, 10, 7);
+  keyLight.castShadow = true;
+  scene.add(keyLight);
+  
+  const fillLight = new THREE.DirectionalLight(0xE6A0C4, 0.3);
+  fillLight.position.set(-5, 3, -3);
+  scene.add(fillLight);
+  
+  const rimLight = new THREE.DirectionalLight(0x85D4E3, 0.4);
+  rimLight.position.set(0, -2, -8);
+  scene.add(rimLight);
+
+  // Central structure - a "Grand Budapest" inspired building
+  const buildingGroup = new THREE.Group();
+  
+  // Main body
+  const bodyGeo = new THREE.BoxGeometry(4, 6, 3);
+  const bodyMat = new THREE.MeshStandardMaterial({ color: 0xE6A0C4, roughness: 0.7, metalness: 0.1 });
+  const body = new THREE.Mesh(bodyGeo, bodyMat);
+  body.position.y = 3;
+  body.castShadow = true;
+  buildingGroup.add(body);
+  
+  // Roof
+  const roofGeo = new THREE.BoxGeometry(4.6, 0.6, 3.6);
+  const roofMat = new THREE.MeshStandardMaterial({ color: 0x5B1A18, roughness: 0.8 });
+  const roof = new THREE.Mesh(roofGeo, roofMat);
+  roof.position.y = 6.3;
+  buildingGroup.add(roof);
+  
+  // Tower
+  const towerGeo = new THREE.BoxGeometry(1.4, 3, 1.4);
+  const towerMat = new THREE.MeshStandardMaterial({ color: 0xFD6467, roughness: 0.6 });
+  const tower = new THREE.Mesh(towerGeo, towerMat);
+  tower.position.y = 8;
+  buildingGroup.add(tower);
+  
+  // Tower roof (pyramid using cone)
+  const towerRoofGeo = new THREE.ConeGeometry(1.2, 1.8, 4);
+  const towerRoofMat = new THREE.MeshStandardMaterial({ color: 0xF1BB7B, roughness: 0.6 });
+  const towerRoof = new THREE.Mesh(towerRoofGeo, towerRoofMat);
+  towerRoof.position.y = 10.4;
+  towerRoof.rotation.y = Math.PI / 4;
+  buildingGroup.add(towerRoof);
+  
+  // Windows - rows
+  const windowMat = new THREE.MeshStandardMaterial({ color: 0xFAEFD1, emissive: 0xFAEFD1, emissiveIntensity: 0.4, roughness: 0.4 });
+  
+  for (let row = 0; row < 3; row++) {
+    for (let col = -1; col <= 1; col++) {
+      const winGeo = new THREE.BoxGeometry(0.5, 0.8, 0.1);
+      const win = new THREE.Mesh(winGeo, windowMat);
+      win.position.set(col * 1.1, 1.5 + row * 1.6, 1.56);
+      buildingGroup.add(win);
+    }
+  }
+  
+  // Door
+  const doorGeo = new THREE.BoxGeometry(0.8, 1.2, 0.1);
+  const doorMat = new THREE.MeshStandardMaterial({ color: 0x5B1A18, roughness: 0.8 });
+  const door = new THREE.Mesh(doorGeo, doorMat);
+  door.position.set(0, 0.6, 1.56);
+  buildingGroup.add(door);
+  
+  // Ground plane
+  const groundGeo = new THREE.BoxGeometry(20, 0.3, 20);
+  const groundMat = new THREE.MeshStandardMaterial({ color: 0xD8A499, roughness: 0.9 });
+  const ground = new THREE.Mesh(groundGeo, groundMat);
+  ground.position.y = -0.15;
+  ground.receiveShadow = true;
+  buildingGroup.add(ground);
+  
+  scene.add(buildingGroup);
+  
+  // Floating data orbs around the building
+  const orbs = [];
+  for (let i = 0; i < 40; i++) {
+    const radius = Math.random() * 0.15 + 0.08;
+    const orbGeo = new THREE.SphereGeometry(radius, 12, 12);
+    const orbMat = new THREE.MeshStandardMaterial({
+      color: palette[i % palette.length],
+      emissive: palette[i % palette.length],
+      emissiveIntensity: 0.3,
+      roughness: 0.3,
+      metalness: 0.5
+    });
+    const orb = new THREE.Mesh(orbGeo, orbMat);
+    const angle = (i / 40) * Math.PI * 2;
+    const dist = 5 + Math.random() * 6;
+    orb.position.set(
+      Math.cos(angle) * dist,
+      Math.random() * 12 + 1,
+      Math.sin(angle) * dist
+    );
+    orb.userData = {
+      angle: angle,
+      dist: dist,
+      speed: Math.random() * 0.3 + 0.15,
+      yBase: orb.position.y,
+      yAmp: Math.random() * 1.5 + 0.5
+    };
+    orbs.push(orb);
+    scene.add(orb);
+  }
+  
+  // Floating geometric shapes (Wes Anderson symmetry objects)
+  const shapes = [];
+  const shapeTypes = [
+    () => new THREE.BoxGeometry(0.6, 0.6, 0.6),
+    () => new THREE.SphereGeometry(0.4, 8, 8),
+    () => new THREE.ConeGeometry(0.3, 0.8, 6),
+    () => new THREE.TorusGeometry(0.3, 0.1, 8, 16),
+    () => new THREE.TetrahedronGeometry(0.4),
+    () => new THREE.OctahedronGeometry(0.35),
+    () => new THREE.DodecahedronGeometry(0.3)
+  ];
+  
+  for (let i = 0; i < 18; i++) {
+    const geo = shapeTypes[i % shapeTypes.length]();
+    const mat = new THREE.MeshStandardMaterial({
+      color: palette[i % palette.length],
+      roughness: 0.5,
+      metalness: 0.3,
+      wireframe: i % 3 === 0
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+    const angle = (i / 18) * Math.PI * 2;
+    const dist = 7 + Math.random() * 5;
+    mesh.position.set(
+      Math.cos(angle) * dist,
+      Math.random() * 10 + 2,
+      Math.sin(angle) * dist
+    );
+    mesh.userData = {
+      rotSpeed: new THREE.Vector3(
+        (Math.random() - 0.5) * 0.02,
+        (Math.random() - 0.5) * 0.02,
+        (Math.random() - 0.5) * 0.02
+      ),
+      floatSpeed: Math.random() * 0.5 + 0.3,
+      floatAmp: Math.random() * 0.8 + 0.3,
+      baseY: mesh.position.y
+    };
+    shapes.push(mesh);
+    scene.add(mesh);
+  }
+  
+  // Mouse tracking
+  let mouseX = 0, mouseY = 0;
+  container.addEventListener('mousemove', (e) => {
+    const rect = container.getBoundingClientRect();
+    mouseX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    mouseY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+  });
+  
+  // Animation
+  let time = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    time += 0.016;
+    
+    // Camera follows mouse
+    camera.position.x += (mouseX * 5 - camera.position.x) * 0.03;
+    camera.position.y += (-mouseY * 2 + 4 - camera.position.y) * 0.03;
+    camera.lookAt(0, 4, 0);
+    
+    // Building gentle sway
+    buildingGroup.rotation.y = Math.sin(time * 0.3) * 0.05;
+    
+    // Animate orbs
+    orbs.forEach(orb => {
+      const d = orb.userData;
+      orb.position.x = Math.cos(d.angle + time * d.speed) * d.dist;
+      orb.position.z = Math.sin(d.angle + time * d.speed) * d.dist;
+      orb.position.y = d.yBase + Math.sin(time * d.speed * 2) * d.yAmp;
+    });
+    
+    // Animate shapes
+    shapes.forEach(mesh => {
+      const d = mesh.userData;
+      mesh.rotation.x += d.rotSpeed.x;
+      mesh.rotation.y += d.rotSpeed.y;
+      mesh.rotation.z += d.rotSpeed.z;
+      mesh.position.y = d.baseY + Math.sin(time * d.floatSpeed) * d.floatAmp;
+    });
+    
+    renderer.render(scene, camera);
+  }
+  animate();
+  
+  // Resize
+  window.addEventListener('resize', () => {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  });
+})();
+
+// ============================
+// MINI GAME — The Grand Data Catcher
+// ============================
+(function() {
+  const canvas = document.getElementById('game-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = 700, H = 420;
+  canvas.width = W;
+  canvas.height = H;
+  
+  const palette = {
+    bg: '#1a0f0a',
+    player: '#E6A0C4',
+    playerOutline: '#5B1A18',
+    dataGood: ['#85D4E3', '#F4B5BD', '#C6CDF7', '#F1BB7B', '#7294D4', '#EBCC2A'],
+    dataBad: '#FD6467',
+    text: '#FAEFD1',
+    grid: 'rgba(250,239,209,0.04)'
+  };
+  
+  let state = 'waiting'; // waiting, playing, gameover
+  let score = 0, lives = 3, level = 1;
+  let player = { x: W / 2, w: 70, h: 18 };
+  let items = [];
+  let particles = [];
+  let spawnTimer = 0;
+  let keys = {};
+  let frameCount = 0;
+  
+  document.addEventListener('keydown', e => {
+    keys[e.key] = true;
+    if (e.key === ' ' && state !== 'playing') {
+      state = 'playing';
+      score = 0; lives = 3; level = 1; items = []; particles = [];
+      updateHUD();
+    }
+  });
+  document.addEventListener('keyup', e => keys[e.key] = false);
+  
+  function spawnItem() {
+    const isBad = Math.random() < 0.2 + level * 0.03;
+    const size = isBad ? 14 : 10 + Math.random() * 6;
+    items.push({
+      x: Math.random() * (W - 40) + 20,
+      y: -20,
+      size: size,
+      speed: 1.5 + Math.random() * 1.5 + level * 0.3,
+      bad: isBad,
+      color: isBad ? palette.dataBad : palette.dataGood[Math.floor(Math.random() * palette.dataGood.length)],
+      shape: isBad ? 'x' : ['circle', 'diamond', 'square'][Math.floor(Math.random() * 3)],
+      rotation: 0,
+      rotSpeed: (Math.random() - 0.5) * 0.08
+    });
+  }
+  
+  function addParticles(x, y, color, count) {
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x, y,
+        vx: (Math.random() - 0.5) * 6,
+        vy: (Math.random() - 0.5) * 6 - 2,
+        life: 1,
+        decay: 0.02 + Math.random() * 0.03,
+        size: Math.random() * 4 + 2,
+        color
+      });
+    }
+  }
+  
+  function updateHUD() {
+    document.getElementById('game-score').textContent = score;
+    document.getElementById('game-lives').textContent = '♥'.repeat(Math.max(0, lives));
+    document.getElementById('game-level').textContent = level;
+  }
+  
+  function drawGrid() {
+    ctx.strokeStyle = palette.grid;
+    ctx.lineWidth = 1;
+    for (let x = 0; x < W; x += 35) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = 0; y < H; y += 35) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+  }
+  
+  function drawPlayer() {
+    // Main paddle
+    ctx.fillStyle = palette.player;
+    ctx.strokeStyle = palette.playerOutline;
+    ctx.lineWidth = 3;
+    
+    const px = player.x - player.w / 2;
+    const py = H - 40;
+    
+    ctx.fillRect(px, py, player.w, player.h);
+    ctx.strokeRect(px, py, player.w, player.h);
+    
+    // Decorative lines on paddle (Wes Anderson detail)
+    ctx.strokeStyle = palette.playerOutline;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(px + 8, py + 4);
+    ctx.lineTo(px + 8, py + player.h - 4);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(px + player.w - 8, py + 4);
+    ctx.lineTo(px + player.w - 8, py + player.h - 4);
+    ctx.stroke();
+  }
+  
+  function drawItem(item) {
+    ctx.save();
+    ctx.translate(item.x, item.y);
+    ctx.rotate(item.rotation);
+    
+    if (item.bad) {
+      // Anomaly - X shape
+      ctx.strokeStyle = item.color;
+      ctx.lineWidth = 3;
+      const s = item.size;
+      ctx.beginPath(); ctx.moveTo(-s, -s); ctx.lineTo(s, s); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(s, -s); ctx.lineTo(-s, s); ctx.stroke();
+      // Outer ring
+      ctx.beginPath();
+      ctx.arc(0, 0, s + 2, 0, Math.PI * 2);
+      ctx.stroke();
+    } else if (item.shape === 'circle') {
+      ctx.fillStyle = item.color;
+      ctx.strokeStyle = palette.playerOutline;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, item.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    } else if (item.shape === 'diamond') {
+      ctx.fillStyle = item.color;
+      ctx.strokeStyle = palette.playerOutline;
+      ctx.lineWidth = 2;
+      const s = item.size;
+      ctx.beginPath();
+      ctx.moveTo(0, -s); ctx.lineTo(s, 0); ctx.lineTo(0, s); ctx.lineTo(-s, 0);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    } else {
+      ctx.fillStyle = item.color;
+      ctx.strokeStyle = palette.playerOutline;
+      ctx.lineWidth = 2;
+      const s = item.size;
+      ctx.fillRect(-s, -s, s * 2, s * 2);
+      ctx.strokeRect(-s, -s, s * 2, s * 2);
+    }
+    
+    ctx.restore();
+  }
+  
+  function gameLoop() {
+    requestAnimationFrame(gameLoop);
+    frameCount++;
+    
+    // Clear
+    ctx.fillStyle = palette.bg;
+    ctx.fillRect(0, 0, W, H);
+    drawGrid();
+    
+    if (state === 'waiting') {
+      ctx.fillStyle = palette.text;
+      ctx.font = '700 28px "Playfair Display", serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('THE GRAND DATA CATCHER', W / 2, H / 2 - 30);
+      ctx.font = '14px "DM Mono", monospace';
+      ctx.fillStyle = palette.dataGood[0];
+      ctx.fillText('PRESS SPACE TO BEGIN THE SHOW', W / 2, H / 2 + 15);
+      
+      // Decorative line
+      ctx.strokeStyle = palette.dataGood[1];
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(W / 2 - 120, H / 2 + 35);
+      ctx.lineTo(W / 2 + 120, H / 2 + 35);
+      ctx.stroke();
+      return;
+    }
+    
+    if (state === 'gameover') {
+      ctx.fillStyle = palette.text;
+      ctx.font = '700 32px "Playfair Display", serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('FIN.', W / 2, H / 2 - 30);
+      ctx.font = '16px "DM Mono", monospace';
+      ctx.fillStyle = '#EBCC2A';
+      ctx.fillText('FINAL SCORE: ' + score, W / 2, H / 2 + 10);
+      ctx.font = '12px "DM Mono", monospace';
+      ctx.fillStyle = palette.dataGood[0];
+      ctx.fillText('PRESS SPACE FOR ENCORE', W / 2, H / 2 + 45);
+      return;
+    }
+    
+    // Input
+    const speed = 6;
+    if (keys['ArrowLeft'] || keys['a'] || keys['A']) player.x -= speed;
+    if (keys['ArrowRight'] || keys['d'] || keys['D']) player.x += speed;
+    player.x = Math.max(player.w / 2, Math.min(W - player.w / 2, player.x));
+    
+    // Spawn
+    spawnTimer++;
+    const spawnRate = Math.max(15, 45 - level * 4);
+    if (spawnTimer >= spawnRate) {
+      spawnItem();
+      spawnTimer = 0;
+    }
+    
+    // Update items
+    for (let i = items.length - 1; i >= 0; i--) {
+      const item = items[i];
+      item.y += item.speed;
+      item.rotation += item.rotSpeed;
+      
+      // Check paddle collision
+      const py = H - 40;
+      if (item.y + item.size >= py && item.y - item.size <= py + player.h &&
+          item.x >= player.x - player.w / 2 - item.size &&
+          item.x <= player.x + player.w / 2 + item.size) {
+        if (item.bad) {
+          lives--;
+          addParticles(item.x, item.y, palette.dataBad, 15);
+          updateHUD();
+          if (lives <= 0) state = 'gameover';
+        } else {
+          score += 10 * level;
+          addParticles(item.x, item.y, item.color, 10);
+          updateHUD();
+          if (score > 0 && score % 100 === 0) {
+            level++;
+            updateHUD();
+          }
+        }
+        items.splice(i, 1);
+        continue;
+      }
+      
+      // Off screen
+      if (item.y > H + 30) {
+        if (!item.bad) {
+          // Missed a good one - no penalty, just disappears
+        }
+        items.splice(i, 1);
+      }
+    }
+    
+    // Update particles
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.15;
+      p.life -= p.decay;
+      if (p.life <= 0) particles.splice(i, 1);
+    }
+    
+    // Draw items
+    items.forEach(drawItem);
+    
+    // Draw particles
+    particles.forEach(p => {
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
+    });
+    ctx.globalAlpha = 1;
+    
+    // Draw player
+    drawPlayer();
+    
+    // Scanline effect
+    if (frameCount % 2 === 0) {
+      ctx.fillStyle = 'rgba(0,0,0,0.03)';
+      for (let y = 0; y < H; y += 4) {
+        ctx.fillRect(0, y, W, 2);
+      }
+    }
+  }
+  
+  gameLoop();
+})();
+
+// ============================
+// SMOOTH NAV SCROLL
+// ============================
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
 </body>
 </html>
