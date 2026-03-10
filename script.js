@@ -1,4 +1,8 @@
-// ===== Three.js 3D Background Scene =====
+// ==========================================================
+//  WES ANDERSON × NEO-BRUTALIST — Portfolio JavaScript
+// ==========================================================
+
+// ===== Three.js 3D Scene (warm-toned, sculptural) =====
 (function initThree() {
     const canvas = document.getElementById('threeCanvas');
     if (!canvas) return;
@@ -7,72 +11,79 @@
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
     script.onload = () => {
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        const camera = new THREE.PerspectiveCamera(
+            45,
+            canvas.clientWidth / canvas.clientHeight,
+            0.1,
+            1000
+        );
+        const renderer = new THREE.WebGLRenderer({
+            canvas,
+            alpha: true,
+            antialias: true,
+        });
         renderer.setSize(canvas.clientWidth, canvas.clientHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // Create abstract geometric shape (icosahedron as sculptural element)
-        const geometry = new THREE.IcosahedronGeometry(2.5, 1);
-        const material = new THREE.MeshPhysicalMaterial({
-            color: 0x1a1a2e,
-            metalness: 0.9,
-            roughness: 0.15,
-            envMapIntensity: 1.0,
-            clearcoat: 0.3,
-            clearcoatRoughness: 0.25,
-            wireframe: false,
+        // Sculpted dodecahedron — feels like a Wes Anderson set piece
+        const geo = new THREE.DodecahedronGeometry(2.4, 0);
+        const mat = new THREE.MeshPhysicalMaterial({
+            color: 0xd4a0a0, // dusty rose
+            metalness: 0.15,
+            roughness: 0.6,
+            clearcoat: 0.2,
+            clearcoatRoughness: 0.4,
         });
-        const mesh = new THREE.Mesh(geometry, material);
+        const mesh = new THREE.Mesh(geo, mat);
         scene.add(mesh);
 
-        // Wireframe overlay
-        const wireGeo = new THREE.IcosahedronGeometry(2.55, 1);
+        // Wireframe overlay — brutalist grid
+        const wireGeo = new THREE.DodecahedronGeometry(2.45, 0);
         const wireMat = new THREE.MeshBasicMaterial({
-            color: 0xa680ff,
+            color: 0x1a1714,
             wireframe: true,
             transparent: true,
-            opacity: 0.08,
+            opacity: 0.12,
         });
         const wireMesh = new THREE.Mesh(wireGeo, wireMat);
         scene.add(wireMesh);
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0x404060, 0.5);
-        scene.add(ambientLight);
+        // Warm lighting to match palette
+        scene.add(new THREE.AmbientLight(0xf5f0e8, 0.6));
 
-        const directionalLight = new THREE.DirectionalLight(0xa680ff, 0.8);
-        directionalLight.position.set(5, 5, 5);
-        scene.add(directionalLight);
+        const keyLight = new THREE.DirectionalLight(0xc4a77d, 0.9); // mustard
+        keyLight.position.set(4, 5, 5);
+        scene.add(keyLight);
 
-        const pointLight = new THREE.PointLight(0x6040ff, 1, 100);
-        pointLight.position.set(-3, 3, 4);
-        scene.add(pointLight);
+        const fillLight = new THREE.PointLight(0xd4a0a0, 0.6, 80); // dusty rose
+        fillLight.position.set(-4, 2, 3);
+        scene.add(fillLight);
 
-        const rimLight = new THREE.PointLight(0xff80a0, 0.5, 100);
-        rimLight.position.set(3, -2, -3);
+        const rimLight = new THREE.PointLight(0xa0b8a0, 0.4, 60); // sage
+        rimLight.position.set(2, -3, -4);
         scene.add(rimLight);
 
         camera.position.z = 7;
 
-        // Floating particles
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 200;
-        const posArray = new Float32Array(particlesCount * 3);
-        for (let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 20;
+        // Subtle floating particles
+        const pCount = 120;
+        const pGeo = new THREE.BufferGeometry();
+        const pPos = new Float32Array(pCount * 3);
+        for (let i = 0; i < pCount * 3; i++) {
+            pPos[i] = (Math.random() - 0.5) * 18;
         }
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.015,
-            color: 0xa680ff,
+        pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+        const pMat = new THREE.PointsMaterial({
+            size: 0.02,
+            color: 0x1a1714,
             transparent: true,
-            opacity: 0.6,
+            opacity: 0.2,
         });
-        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-        scene.add(particlesMesh);
+        const particles = new THREE.Points(pGeo, pMat);
+        scene.add(particles);
 
-        let mouseX = 0, mouseY = 0;
+        let mouseX = 0,
+            mouseY = 0;
         document.addEventListener('mousemove', (e) => {
             mouseX = (e.clientX / window.innerWidth) * 2 - 1;
             mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -80,314 +91,282 @@
 
         function animate() {
             requestAnimationFrame(animate);
-            const time = Date.now() * 0.001;
+            const t = Date.now() * 0.001;
 
-            mesh.rotation.x += 0.002;
-            mesh.rotation.y += 0.003;
-            wireMesh.rotation.x = mesh.rotation.x;
-            wireMesh.rotation.y = mesh.rotation.y;
+            mesh.rotation.x += 0.0015;
+            mesh.rotation.y += 0.002;
+            mesh.position.y = Math.sin(t * 0.4) * 0.25;
 
-            mesh.position.y = Math.sin(time * 0.5) * 0.3;
-            wireMesh.position.y = mesh.position.y;
+            wireMesh.rotation.copy(mesh.rotation);
+            wireMesh.position.copy(mesh.position);
 
-            // Mouse follow
-            mesh.rotation.x += mouseY * 0.01;
-            mesh.rotation.y += mouseX * 0.01;
-            wireMesh.rotation.x = mesh.rotation.x;
-            wireMesh.rotation.y = mesh.rotation.y;
+            // Gentle mouse response
+            mesh.rotation.x += mouseY * 0.005;
+            mesh.rotation.y += mouseX * 0.005;
+            wireMesh.rotation.copy(mesh.rotation);
 
-            particlesMesh.rotation.y += 0.0003;
-            particlesMesh.rotation.x += 0.0001;
+            particles.rotation.y += 0.0002;
 
             renderer.render(scene, camera);
         }
         animate();
 
         window.addEventListener('resize', () => {
-            const w = canvas.clientWidth;
-            const h = canvas.clientHeight;
-            camera.aspect = w / h;
+            camera.aspect = canvas.clientWidth / canvas.clientHeight;
             camera.updateProjectionMatrix();
-            renderer.setSize(w, h);
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
         });
     };
     document.head.appendChild(script);
 })();
 
-// ===== Navigation Active State =====
+// ===== Nav Active State =====
 (function initNav() {
-    const sections = document.querySelectorAll('[id]');
-    const navLinks = document.querySelectorAll('.linkMenuList li a');
+    const sections = document.querySelectorAll('section[id]');
+    const navItems = document.querySelectorAll('.nav-item');
 
-    function updateNav() {
-        const scrollY = window.scrollY + 200;
-        sections.forEach(section => {
-            const top = section.offsetTop;
-            const height = section.offsetHeight;
-            const id = section.getAttribute('id');
-            if (scrollY >= top && scrollY < top + height) {
-                navLinks.forEach(link => {
-                    link.closest('li').classList.remove('linkActive');
-                    if (link.getAttribute('href') === '#' + id) {
-                        link.closest('li').classList.add('linkActive');
+    function update() {
+        const scrollY = window.scrollY + 250;
+        sections.forEach((sec) => {
+            const top = sec.offsetTop;
+            const h = sec.offsetHeight;
+            const id = sec.getAttribute('id');
+            if (scrollY >= top && scrollY < top + h) {
+                navItems.forEach((item) => {
+                    item.classList.remove('active');
+                    const link = item.querySelector('a');
+                    if (link && link.getAttribute('href') === '#' + id) {
+                        item.classList.add('active');
                     }
                 });
             }
         });
     }
-
-    window.addEventListener('scroll', updateNav);
+    window.addEventListener('scroll', update);
 })();
 
-// ===== Navbar Background on Scroll =====
-(function initNavbarScroll() {
-    const nav = document.querySelector('.navbarWrap');
+// ===== Navbar scroll shadow =====
+(function () {
+    const nav = document.querySelector('.navbar');
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 100) {
-            nav.classList.add('scrolled');
-        } else {
-            nav.classList.remove('scrolled');
-        }
+        nav.classList.toggle('scrolled', window.scrollY > 80);
     });
 })();
 
 // ===== Mobile Menu =====
-(function initMobileMenu() {
-    const hamburger = document.getElementById('hamburgerMenu');
-    const mobileMenu = document.getElementById('menuMobile');
-    const mobileLinks = document.querySelectorAll('.ulMobile li a');
-    let isOpen = false;
+(function () {
+    const btn = document.getElementById('hamburgerMenu');
+    const menu = document.getElementById('mobileMenu');
+    const links = document.querySelectorAll('.mobile-links a');
+    if (!btn || !menu) return;
 
-    if (!hamburger || !mobileMenu) return;
+    let open = false;
 
-    hamburger.addEventListener('click', () => {
-        isOpen = !isOpen;
-        if (isOpen) {
-            mobileMenu.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            // Animate lines
-            hamburger.querySelector('.line1').style.transform = 'rotate(45deg) translate(5px, 5px)';
-            hamburger.querySelector('.line2').style.opacity = '0';
-            hamburger.querySelector('.line3').style.transform = 'rotate(-45deg) translate(5px, -5px)';
+    btn.addEventListener('click', () => {
+        open = !open;
+        menu.classList.toggle('active', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+        // Animate hamburger lines
+        const lines = btn.querySelectorAll('.h-line');
+        if (open) {
+            lines[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+            lines[1].style.opacity = '0';
+            lines[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
         } else {
-            closeMobileMenu();
+            lines[0].style.transform = '';
+            lines[1].style.opacity = '1';
+            lines[2].style.transform = '';
         }
     });
 
-    mobileLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            closeMobileMenu();
-        });
-    });
-
-    function closeMobileMenu() {
-        isOpen = false;
-        mobileMenu.classList.remove('active');
-        document.body.style.overflow = '';
-        hamburger.querySelector('.line1').style.transform = '';
-        hamburger.querySelector('.line2').style.opacity = '1';
-        hamburger.querySelector('.line3').style.transform = '';
-    }
+    links.forEach((a) =>
+        a.addEventListener('click', () => {
+            open = false;
+            menu.classList.remove('active');
+            document.body.style.overflow = '';
+            const lines = btn.querySelectorAll('.h-line');
+            lines[0].style.transform = '';
+            lines[1].style.opacity = '1';
+            lines[2].style.transform = '';
+        })
+    );
 })();
 
 // ===== Text Rotation (Hero) =====
-(function initTextRotation() {
-    const topWord = document.querySelector('.titleWord');
-    const bottomWord = document.querySelector('.titleWord2');
-    const jobInner = document.querySelector('.jobInner');
+(function () {
+    const topEl = document.querySelector('.title-top');
+    const botEl = document.querySelector('.title-bottom');
+    const subEl = document.querySelector('.subtitle-rotate');
+    if (!topEl || !botEl || !subEl) return;
 
-    if (!topWord || !bottomWord || !jobInner) return;
-
-    const topWords = JSON.parse(topWord.dataset.words);
-    const bottomWords = JSON.parse(bottomWord.dataset.words);
-    const jobWords = JSON.parse(jobInner.dataset.words);
-    let index = 0;
+    const topW = JSON.parse(topEl.dataset.words);
+    const botW = JSON.parse(botEl.dataset.words);
+    const subW = JSON.parse(subEl.dataset.words);
+    let idx = 0;
 
     setInterval(() => {
-        index = (index + 1) % topWords.length;
+        idx = (idx + 1) % topW.length;
 
-        // Animate out
-        topWord.style.transition = 'transform 0.5s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.5s ease';
-        bottomWord.style.transition = 'transform 0.5s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.5s ease';
-        jobInner.style.transition = 'transform 0.5s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.5s ease';
-
-        topWord.style.transform = 'translateY(-100%)';
-        topWord.style.opacity = '0';
-        bottomWord.style.transform = 'translateY(-100%)';
-        bottomWord.style.opacity = '0';
-        jobInner.style.transform = 'translateY(-100%)';
-        jobInner.style.opacity = '0';
+        [topEl, botEl, subEl].forEach((el) => {
+            el.style.transition =
+                'transform 0.45s cubic-bezier(0.22,1,0.36,1), opacity 0.45s ease';
+            el.style.transform = 'translateY(-110%)';
+            el.style.opacity = '0';
+        });
 
         setTimeout(() => {
-            topWord.textContent = topWords[index];
-            bottomWord.textContent = bottomWords[index];
-            jobInner.textContent = jobWords[index];
+            topEl.textContent = topW[idx];
+            botEl.textContent = botW[idx];
+            subEl.textContent = subW[idx];
 
-            topWord.style.transition = 'none';
-            bottomWord.style.transition = 'none';
-            jobInner.style.transition = 'none';
-            topWord.style.transform = 'translateY(100%)';
-            bottomWord.style.transform = 'translateY(100%)';
-            jobInner.style.transform = 'translateY(100%)';
-
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    topWord.style.transition = 'transform 0.5s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.5s ease';
-                    bottomWord.style.transition = 'transform 0.5s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.5s ease';
-                    jobInner.style.transition = 'transform 0.5s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.5s ease';
-                    topWord.style.transform = 'translateY(0)';
-                    topWord.style.opacity = '1';
-                    bottomWord.style.transform = 'translateY(0)';
-                    bottomWord.style.opacity = '1';
-                    jobInner.style.transform = 'translateY(0)';
-                    jobInner.style.opacity = '1';
-                });
+            [topEl, botEl, subEl].forEach((el) => {
+                el.style.transition = 'none';
+                el.style.transform = 'translateY(110%)';
+                requestAnimationFrame(() =>
+                    requestAnimationFrame(() => {
+                        el.style.transition =
+                            'transform 0.45s cubic-bezier(0.22,1,0.36,1), opacity 0.45s ease';
+                        el.style.transform = 'translateY(0)';
+                        el.style.opacity = '1';
+                    })
+                );
             });
-        }, 500);
-    }, 3000);
+        }, 450);
+    }, 3200);
 })();
 
-// ===== Scroll Reveal Animations =====
-(function initScrollReveal() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
+// ===== Scroll Reveal =====
+(function () {
+    const obs = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((e) => {
+                if (e.isIntersecting) e.target.classList.add('active');
+            });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
 
-    // Add reveal class to elements
-    document.querySelectorAll('.aboutBio, .aboutContent, .workSectionTitle, .oneProjectWrap, .contactContainer > div, .introWrapper .intro span').forEach(el => {
-        if (!el.classList.contains('intro')) {
+    document
+        .querySelectorAll(
+            '.about-card, .about-grid, .project, .contact-card, .section-header'
+        )
+        .forEach((el) => {
             el.classList.add('reveal');
-            observer.observe(el);
-        }
-    });
-
-    // Intro text reveal
-    const introSpans = document.querySelectorAll('.intro span');
-    const introObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
+            obs.observe(el);
         });
-    }, { threshold: 0.5 });
 
-    introSpans.forEach((span, i) => {
-        span.style.transitionDelay = `${i * 0.15}s`;
-        introObserver.observe(span);
+    // Intro line text
+    const introObs = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((e) => {
+                if (e.isIntersecting) e.target.classList.add('visible');
+            });
+        },
+        { threshold: 0.5 }
+    );
+
+    document.querySelectorAll('.intro-line span').forEach((s, i) => {
+        s.style.transitionDelay = `${i * 0.14}s`;
+        introObs.observe(s);
     });
 })();
 
-// ===== Scroll to Top Button =====
-(function initScrollTop() {
+// ===== Stagger project reveals =====
+(function () {
+    document.querySelectorAll('.project.reveal').forEach((p, i) => {
+        p.style.transitionDelay = `${i * 0.08}s`;
+    });
+})();
+
+// ===== Scroll to Top =====
+(function () {
     const btn = document.getElementById('scrollTopBtn');
     if (!btn) return;
-
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 500) {
-            btn.classList.add('visible');
-        } else {
-            btn.classList.remove('visible');
-        }
+        btn.classList.toggle('visible', window.scrollY > 500);
     });
-
     btn.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 })();
 
-// ===== Smooth Scroll for Nav Links =====
-(function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
+// ===== Smooth Scroll =====
+document.querySelectorAll('a[href^="#"]').forEach((a) => {
+    a.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-})();
+});
 
-// ===== Copy Email Function =====
+// ===== Copy Email =====
 function copyEmail() {
-    navigator.clipboard.writeText('mailto@uwm.edu').then(() => {
-        const btn = document.querySelector('.clipboardButton p');
-        if (btn) {
-            const original = btn.textContent;
-            btn.textContent = 'Copied!';
-            setTimeout(() => { btn.textContent = original; }, 2000);
-        }
-    }).catch(() => {
-        // Fallback
-        const textArea = document.createElement('textarea');
-        textArea.value = 'mailto@uwm.edu';
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        const btn = document.querySelector('.clipboardButton p');
-        if (btn) {
-            const original = btn.textContent;
-            btn.textContent = 'Copied!';
-            setTimeout(() => { btn.textContent = original; }, 2000);
-        }
-    });
+    const email = 'rhshovon@uwm.edu';
+    navigator.clipboard
+        .writeText(email)
+        .then(() => showCopied())
+        .catch(() => {
+            // fallback
+            const ta = document.createElement('textarea');
+            ta.value = email;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showCopied();
+        });
 }
 
-// ===== Parallax Effect on Scroll =====
-(function initParallax() {
-    const canvasWrapper = document.querySelector('.canvasWrapper');
-    if (!canvasWrapper) return;
+function showCopied() {
+    const label = document.querySelector('.copy-label');
+    if (!label) return;
+    const orig = label.textContent;
+    label.textContent = 'Copied!';
+    setTimeout(() => (label.textContent = orig), 2000);
+}
 
+// ===== Canvas Parallax Fade =====
+(function () {
+    const wrap = document.querySelector('.canvas-wrap');
+    if (!wrap) return;
     window.addEventListener('scroll', () => {
-        const scrolled = window.scrollY;
-        const heroHeight = document.querySelector('.heroWrap')?.offsetHeight || window.innerHeight;
-
-        // Fade out canvas as we scroll past hero
-        const opacity = Math.max(0, 1 - (scrolled / heroHeight) * 1.2);
-        canvasWrapper.style.opacity = opacity;
+        const heroH =
+            document.querySelector('.hero')?.offsetHeight || window.innerHeight;
+        wrap.style.opacity = Math.max(0, 1 - (window.scrollY / heroH) * 1.3);
     });
 })();
 
-// ===== Project Image Follow Cursor =====
-(function initProjectImageFollow() {
-    const projects = document.querySelectorAll('.oneProjectWrap');
+// ===== Project Image Cursor Follow =====
+(function () {
+    const projects = document.querySelectorAll('.project');
 
-    projects.forEach(project => {
-        const imgWrap = project.querySelector('.projectImageWrap');
+    projects.forEach((proj) => {
+        const imgWrap = proj.querySelector('.project-img-wrap');
         if (!imgWrap) return;
 
-        project.addEventListener('mousemove', (e) => {
-            const rect = project.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+        proj.addEventListener('mouseenter', () => {
+            imgWrap.style.opacity = '1';
+        });
 
-            // Position image near cursor
-            imgWrap.style.left = `${Math.min(x + 20, rect.width - 300)}px`;
-            imgWrap.style.top = `${y - 90}px`;
-            imgWrap.style.transform = 'scale(1)';
+        proj.addEventListener('mouseleave', () => {
+            imgWrap.style.opacity = '0';
+        });
+
+        proj.addEventListener('mousemove', (e) => {
+            imgWrap.style.left = e.clientX + 20 + 'px';
+            imgWrap.style.top = e.clientY - 100 + 'px';
         });
     });
 })();
 
-// ===== Page Load Animation =====
-(function initPageLoad() {
-    window.addEventListener('load', () => {
-        // Hide progress bar after load
-        setTimeout(() => {
-            const nprogress = document.getElementById('nprogress');
-            if (nprogress) {
-                nprogress.style.transition = 'opacity 0.3s ease';
-                nprogress.style.opacity = '0';
-                setTimeout(() => { nprogress.style.display = 'none'; }, 300);
-            }
-        }, 1500);
-    });
-})();
+// ===== Progress Bar Hide =====
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const np = document.getElementById('nprogress');
+        if (np) {
+            np.style.transition = 'opacity 0.4s ease';
+            np.style.opacity = '0';
+            setTimeout(() => (np.style.display = 'none'), 400);
+        }
+    }, 1800);
+});

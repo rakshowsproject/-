@@ -1,45 +1,33 @@
 # Rakibul Hasan Shovon — Portfolio
+### Wes Anderson × Neo-Brutalist Aesthetic
 
-A carbon copy of davidlangarica.dev, customized with your personal information.
+A portfolio inspired by davidlangarica.dev, reimagined through a **Wes Anderson × Neo-Brutalist** design fusion.
 
-## Setup Instructions
+**Wes Anderson DNA**: Obsessive symmetry, warm pastel palette (dusty rose, sage, mustard, cream), film-grain texture overlay, Playfair Display + Instrument Serif typography, "Chapter I" title cards, Roman numeral project numbering, "Fig. A" photo labels, centered compositions.
 
-### 1. Add Your Images
-Place the following files in the `images/` folder:
+**Neo-Brutalist DNA**: Thick 3px black borders, hard 6px offset box-shadows, raw monospace details (DM Mono), terminal-style contact window, no border-radius on cards, skill tags that invert on hover, stark contrast elements against soft pastels.
 
-- `502415591_10223039982908103_9008122845678656848_n.jpg` — Your profile photo
-- `PIcture 1.png` — ChatGPT Perception Project thumbnail
-- `Social_media.png` — Social Media Purchase Analysis thumbnail
-- `Telecom Churn.png` — Orange Telecom Churn Prediction thumbnail
-- `Walmart-iStock.com-Alexander-Farnsworth.jpg` — Walmart Store Sales Analysis thumbnail
-- `EV.png` — EV Market Intelligence Suite thumbnail
-- `tesla.jpg` — Tesla Sentiment Analysis thumbnail
+## Setup
 
-### 2. Add Your Resume
-Place your resume PDF in the `documents/` folder:
+### 1. Add Images to `images/` folder:
+- `502415591_10223039982908103_9008122845678656848_n.jpg` — Profile photo
+- `PIcture 1.png` — ChatGPT Perception Project
+- `Social_media.png` — Social Media Purchase Analysis
+- `Telecom Churn.png` — Orange Telecom Churn Prediction
+- `Walmart-iStock.com-Alexander-Farnsworth.jpg` — Walmart Store Sales
+- `EV.png` — EV Market Intelligence Suite
+- `tesla.jpg` — Tesla Sentiment Analysis
+
+### 2. Add Resume to `documents/` folder:
 - `resume.pdf`
 
-### 3. Run Locally
-Simply open `index.html` in your browser. No build tools or frameworks needed.
+### 3. Open `index.html` in browser. Done.
 
-### 4. Deploy to GitHub Pages
-1. Create a new repository on GitHub
-2. Push all files to the `main` branch
-3. Go to Settings → Pages → Source: Deploy from `main` branch, root `/`
-4. Your site will be live at `https://yourusername.github.io/repo-name/`
+### 4. Deploy to GitHub Pages:
+Push to `main` branch → Settings → Pages → Deploy from `main`, root `/`
 
 ## Tech Stack
-- Pure HTML, CSS, and vanilla JavaScript
-- Three.js (loaded from CDN) for the 3D background
-- Google Fonts (Syne + Space Grotesk)
-- No frameworks, no build step, no dependencies
-
-## Features
-- 3D animated geometric background with particle effects
-- Animated hero text with word rotation
-- Scroll-triggered reveal animations
-- Project cards with cursor-following image previews
-- Mobile-responsive hamburger menu
-- Smooth scroll navigation
-- Copy-to-clipboard email function
-- Scroll-to-top button
+- Pure HTML, CSS, vanilla JavaScript
+- Three.js (CDN) — warm-toned dodecahedron 3D scene
+- Google Fonts: Playfair Display, Instrument Serif, DM Mono, Schibsted Grotesk
+- No frameworks, no build step
