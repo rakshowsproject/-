@@ -1,48 +1,45 @@
-# Rakibul Hasan Shovon — Portfolio Site
+# Rakibul Hasan Shovon — Portfolio
 
-## Folder Structure
+A carbon copy of davidlangarica.dev, customized with your personal information.
 
-```
-portfolio-site/
-│
-├── index.html
-├── styles/
-│   └── style.css
-│
-├── scripts/
-│   └── script.js
-│
-├── images/
-│   ├── PIcture 1.png
-│   ├── Social_media.png
-│   ├── Telecom Churn.png
-│   ├── Walmart-iStock.com-Alexander-Farnsworth.jpg
-│   ├── EV.png
-│   ├── tesla.jpg
-│   └── 502415591_10223039982908103_9008122845678656848_n.jpg
-│
-└── documents/
-    └── resume.pdf
-```
+## Setup Instructions
 
-## Setup
+### 1. Add Your Images
+Place the following files in the `images/` folder:
 
-1. Add your images to the `images/` folder with the exact filenames listed above.
-2. Add your resume PDF to the `documents/` folder as `resume.pdf`.
-3. Push the entire `portfolio-site/` folder to a GitHub repository.
-4. Enable GitHub Pages in Settings → Pages → Source: Deploy from branch (`main`, root `/`).
-5. Your site will be live at `https://<username>.github.io/<repo-name>/`.
+- `502415591_10223039982908103_9008122845678656848_n.jpg` — Your profile photo
+- `PIcture 1.png` — ChatGPT Perception Project thumbnail
+- `Social_media.png` — Social Media Purchase Analysis thumbnail
+- `Telecom Churn.png` — Orange Telecom Churn Prediction thumbnail
+- `Walmart-iStock.com-Alexander-Farnsworth.jpg` — Walmart Store Sales Analysis thumbnail
+- `EV.png` — EV Market Intelligence Suite thumbnail
+- `tesla.jpg` — Tesla Sentiment Analysis thumbnail
+
+### 2. Add Your Resume
+Place your resume PDF in the `documents/` folder:
+- `resume.pdf`
+
+### 3. Run Locally
+Simply open `index.html` in your browser. No build tools or frameworks needed.
+
+### 4. Deploy to GitHub Pages
+1. Create a new repository on GitHub
+2. Push all files to the `main` branch
+3. Go to Settings → Pages → Source: Deploy from `main` branch, root `/`
+4. Your site will be live at `https://yourusername.github.io/repo-name/`
+
+## Tech Stack
+- Pure HTML, CSS, and vanilla JavaScript
+- Three.js (loaded from CDN) for the 3D background
+- Google Fonts (Syne + Space Grotesk)
+- No frameworks, no build step, no dependencies
 
 ## Features
-
-- Fully static HTML/CSS/JS — no frameworks or build tools needed
-- Particle background animation (canvas)
+- 3D animated geometric background with particle effects
+- Animated hero text with word rotation
 - Scroll-triggered reveal animations
-- Responsive design (mobile + desktop)
-- Smooth scrolling navigation
-- Copy-to-clipboard email button
+- Project cards with cursor-following image previews
+- Mobile-responsive hamburger menu
+- Smooth scroll navigation
+- Copy-to-clipboard email function
 - Scroll-to-top button
-
-## No Dependencies
-
-This site uses only vanilla HTML, CSS, and JavaScript. No Next.js, React, or any framework dependencies.
