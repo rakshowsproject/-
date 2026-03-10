@@ -2,7 +2,6 @@
    CSS CUSTOM PROPERTIES
    ============================================ */
 :root {
-  /* Colors */
   --c-bg: #0a0a0a;
   --c-bg-alt: #111111;
   --c-surface: #161616;
@@ -13,16 +12,13 @@
   --c-border: #2a2725;
   --c-overlay: rgba(10, 10, 10, 0.55);
 
-  /* Typography */
-  --f-serif: 'Cormorant Garamond', 'Georgia', serif;
-  --f-sans: 'Outfit', 'Helvetica Neue', sans-serif;
+  --f-serif: 'Cormorant Garamond', Georgia, serif;
+  --f-sans: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
 
-  /* Spacing */
   --s-page: clamp(20px, 5vw, 80px);
   --s-section: clamp(100px, 15vh, 200px);
   --s-gap: clamp(40px, 6vw, 80px);
 
-  /* Transitions */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
   --dur-fast: 0.35s;
@@ -55,10 +51,6 @@ body {
   overflow-x: hidden;
 }
 
-body.loading {
-  overflow: hidden;
-}
-
 a {
   color: inherit;
   text-decoration: none;
@@ -84,50 +76,38 @@ button {
 }
 
 /* ============================================
-   LOADER
+   ENTRANCE ANIMATION (CSS only — hero elements)
+   These play once on page load via @keyframes.
+   No JS dependency. Cannot get stuck.
    ============================================ */
-.loader {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: var(--c-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.6s var(--ease-out), visibility 0.6s;
+.entrance {
+  animation: entranceFade 0.9s var(--ease-out) both;
+  animation-delay: var(--d, 0s);
 }
 
-.loader.hidden {
+@keyframes entranceFade {
+  from {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   SCROLL REVEAL (JS-driven for below-fold)
+   ============================================ */
+.reveal {
   opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+  transform: translateY(35px);
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
 }
 
-.loader__inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-.loader__line {
-  width: 40px;
-  height: 1px;
-  background: var(--c-accent);
-  animation: loaderPulse 1.2s ease-in-out infinite;
-}
-
-@keyframes loaderPulse {
-  0%, 100% { opacity: 0.3; transform: scaleX(0.5); }
-  50% { opacity: 1; transform: scaleX(1); }
-}
-
-.loader__text {
-  font-family: var(--f-serif);
-  font-size: 1.1rem;
-  letter-spacing: 0.3em;
-  color: var(--c-text-muted);
-  font-weight: 300;
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* ============================================
@@ -298,6 +278,7 @@ button {
    ============================================ */
 .hero {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   padding: 120px var(--s-page) var(--s-section);
@@ -732,7 +713,6 @@ button {
 .footer__links {
   display: flex;
   flex-direction: column;
-  gap: 0;
   margin-bottom: clamp(60px, 8vw, 120px);
 }
 
@@ -800,21 +780,6 @@ button {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--c-text-dim);
-}
-
-/* ============================================
-   REVEAL ANIMATIONS
-   ============================================ */
-.reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity var(--dur-slow) var(--ease-out),
-              transform var(--dur-slow) var(--ease-out);
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 /* ============================================
