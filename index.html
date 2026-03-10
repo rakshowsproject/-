@@ -1,14 +1,643 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Analytics (kept from original) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HV06YHZZ3Q"></script>
-  <script>
-    window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date()); gtag('config', 'G-HV06YHZZ3Q');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rakibul Hasan Shovon — Marketing Analytics & Data Science</title>
+  <meta name="description" content="Portfolio of Rakibul Hasan Shovon — Marketing Analytics, Data Science, and Business Intelligence.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ========================================
+       LOADER / CURTAIN
+  ========================================= -->
+  <div class="loader" id="loader">
+    <div class="loader__inner">
+      <span class="loader__line"></span>
+      <span class="loader__text">RHS</span>
+    </div>
+  </div>
+
+  <!-- ========================================
+       NAVIGATION
+  ========================================= -->
+  <nav class="nav" id="nav">
+    <a href="#hero" class="nav__logo">RHS<span class="nav__dot">.</span></a>
+    <div class="nav__links">
+      <a href="#work" class="nav__link" data-nav>Work</a>
+      <a href="#about" class="nav__link" data-nav>About</a>
+      <a href="#resume" class="nav__link" data-nav>Resume</a>
+      <a href="#contact" class="nav__link" data-nav>Contact</a>
+    </div>
+    <button class="nav__menu-btn" id="menuBtn" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile menu overlay -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu__inner">
+      <a href="#hero" class="mobile-menu__link" data-mobile-nav>Home</a>
+      <a href="#work" class="mobile-menu__link" data-mobile-nav>Work</a>
+      <a href="#about" class="mobile-menu__link" data-mobile-nav>About</a>
+      <a href="#resume" class="mobile-menu__link" data-mobile-nav>Resume</a>
+      <a href="#contact" class="mobile-menu__link" data-mobile-nav>Contact</a>
+    </div>
+  </div>
+
+  <!-- ========================================
+       HERO SECTION
+  ========================================= -->
+  <section class="hero" id="hero">
+    <div class="hero__grid">
+      <div class="hero__content">
+        <div class="hero__tag reveal" data-delay="0.4">
+          <span class="hero__tag-line"></span>
+          <span class="hero__tag-text">Portfolio — 2025</span>
+        </div>
+        <h1 class="hero__name reveal" data-delay="0.6">
+          <span class="hero__name-line">Rakibul</span>
+          <span class="hero__name-line hero__name-line--indent">Hasan Shovon</span>
+        </h1>
+        <p class="hero__title reveal" data-delay="0.9">
+          Marketing Analytics <span class="hero__divider">|</span> Data Science <span class="hero__divider">|</span> Business Intelligence
+        </p>
+        <p class="hero__intro reveal" data-delay="1.1">
+          A data-driven analyst focused on consumer behavior, machine learning, business intelligence, and strategy. My work sits at the intersection of analytics, storytelling, and decision-making.
+        </p>
+        <div class="hero__scroll-cue reveal" data-delay="1.4">
+          <span class="hero__scroll-line"></span>
+          <span class="hero__scroll-text">Scroll to explore</span>
+        </div>
+      </div>
+      <div class="hero__portrait reveal" data-delay="0.3">
+        <div class="hero__portrait-frame">
+          <div class="hero__portrait-overlay"></div>
+          <img
+            src="images/502415591_10223039982908103_9008122845678656848_n.jpg"
+            alt="Rakibul Hasan Shovon"
+            class="hero__portrait-img"
+          >
+        </div>
+        <span class="hero__portrait-caption">RHS — Milwaukee, WI</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION DIVIDER
+  ========================================= -->
+  <div class="section-divider">
+    <div class="section-divider__line"></div>
+  </div>
+
+  <!-- ========================================
+       SELECTED WORK
+  ========================================= -->
+  <section class="work" id="work">
+    <header class="work__header">
+      <span class="section-label reveal">( Selected Work )</span>
+      <h2 class="section-heading reveal" data-delay="0.15">
+        Projects<span class="heading-dot">.</span>
+      </h2>
+    </header>
+
+    <div class="work__grid">
+
+      <!-- Project 1 -->
+      <a href="https://github.com/shovonhasan1/chatgpt-perception-project" target="_blank" rel="noopener noreferrer" class="project reveal" data-delay="0.1">
+        <div class="project__img-wrap">
+          <img src="images/PIcture 1.png" alt="ChatGPT Perception Project" class="project__img" loading="lazy">
+          <div class="project__img-overlay"></div>
+        </div>
+        <div class="project__info">
+          <span class="project__number">01</span>
+          <h3 class="project__title">ChatGPT Perception Project</h3>
+          <p class="project__desc">Consumer and perception analysis around AI interaction and behavioral insight.</p>
+          <span class="project__cta">
+            View on GitHub
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Project 2 -->
+      <a href="https://github.com/shovonhasan1/social-media-purchase-analysis" target="_blank" rel="noopener noreferrer" class="project project--reverse reveal" data-delay="0.1">
+        <div class="project__img-wrap">
+          <img src="images/Social_media.png" alt="Social Media Purchase Analysis" class="project__img" loading="lazy">
+          <div class="project__img-overlay"></div>
+        </div>
+        <div class="project__info">
+          <span class="project__number">02</span>
+          <h3 class="project__title">Social Media Purchase Analysis</h3>
+          <p class="project__desc">Purchase behavior patterns shaped by social media engagement.</p>
+          <span class="project__cta">
+            View on GitHub
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Project 3 -->
+      <a href="https://github.com/shovonhasan1/Orange-telecom-Churn" target="_blank" rel="noopener noreferrer" class="project reveal" data-delay="0.1">
+        <div class="project__img-wrap">
+          <img src="images/Telecom Churn.png" alt="Orange Telecom Churn Prediction" class="project__img" loading="lazy">
+          <div class="project__img-overlay"></div>
+        </div>
+        <div class="project__info">
+          <span class="project__number">03</span>
+          <h3 class="project__title">Orange Telecom Churn Prediction</h3>
+          <p class="project__desc">Churn analysis and predictive modeling for customer retention.</p>
+          <span class="project__cta">
+            View on GitHub
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Project 4 -->
+      <a href="https://github.com/shovonhasan1/walmart-store-analysis" target="_blank" rel="noopener noreferrer" class="project project--reverse reveal" data-delay="0.1">
+        <div class="project__img-wrap">
+          <img src="images/Walmart-iStock.com-Alexander-Farnsworth.jpg" alt="Walmart Store Data Analysis" class="project__img" loading="lazy">
+          <div class="project__img-overlay"></div>
+        </div>
+        <div class="project__info">
+          <span class="project__number">04</span>
+          <h3 class="project__title">Walmart Store Data Analysis</h3>
+          <p class="project__desc">Retail trend exploration and store-level business performance analysis.</p>
+          <span class="project__cta">
+            View on GitHub
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Project 5 -->
+      <a href="https://github.com/shovonhasan1/ev-market-intelligence-suite" target="_blank" rel="noopener noreferrer" class="project reveal" data-delay="0.1">
+        <div class="project__img-wrap">
+          <img src="images/EV.png" alt="EV Market Intelligence Suite" class="project__img" loading="lazy">
+          <div class="project__img-overlay"></div>
+        </div>
+        <div class="project__info">
+          <span class="project__number">05</span>
+          <h3 class="project__title">EV Market Intelligence Suite</h3>
+          <p class="project__desc">EV segmentation, benchmarking, and charging-readiness intelligence.</p>
+          <span class="project__cta">
+            View on GitHub
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Project 6 -->
+      <a href="https://github.com/rakshowsproject/Tesla-Sentiment-Analysis" target="_blank" rel="noopener noreferrer" class="project project--reverse reveal" data-delay="0.1">
+        <div class="project__img-wrap">
+          <img src="images/tesla.jpg" alt="Tesla Sentiment Analysis" class="project__img" loading="lazy">
+          <div class="project__img-overlay"></div>
+        </div>
+        <div class="project__info">
+          <span class="project__number">06</span>
+          <h3 class="project__title">Tesla Sentiment Analysis</h3>
+          <p class="project__desc">Sentiment mining and brand perception analysis around Tesla.</p>
+          <span class="project__cta">
+            View on GitHub
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION DIVIDER
+  ========================================= -->
+  <div class="section-divider">
+    <div class="section-divider__line"></div>
+  </div>
+
+  <!-- ========================================
+       ABOUT SECTION
+  ========================================= -->
+  <section class="about" id="about">
+    <header class="about__header">
+      <span class="section-label reveal">( About )</span>
+      <h2 class="section-heading reveal" data-delay="0.15">
+        Background<span class="heading-dot">.</span>
+      </h2>
+    </header>
+
+    <div class="about__content">
+      <div class="about__text reveal" data-delay="0.2">
+        <p class="about__paragraph about__paragraph--lead">
+          I work across marketing analytics, business intelligence, and data storytelling. My background combines analytical rigor with a strong eye for strategic insight.
+        </p>
+        <p class="about__paragraph">
+          Using tools like Python, SQL, Power BI, Tableau, and machine learning, I turn complex data into decisions that matter. Every project I approach begins with a question worth answering and ends with an insight that drives action.
+        </p>
+      </div>
+      <div class="about__skills reveal" data-delay="0.35">
+        <div class="about__skill-group">
+          <h4 class="about__skill-label">Languages & Tools</h4>
+          <p class="about__skill-list">Python, SQL, R, Power BI, Tableau, Excel, Google Analytics</p>
+        </div>
+        <div class="about__skill-group">
+          <h4 class="about__skill-label">Specializations</h4>
+          <p class="about__skill-list">Machine Learning, NLP, Consumer Behavior, Predictive Modeling, A/B Testing</p>
+        </div>
+        <div class="about__skill-group">
+          <h4 class="about__skill-label">Domains</h4>
+          <p class="about__skill-list">Marketing Analytics, Retail Intelligence, Telecom, EV & Automotive, Social Media</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       RESUME SECTION
+  ========================================= -->
+  <section class="resume" id="resume">
+    <div class="resume__inner reveal">
+      <span class="section-label">( Resume )</span>
+      <h2 class="resume__heading">
+        Interested in working<br>together<span class="heading-dot">?</span>
+      </h2>
+      <a href="documents/8. Rakibul%20Hasan%20Shovon_resume__.pdf" download class="resume__btn">
+        <span class="resume__btn-text">Download Resume</span>
+        <span class="resume__btn-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1V12M8 12L3 7M8 12L13 7" stroke="currentColor" stroke-width="1.5"/><path d="M1 15H15" stroke="currentColor" stroke-width="1.5"/></svg>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ========================================
+       CONTACT / FOOTER
+  ========================================= -->
+  <footer class="footer" id="contact">
+    <div class="footer__inner">
+      <div class="footer__top">
+        <span class="section-label reveal">( Contact )</span>
+        <h2 class="footer__heading reveal" data-delay="0.15">
+          Let's connect<span class="heading-dot">.</span>
+        </h2>
+      </div>
+
+      <div class="footer__links reveal" data-delay="0.3">
+        <a href="mailto:rhshovon@uwm.edu" class="footer__link" target="_blank" rel="noopener noreferrer">
+          <span class="footer__link-label">Email</span>
+          <span class="footer__link-value">rhshovon@uwm.edu</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+        <a href="https://linkedin.com/in/rakibul-shovon-6474691b3" class="footer__link" target="_blank" rel="noopener noreferrer">
+          <span class="footer__link-label">LinkedIn</span>
+          <span class="footer__link-value">Rakibul Shovon</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+        <a href="https://github.com/rakshowsproject" class="footer__link" target="_blank" rel="noopener noreferrer">
+          <span class="footer__link-label">GitHub</span>
+          <span class="footer__link-value">rakshowsproject</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </div>
+
+      <div class="footer__bottom">
+        <span class="footer__copy">&copy; 2025 Rakibul Hasan Shovon</span>
+        <span class="footer__note">Designed with precision.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+'js', new Date()); gtag('config', 'G-HV06YHZZ3Q');
   </script>
 
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rakibul Hasan Shovon — Marketing Analytics & Data Science</title>
+  <meta name="description" content="Portfolio of Rakibul Hasan Shovon — Marketing Analytics, Data Science, and Business Intelligence.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ========================================
+       LOADER / CURTAIN
+  ========================================= -->
+  <div class="loader" id="loader">
+    <div class="loader__inner">
+      <span class="loader__line"></span>
+      <span class="loader__text">RHS</span>
+    </div>
+  </div>
+
+  <!-- ========================================
+       NAVIGATION
+  ========================================= -->
+  <nav class="nav" id="nav">
+    <a href="#hero" class="nav__logo">RHS<span class="nav__dot">.</span></a>
+    <div class="nav__links">
+      <a href="#work" class="nav__link" data-nav>Work</a>
+      <a href="#about" class="nav__link" data-nav>About</a>
+      <a href="#resume" class="nav__link" data-nav>Resume</a>
+      <a href="#contact" class="nav__link" data-nav>Contact</a>
+    </div>
+    <button class="nav__menu-btn" id="menuBtn" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile menu overlay -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu__inner">
+      <a href="#hero" class="mobile-menu__link" data-mobile-nav>Home</a>
+      <a href="#work" class="mobile-menu__link" data-mobile-nav>Work</a>
+      <a href="#about" class="mobile-menu__link" data-mobile-nav>About</a>
+      <a href="#resume" class="mobile-menu__link" data-mobile-nav>Resume</a>
+      <a href="#contact" class="mobile-menu__link" data-mobile-nav>Contact</a>
+    </div>
+  </div>
+
+  <!-- ========================================
+       HERO SECTION
+  ========================================= -->
+  <section class="hero" id="hero">
+    <div class="hero__grid">
+      <div class="hero__content">
+        <div class="hero__tag reveal" data-delay="0.4">
+          <span class="hero__tag-line"></span>
+          <span class="hero__tag-text">Portfolio — 2025</span>
+        </div>
+        <h1 class="hero__name reveal" data-delay="0.6">
+          <span class="hero__name-line">Rakibul</span>
+          <span class="hero__name-line hero__name-line--indent">Hasan Shovon</span>
+        </h1>
+        <p class="hero__title reveal" data-delay="0.9">
+          Marketing Analytics <span class="hero__divider">|</span> Data Science <span class="hero__divider">|</span> Business Intelligence
+        </p>
+        <p class="hero__intro reveal" data-delay="1.1">
+          A data-driven analyst focused on consumer behavior, machine learning, business intelligence, and strategy. My work sits at the intersection of analytics, storytelling, and decision-making.
+        </p>
+        <div class="hero__scroll-cue reveal" data-delay="1.4">
+          <span class="hero__scroll-line"></span>
+          <span class="hero__scroll-text">Scroll to explore</span>
+        </div>
+      </div>
+      <div class="hero__portrait reveal" data-delay="0.3">
+        <div class="hero__portrait-frame">
+          <div class="hero__portrait-overlay"></div>
+          <img
+            src="images/502415591_10223039982908103_9008122845678656848_n.jpg"
+            alt="Rakibul Hasan Shovon"
+            class="hero__portrait-img"
+          >
+        </div>
+        <span class="hero__portrait-caption">RHS — Milwaukee, WI</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION DIVIDER
+  ========================================= -->
+  <div class="section-divider">
+    <div class="section-divider__line"></div>
+  </div>
+
+  <!-- ========================================
+       SELECTED WORK
+  ========================================= -->
+  <section class="work" id="work">
+    <header class="work__header">
+      <span class="section-label reveal">( Selected Work )</span>
+      <h2 class="section-heading reveal" data-delay="0.15">
+        Projects<span class="heading-dot">.</span>
+      </h2>
+    </header>
+
+    <div class="work__grid">
+
+      <!-- Project 1 -->
+      <a href="https://github.com/shovonhasan1/chatgpt-perception-project" target="_blank" rel="noopener noreferrer" class="project reveal" data-delay="0.1">
+        <div class="project__img-wrap">
+          <img src="images/PIcture 1.png" alt="ChatGPT Perception Project" class="project__img" loading="lazy">
+          <div class="project__img-overlay"></div>
+        </div>
+        <div class="project__info">
+          <span class="project__number">01</span>
+          <h3 class="project__title">ChatGPT Perception Project</h3>
+          <p class="project__desc">Consumer and perception analysis around AI interaction and behavioral insight.</p>
+          <span class="project__cta">
+            View on GitHub
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Project 2 -->
+      <a href="https://github.com/shovonhasan1/social-media-purchase-analysis" target="_blank" rel="noopener noreferrer" class="project project--reverse reveal" data-delay="0.1">
+        <div class="project__img-wrap">
+          <img src="images/Social_media.png" alt="Social Media Purchase Analysis" class="project__img" loading="lazy">
+          <div class="project__img-overlay"></div>
+        </div>
+        <div class="project__info">
+          <span class="project__number">02</span>
+          <h3 class="project__title">Social Media Purchase Analysis</h3>
+          <p class="project__desc">Purchase behavior patterns shaped by social media engagement.</p>
+          <span class="project__cta">
+            View on GitHub
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Project 3 -->
+      <a href="https://github.com/shovonhasan1/Orange-telecom-Churn" target="_blank" rel="noopener noreferrer" class="project reveal" data-delay="0.1">
+        <div class="project__img-wrap">
+          <img src="images/Telecom Churn.png" alt="Orange Telecom Churn Prediction" class="project__img" loading="lazy">
+          <div class="project__img-overlay"></div>
+        </div>
+        <div class="project__info">
+          <span class="project__number">03</span>
+          <h3 class="project__title">Orange Telecom Churn Prediction</h3>
+          <p class="project__desc">Churn analysis and predictive modeling for customer retention.</p>
+          <span class="project__cta">
+            View on GitHub
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Project 4 -->
+      <a href="https://github.com/shovonhasan1/walmart-store-analysis" target="_blank" rel="noopener noreferrer" class="project project--reverse reveal" data-delay="0.1">
+        <div class="project__img-wrap">
+          <img src="images/Walmart-iStock.com-Alexander-Farnsworth.jpg" alt="Walmart Store Data Analysis" class="project__img" loading="lazy">
+          <div class="project__img-overlay"></div>
+        </div>
+        <div class="project__info">
+          <span class="project__number">04</span>
+          <h3 class="project__title">Walmart Store Data Analysis</h3>
+          <p class="project__desc">Retail trend exploration and store-level business performance analysis.</p>
+          <span class="project__cta">
+            View on GitHub
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Project 5 -->
+      <a href="https://github.com/shovonhasan1/ev-market-intelligence-suite" target="_blank" rel="noopener noreferrer" class="project reveal" data-delay="0.1">
+        <div class="project__img-wrap">
+          <img src="images/EV.png" alt="EV Market Intelligence Suite" class="project__img" loading="lazy">
+          <div class="project__img-overlay"></div>
+        </div>
+        <div class="project__info">
+          <span class="project__number">05</span>
+          <h3 class="project__title">EV Market Intelligence Suite</h3>
+          <p class="project__desc">EV segmentation, benchmarking, and charging-readiness intelligence.</p>
+          <span class="project__cta">
+            View on GitHub
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Project 6 -->
+      <a href="https://github.com/rakshowsproject/Tesla-Sentiment-Analysis" target="_blank" rel="noopener noreferrer" class="project project--reverse reveal" data-delay="0.1">
+        <div class="project__img-wrap">
+          <img src="images/tesla.jpg" alt="Tesla Sentiment Analysis" class="project__img" loading="lazy">
+          <div class="project__img-overlay"></div>
+        </div>
+        <div class="project__info">
+          <span class="project__number">06</span>
+          <h3 class="project__title">Tesla Sentiment Analysis</h3>
+          <p class="project__desc">Sentiment mining and brand perception analysis around Tesla.</p>
+          <span class="project__cta">
+            View on GitHub
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION DIVIDER
+  ========================================= -->
+  <div class="section-divider">
+    <div class="section-divider__line"></div>
+  </div>
+
+  <!-- ========================================
+       ABOUT SECTION
+  ========================================= -->
+  <section class="about" id="about">
+    <header class="about__header">
+      <span class="section-label reveal">( About )</span>
+      <h2 class="section-heading reveal" data-delay="0.15">
+        Background<span class="heading-dot">.</span>
+      </h2>
+    </header>
+
+    <div class="about__content">
+      <div class="about__text reveal" data-delay="0.2">
+        <p class="about__paragraph about__paragraph--lead">
+          I work across marketing analytics, business intelligence, and data storytelling. My background combines analytical rigor with a strong eye for strategic insight.
+        </p>
+        <p class="about__paragraph">
+          Using tools like Python, SQL, Power BI, Tableau, and machine learning, I turn complex data into decisions that matter. Every project I approach begins with a question worth answering and ends with an insight that drives action.
+        </p>
+      </div>
+      <div class="about__skills reveal" data-delay="0.35">
+        <div class="about__skill-group">
+          <h4 class="about__skill-label">Languages & Tools</h4>
+          <p class="about__skill-list">Python, SQL, R, Power BI, Tableau, Excel, Google Analytics</p>
+        </div>
+        <div class="about__skill-group">
+          <h4 class="about__skill-label">Specializations</h4>
+          <p class="about__skill-list">Machine Learning, NLP, Consumer Behavior, Predictive Modeling, A/B Testing</p>
+        </div>
+        <div class="about__skill-group">
+          <h4 class="about__skill-label">Domains</h4>
+          <p class="about__skill-list">Marketing Analytics, Retail Intelligence, Telecom, EV & Automotive, Social Media</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       RESUME SECTION
+  ========================================= -->
+  <section class="resume" id="resume">
+    <div class="resume__inner reveal">
+      <span class="section-label">( Resume )</span>
+      <h2 class="resume__heading">
+        Interested in working<br>together<span class="heading-dot">?</span>
+      </h2>
+      <a href="documents/8. Rakibul%20Hasan%20Shovon_resume__.pdf" download class="resume__btn">
+        <span class="resume__btn-text">Download Resume</span>
+        <span class="resume__btn-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1V12M8 12L3 7M8 12L13 7" stroke="currentColor" stroke-width="1.5"/><path d="M1 15H15" stroke="currentColor" stroke-width="1.5"/></svg>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ========================================
+       CONTACT / FOOTER
+  ========================================= -->
+  <footer class="footer" id="contact">
+    <div class="footer__inner">
+      <div class="footer__top">
+        <span class="section-label reveal">( Contact )</span>
+        <h2 class="footer__heading reveal" data-delay="0.15">
+          Let's connect<span class="heading-dot">.</span>
+        </h2>
+      </div>
+
+      <div class="footer__links reveal" data-delay="0.3">
+        <a href="mailto:rhshovon@uwm.edu" class="footer__link" target="_blank" rel="noopener noreferrer">
+          <span class="footer__link-label">Email</span>
+          <span class="footer__link-value">rhshovon@uwm.edu</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+        <a href="https://linkedin.com/in/rakibul-shovon-6474691b3" class="footer__link" target="_blank" rel="noopener noreferrer">
+          <span class="footer__link-label">LinkedIn</span>
+          <span class="footer__link-value">Rakibul Shovon</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+        <a href="https://github.com/rakshowsproject" class="footer__link" target="_blank" rel="noopener noreferrer">
+          <span class="footer__link-label">GitHub</span>
+          <span class="footer__link-value">rakshowsproject</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H3M13 1V11" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </div>
+
+      <div class="footer__bottom">
+        <span class="footer__copy">&copy; 2025 Rakibul Hasan Shovon</span>
+        <span class="footer__note">Designed with precision.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#F5EDD6" />
   <meta name="description" content="RakShow – Portfolio. Data analyst, marketing scientist, chaos wrangler." />
@@ -1580,3 +2209,4 @@ footer {
         el.addEventListener('mousemove',e=>{
           const r=el.getBoundingClientRect(); const x=(e.clientX-(r.left+r.width/2))/r.width, y=(e.clientY-(r.top+r.height/2))/r.height;
           el.style.transform=`translate(${x*
+
