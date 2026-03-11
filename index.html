@@ -706,6 +706,12 @@ nav .nav-links a::after {
   gap: 2rem;
 }
 
+a.project-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
 .project-card {
   border: var(--border-brutal);
   background: var(--cream);
@@ -921,7 +927,7 @@ nav .nav-links a::after {
 /* ========== CONTACT SECTION ========== */
 #contact {
   padding: 6rem 4rem;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
   text-align: center;
 }
@@ -944,7 +950,7 @@ nav .nav-links a::after {
 
 .contact-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   margin-bottom: 3rem;
 }
@@ -961,6 +967,7 @@ nav .nav-links a::after {
 .contact-card:nth-child(1) { background: var(--budapest-lavender); }
 .contact-card:nth-child(2) { background: var(--moonrise-blue); }
 .contact-card:nth-child(3) { background: var(--mustard); }
+.contact-card:nth-child(4) { background: var(--moonrise-pink); }
 
 .contact-card:hover {
   transform: translate(-4px, -4px);
@@ -1067,11 +1074,91 @@ footer .footer-sub {
   #about { grid-template-columns: 1fr; padding: 4rem 2rem; }
   .profile-card { position: static; max-width: 350px; margin: 0 auto; }
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
-  .contact-grid { grid-template-columns: 1fr; max-width: 300px; margin: 0 auto 3rem; }
+  .contact-grid { grid-template-columns: 1fr 1fr; max-width: 400px; margin: 0 auto 3rem; }
   .projects-grid { grid-template-columns: 1fr; }
   #experience > div:last-child { grid-template-columns: 1fr !important; }
   nav { padding: 0 1rem; }
   nav .nav-links a { padding: 0.8rem 0.7rem; font-size: 0.6rem; }
+}
+
+/* ========== RESUME BANNER ========== */
+.resume-banner {
+  background: var(--budapest-pink);
+  border-top: var(--border-brutal);
+  border-bottom: var(--border-brutal);
+  padding: 3rem 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.resume-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 20px,
+      rgba(44,24,16,0.04) 20px,
+      rgba(44,24,16,0.04) 21px
+    );
+  pointer-events: none;
+}
+
+.resume-banner-inner {
+  position: relative;
+  z-index: 2;
+}
+
+.resume-banner h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.resume-banner p {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--burgundy);
+  margin-bottom: 1.5rem;
+}
+
+.btn-resume {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 1.1rem 3rem;
+  border: var(--border-brutal);
+  background: var(--ink);
+  color: var(--cream);
+  box-shadow: var(--shadow-brutal-lg);
+  transition: all 0.15s ease;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+}
+
+.btn-resume:hover {
+  transform: translate(6px, 6px);
+  box-shadow: 6px 6px 0px var(--burgundy);
+  background: var(--burgundy);
+}
+
+.btn-resume:active {
+  transform: translate(12px, 12px);
+  box-shadow: none;
+}
+
+.btn-resume::after {
+  content: ' ↓';
 }
 
 /* ========== DECORATIVE TAPE STRIP ========== */
@@ -1150,6 +1237,7 @@ footer .footer-sub {
     </p>
     <div class="hero-cta-row">
       <a href="#projects" class="btn-brutal">View the Acts</a>
+      <a href="Rakibul_Shovon_CV.pdf" target="_blank" class="btn-brutal outline">Download CV</a>
       <a href="#contact" class="btn-brutal outline">Send a Telegram</a>
     </div>
   </div>
@@ -1343,12 +1431,22 @@ footer .footer-sub {
   </div>
 </section>
 
+<!-- ============ RESUME BANNER ============ -->
+<div class="resume-banner">
+  <div class="resume-banner-inner reveal">
+    <h3>Interested in the Full Story?</h3>
+    <p>Three degrees · Nielsen research · 147 focus groups · A storyteller who lets data do the talking</p>
+    <a href="Rakibul_Shovon_CV.pdf" target="_blank" class="btn-resume">Download CV</a>
+  </div>
+</div>
+
 <!-- ============ PROJECTS ============ -->
 <section id="projects">
   <div class="chapter-label reveal" style="justify-content:center;">Chapter III — The Feature Presentations</div>
   <h2 class="reveal">Selected Works</h2>
   <div class="projects-grid">
 
+    <a href="https://github.com/rakshowsproject/chatgpt-perception-project" target="_blank" class="project-card-link">
     <div class="project-card reveal reveal-delay-1">
       <div class="project-card-image">
         <div class="project-card-number">01</div>
@@ -1365,7 +1463,9 @@ footer .footer-sub {
         </div>
       </div>
     </div>
+    </a>
 
+    <a href="https://github.com/rakshowsproject/social-media-purchase-analysis" target="_blank" class="project-card-link">
     <div class="project-card reveal reveal-delay-2">
       <div class="project-card-image">
         <div class="project-card-number">02</div>
@@ -1382,7 +1482,9 @@ footer .footer-sub {
         </div>
       </div>
     </div>
+    </a>
 
+    <a href="https://github.com/rakshowsproject/Orange-telecom-Churn" target="_blank" class="project-card-link">
     <div class="project-card reveal reveal-delay-3">
       <div class="project-card-image">
         <div class="project-card-number">03</div>
@@ -1399,7 +1501,9 @@ footer .footer-sub {
         </div>
       </div>
     </div>
+    </a>
 
+    <a href="https://github.com/rakshowsproject/walmart-store-analysis" target="_blank" class="project-card-link">
     <div class="project-card reveal reveal-delay-1">
       <div class="project-card-image">
         <div class="project-card-number">04</div>
@@ -1416,7 +1520,9 @@ footer .footer-sub {
         </div>
       </div>
     </div>
+    </a>
 
+    <a href="https://github.com/rakshowsproject/ev-market-intelligence-suite" target="_blank" class="project-card-link">
     <div class="project-card reveal reveal-delay-2">
       <div class="project-card-image">
         <div class="project-card-number">05</div>
@@ -1433,7 +1539,9 @@ footer .footer-sub {
         </div>
       </div>
     </div>
+    </a>
 
+    <a href="https://github.com/rakshowsproject/Tesla-Sentiment-Analysis" target="_blank" class="project-card-link">
     <div class="project-card reveal reveal-delay-3">
       <div class="project-card-image">
         <div class="project-card-number">06</div>
@@ -1450,6 +1558,7 @@ footer .footer-sub {
         </div>
       </div>
     </div>
+    </a>
 
   </div>
 </section>
@@ -1492,6 +1601,11 @@ footer .footer-sub {
       <div class="icon">⟐</div>
       <div class="contact-label">Website</div>
       <div class="contact-value">rakshowsproject.github.io</div>
+    </a>
+    <a href="Rakibul_Shovon_CV.pdf" class="contact-card reveal reveal-delay-4" target="_blank">
+      <div class="icon">⎙</div>
+      <div class="contact-label">Curriculum Vitae</div>
+      <div class="contact-value">Download CV</div>
     </a>
   </div>
 </section>
