@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cultural Semantics Loss in LLMs</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06080d;--s1:#0c1018;--s2:#131a26;--s3:#1a2436;
+  --b1:#1c2a3a;--b2:#263a50;
+  --amber:#f59e0b;--amber-d:rgba(245,158,11,.12);--amber-g:rgba(245,158,11,.35);
+  --teal:#14b8a6;--teal-d:rgba(20,184,166,.12);
+  --rose:#f43f5e;--rose-d:rgba(244,63,94,.12);
+  --violet:#8b5cf6;--violet-d:rgba(139,92,246,.12);
+  --sky:#38bdf8;--sky-d:rgba(56,189,248,.12);
+  --lime:#84cc16;--lime-d:rgba(132,204,22,.12);
+  --t1:#f1f5f9;--t2:#94a3b8;--t3:#64748b;--t4:#475569;
+  --ff:'Outfit',sans-serif;--df:'Fraunces',serif;
+}
+body{background:var(--bg);color:var(--t1);font-family:var(--ff);font-size:13px;min-height:100vh}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--b1);border-radius:3px}
+@keyframes su{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes glow{0%,100%{box-shadow:0 0 8px rgba(245,158,11,.2)}50%{box-shadow:0 0 24px rgba(245,158,11,.5)}}
+
+/* NAV */
+header{padding:14px 28px;border-bottom:1px solid var(--b1);background:linear-gradient(180deg,var(--s1),var(--bg));position:sticky;top:0;z-index:100;backdrop-filter:blur(16px)}
+.nav-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12}
+.brand{display:flex;align-items:center;gap:10}
+.brand-dot{width:8px;height:8px;border-radius:50%;background:var(--amber);animation:pulse 2s infinite;box-shadow:0 0 12px var(--amber-g)}
+.brand-title{font-family:var(--df);font-size:19px;font-weight:700}
+.brand-badge{font-size:9px;color:var(--t3);padding:2px 7px;border:1px solid var(--b1);border-radius:5px}
+.nav-tabs{display:flex;gap:2px;background:var(--s1);border-radius:9px;padding:3px;border:1px solid var(--b1);flex-wrap:wrap}
+.tab-btn{padding:6px 13px;border-radius:7px;border:none;cursor:pointer;font-family:var(--ff);font-size:11px;font-weight:400;background:transparent;color:var(--t3);transition:all .2s}
+.tab-btn.active{background:var(--amber-d);color:var(--amber);font-weight:600}
+.tab-btn:hover:not(.active){color:var(--t1);background:var(--s2)}
+
+/* LANG FILTER */
+.lang-bar{max-width:1400px;margin:0 auto;padding:10px 28px 0;display:flex;gap:6px;align-items:center}
+.lang-label{font-size:10px;color:var(--t3);margin-right:4px;text-transform:uppercase;letter-spacing:.08em}
+.pill{padding:6px 14px;border-radius:20px;border:1px solid var(--b1);background:transparent;color:var(--t2);font-size:12px;font-family:var(--ff);cursor:pointer;transition:all .25s;white-space:nowrap}
+.pill.active-both{border-color:var(--sky);color:var(--sky);background:var(--sky-d)}
+.pill.active-bengali{border-color:var(--teal);color:var(--teal);background:var(--teal-d)}
+.pill.active-hindi{border-color:var(--amber);color:var(--amber);background:var(--amber-d)}
+.words-count{margin-left:auto;font-size:10px;color:var(--t4)}
+
+/* MAIN */
+main{max-width:1400px;margin:0 auto;padding:14px 28px 60px}
+
+/* STAT CARDS */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:20px}
+.stat-card{background:var(--s2);border:1px solid var(--b1);border-radius:14px;padding:18px 22px;position:relative;overflow:hidden;animation:su .55s ease both}
+.stat-top-bar{position:absolute;top:0;left:0;right:0;height:3px}
+.stat-label{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.stat-value{font-size:28px;font-weight:700;font-family:var(--df)}
+.stat-sub{font-size:11px;color:var(--t4);margin-top:4px}
+
+/* PROBLEM BANNER */
+.problem{background:linear-gradient(135deg,var(--amber-d),var(--rose-d));border:1px solid rgba(245,158,11,.33);border-radius:14px;padding:22px;margin-bottom:20px}
+.problem h3{font-family:var(--df);font-size:18px;color:var(--amber);margin-bottom:8px}
+.problem p{font-size:13px;line-height:1.8;color:var(--t2)}
+
+/* CHART CARDS */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.chart-card{background:var(--s2);border:1px solid var(--b1);border-radius:14px;padding:18px}
+.chart-title{font-family:var(--df);font-size:14px;margin-bottom:4px}
+.chart-sub{font-size:10px;color:var(--t3);margin-bottom:10px}
+
+/* PIE LEGEND */
+.pie-wrap{display:flex;gap:20px;align-items:center}
+.pie-legend{display:flex;flex-direction:column;gap:4px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--t3)}
+.legend-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+
+/* SCATTER */
+.scatter-card{background:var(--s2);border:1px solid var(--b1);border-radius:14px;padding:18px;margin-bottom:14px}
+.scatter-legend{display:flex;gap:16px;margin-top:10px;justify-content:center}
+.scatter-leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t2)}
+.scatter-dot{width:9px;height:9px;border-radius:50%}
+
+/* WORD EXPLORER */
+.word-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
+.word-card{background:var(--s2);border:1px solid var(--b1);border-radius:14px;padding:16px;cursor:pointer;transition:all .3s}
+.word-card:hover{border-color:var(--b2)}
+.word-card.active-bn{border-color:var(--teal);background:var(--s3);box-shadow:0 0 20px rgba(20,184,166,.1)}
+.word-card.active-hi{border-color:var(--amber);background:var(--s3);box-shadow:0 0 20px rgba(245,158,11,.1)}
+.word-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.word-script{font-size:24px;font-weight:700}
+.word-roman{font-size:11px;color:var(--t3);font-style:italic}
+.word-badges{display:flex;gap:5px}
+.badge{font-size:8px;padding:2px 7px;border-radius:4px;font-weight:600;text-transform:uppercase}
+.llm-line{font-size:11px;color:var(--t4);margin-bottom:6px}
+.llm-val{color:var(--rose);font-weight:600}
+.bar-row{margin-bottom:4px}
+.bar-meta{display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-bottom:2px}
+.bar-track{height:4px;background:var(--b1);border-radius:2px;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px;transition:width .6s}
+.word-expanded{margin-top:12px;border-top:1px solid var(--b1);padding-top:12px;animation:fi .3s}
+.actual-text{font-size:12px;color:var(--t2);line-height:1.7;margin-bottom:12px}
+.section-label{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.layer-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.layer-tag{padding:2px 8px;border-radius:4px;font-size:10px}
+.layer-yes{background:var(--teal-d);color:var(--teal);border:1px solid rgba(20,184,166,.33)}
+.layer-no{background:var(--rose-d);color:var(--rose);border:1px solid rgba(244,63,94,.33)}
+.examples{display:flex;flex-direction:column;gap:3px;margin-bottom:12px}
+.example-item{font-size:11px;color:var(--t2);padding:5px 10px;background:var(--s1);border-radius:6px;line-height:1.5}
+.score-trio{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:4px}
+.score-box{text-align:center;padding:10px;border-radius:8px}
+.score-num{font-size:20px;font-weight:700;font-family:var(--df)}
+.score-lbl{font-size:8px;text-transform:uppercase;margin-top:2px}
+
+/* MODEL ARENA */
+.model-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.model-card{background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:14px;transition:all .3s}
+.model-card:hover{border-color:var(--b2);transform:scale(1.02)}
+.model-name{font-size:13px;font-weight:600;margin-bottom:8px;font-family:var(--df)}
+.mini-bar-row{margin-bottom:5px}
+.mini-bar-meta{display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-bottom:2px}
+.mini-bar-track{height:3px;background:var(--b1);border-radius:2px}
+.mini-bar-fill{height:100%;border-radius:2px;transition:width .5s}
+
+/* SIMULATOR */
+.sim-layout{display:grid;grid-template-columns:300px 1fr;gap:16px}
+.sim-panel{background:var(--s2);border:1px solid var(--b1);border-radius:14px;padding:16px}
+.sim-output{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:22px;min-height:380px}
+.sim-btn{display:block;width:100%;padding:9px 12px;margin-bottom:5px;border-radius:8px;border:1px solid var(--b1);background:var(--s1);color:var(--t2);font-size:12px;font-family:var(--ff);cursor:pointer;text-align:left;transition:all .2s}
+.sim-btn.active-word{border-color:var(--amber);background:var(--amber-d);color:var(--amber)}
+.sim-btn.active-prompt{border-color:var(--sky);background:var(--sky-d);color:var(--sky)}
+.run-btn{padding:12px;border-radius:10px;border:none;color:var(--t1);font-size:13px;font-weight:700;font-family:var(--ff);cursor:pointer;width:100%;background:linear-gradient(135deg,var(--amber),var(--rose));transition:filter .2s}
+.run-btn:hover{filter:brightness(1.15)}
+.run-btn:disabled{background:var(--b1);cursor:wait;animation:glow 1.5s infinite}
+.output-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.output-label{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em}
+.output-text{font-size:14px;color:var(--t2);line-height:1.8;min-height:80px}
+.output-placeholder{color:var(--t4);font-style:italic}
+.cursor{color:var(--amber);animation:blink 1s infinite}
+.analysis{margin-top:20px;border-top:1px solid var(--b1);padding-top:14px;animation:fi .4s}
+
+/* REFS */
+.ref-item{display:flex;gap:12px;align-items:flex-start;padding:12px 16px;border-radius:10px}
+.ref-year{width:40px;height:40px;border-radius:8px;background:var(--amber-d);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--amber);font-family:var(--df);flex-shrink:0}
+.ref-title{font-size:12px;font-weight:600;margin-bottom:2px}
+.ref-meta{font-size:10px;color:var(--t3)}
+.dataset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.dataset-card{padding:10px 12px;background:var(--s2);border:1px solid var(--b1);border-radius:8px}
+
+/* METHOD */
+.method-trio{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:28px}
+.method-card{background:var(--s2);border:1px solid var(--b1);border-radius:14px;padding:20px;position:relative;overflow:hidden}
+.method-top{position:absolute;top:0;left:0;right:0;height:3px}
+.timeline-item{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:8px}
+
+/* FOOTER */
+footer{border-top:1px solid var(--b1);padding:16px 28px;text-align:center;font-size:10px;color:var(--t4)}
+
+/* RADAR — pure SVG */
+.radar-svg text{font-family:var(--ff);font-size:10px;fill:var(--t3)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      <h1 class="brand-title">Cultural Semantics Loss <span style="color:var(--amber)">in LLMs</span></h1>
+      <span class="brand-badge">বাংলা + हिन्दी</span>
+    </div>
+    <div class="nav-tabs" id="navTabs">
+      <button class="tab-btn active" data-tab="overview">Overview</button>
+      <button class="tab-btn" data-tab="words">Word Explorer</button>
+      <button class="tab-btn" data-tab="models">Model Arena</button>
+      <button class="tab-btn" data-tab="simulator">Live Simulator</button>
+      <button class="tab-btn" data-tab="method">Methodology</button>
+      <button class="tab-btn" data-tab="refs">References</button>
+    </div>
+  </div>
+</header>
+
+<div class="lang-bar">
+  <span class="lang-label">Language:</span>
+  <button class="pill active-both" data-lang="both">Both</button>
+  <button class="pill" data-lang="bangla">বাংলা Bengali</button>
+  <button class="pill" data-lang="hindi">हिन्दी Hindi</button>
+  <span class="words-count" id="wordsCount">12 words loaded</span>
+</div>
+
+<main id="mainContent"></main>
+
+<footer><p>Cultural Semantics Loss in LLMs — Bengali + Hindi Research Dashboard · 2026</p></footer>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const banglaWords = [
+  {id:"bn1",script:"মায়া",roman:"maya",llm:'"love"',actual:"Emotional attachment + compassion + possessiveness + melancholy + karmic bonding + illusion (Buddhist/Hindu)",layers:["emotional attachment","compassion","tender possessiveness","melancholy","karmic bond","worldly illusion"],captured:1.5,total:6,distortion:"Severe",ex:["\"ছেলেটার প্রতি মায়া লাগে\" — compassionate pull toward the child","\"মায়ার বাঁধন\" — inescapable emotional tie"]},
+  {id:"bn2",script:"আড্ডা",roman:"adda",llm:'"chat"',actual:"Spontaneous intellectual & social gathering — cornerstone of Bengali identity tied to coffee houses and cultural movements",layers:["spontaneous gathering","intellectual exchange","cultural identity","political discourse","literary tradition","coffeehouse heritage"],captured:1,total:6,distortion:"Severe",ex:["\"কলেজ স্ট্রিটে আড্ডা\" — iconic adda at College Street","\"আড্ডা মারা\" — to engage in adda"]},
+  {id:"bn3",script:"ভাব",roman:"bhab",llm:'"feeling"',actual:"Demeanor + social posture + emotional gravitas + performative dignity + situational ambiance",layers:["demeanor","social posture","emotional gravitas","performative dignity","situational ambiance","self-importance"],captured:1,total:6,distortion:"Moderate",ex:["\"ভাব দেখাচ্ছে\" — putting on airs","\"ভাবের ঘরে চুরি\" — theft in the house of emotion"]},
+  {id:"bn4",script:"অভিমান",roman:"obhiman",llm:'"anger"',actual:"Hurt pride + silent reproach + affectionate protest — not anger but tender wound of caring",layers:["hurt pride","silent reproach","affectionate protest","caring wound","reconciliation desire","tender vulnerability"],captured:0.5,total:6,distortion:"Severe",ex:["\"তোমার উপর অভিমান\" — I feel obhiman toward you","\"রাগ না, অভিমান\" — not anger, but obhiman"]},
+  {id:"bn5",script:"ভালোবাসা",roman:"bhalobasha",llm:'"love"',actual:"Selfless unconditional devotion to family, friends, causes — warmth, acceptance, spiritual bond",layers:["selfless devotion","spiritual bond","familial warmth","unconditional acceptance","enduring commitment","cause-driven passion"],captured:2,total:6,distortion:"Moderate",ex:["\"ভালোবাসা মানে ত্যাগ\" — bhalobasha means sacrifice","\"দেশের প্রতি ভালোবাসা\" — for one's country"]},
+  {id:"bn6",script:"উদাসী",roman:"udashi",llm:'"sad"',actual:"Wistful poetic melancholy mixed with contemplation — reflective distance, not despair",layers:["wistful melancholy","poetic contemplation","reflective distance","gentle longing","rain-mood introspection","philosophical detachment"],captured:0.5,total:6,distortion:"Severe",ex:["\"বৃষ্টির দিনে উদাসী লাগে\" — feeling udashi on rainy days","\"উদাসীন মন\" — a mind touched by udashi"]},
+];
+const hindiWords = [
+  {id:"hi1",script:"जुगाड़",roman:"jugaad",llm:'"hack"',actual:"Resourceful improvisation born of scarcity — cultural survival philosophy, can imply bending rules",layers:["resourceful improvisation","scarcity creativity","rule-bending ingenuity","survival philosophy","makeshift innovation","communal problem-solving"],captured:1,total:6,distortion:"Severe",ex:["\"जुगाड़ से काम चलाना\" — getting by through jugaad","\"देसी जुगाड़\" — indigenous Indian innovation"]},
+  {id:"hi2",script:"विरह",roman:"viraha",llm:'"separation"',actual:"Ache of love-in-absence — spiritual concept where distance intensifies devotion, central to Bhakti poetry",layers:["love-in-absence ache","spiritual intensification","Bhakti devotion","temporal longing","transformative pain","reunion anticipation"],captured:1,total:6,distortion:"Severe",ex:["\"विरह की अग्नि\" — the fire of viraha","\"राधा का विरह\" — Radha's viraha for Krishna"]},
+  {id:"hi3",script:"जूठा",roman:"jootha",llm:'"leftover"',actual:"Ritually contaminated food/drink by touch or saliva — purity/pollution concept with no English parallel",layers:["ritual contamination","saliva taboo","purity/pollution system","caste implications","intimacy marker","religious observance"],captured:0.5,total:6,distortion:"Severe",ex:["\"जूठा मत खाओ\" — don't eat jootha","\"उसका जूठा पानी\" — water made jootha"]},
+  {id:"hi4",script:"ढाबा",roman:"dhaba",llm:'"restaurant"',actual:"Roadside eatery with cultural identity — truck-driver heritage, highway social institution, specific cuisine",layers:["roadside identity","open-air atmosphere","truck-driver heritage","highway institution","cuisine tradition","barebones authenticity"],captured:1,total:6,distortion:"Moderate",ex:["\"ढाबे का खाना\" — dhaba food (a genre)","\"हाईवे पर ढाबा\" — highway dhaba landmark"]},
+  {id:"hi5",script:"पूर्वैया",roman:"purvaiya",llm:'"east wind"',actual:"Not wind direction — carries monsoon anticipation, romantic literary trope, specific humidity & scent",layers:["monsoon anticipation","romantic literary trope","seasonal emotional shift","specific humidity & scent","agricultural significance","poetic personification"],captured:0.5,total:6,distortion:"Severe",ex:["\"तेज़ पूर्वैया चल रही थी\" — a strong purvaiya","\"पूर्वैया में मिट्टी की खुशबू\" — earth scent in purvaiya"]},
+  {id:"hi6",script:"किंकर्तव्यविमूढ़",roman:"kimkartavya-vimoodh",llm:'"confused"',actual:"Paralyzed by moral/ethical dilemma — Sanskrit philosophical weight, existential crossroads of duty",layers:["moral paralysis","ethical dilemma","duty-path conflict","existential crossroads","Sanskrit philosophical weight","decision-crisis dignity"],captured:0.5,total:6,distortion:"Severe",ex:["\"वह किंकर्तव्यविमूढ़ खड़ा रहा\" — stood paralyzed","\"अर्जुन की विमूढ़ता\" — Arjuna's state in the Gita"]},
+];
+const modelData = [
+  {model:"GPT-4o",bn_loss:6.2,bn_dist:4.8,bn_simp:7.1,hi_loss:5.8,hi_dist:4.2,hi_simp:6.5,bn_score:39,hi_score:43,color:"#14b8a6"},
+  {model:"Claude 3.5",bn_loss:5.4,bn_dist:3.9,bn_simp:6.3,hi_loss:5.1,hi_dist:3.5,hi_simp:5.8,bn_score:45,hi_score:48,color:"#38bdf8"},
+  {model:"Gemini 1.5",bn_loss:5.8,bn_dist:4.5,bn_simp:6.8,hi_loss:5.5,hi_dist:4.0,hi_simp:6.2,bn_score:41,hi_score:44,color:"#8b5cf6"},
+  {model:"LLaMA 3",bn_loss:7.1,bn_dist:5.6,bn_simp:7.8,hi_loss:6.8,hi_dist:5.2,hi_simp:7.4,bn_score:34,hi_score:36,color:"#f43f5e"},
+  {model:"BanglaLLaMA",bn_loss:4.2,bn_dist:3.1,bn_simp:5.1,hi_loss:7.5,hi_dist:6.1,hi_simp:8.0,bn_score:53,hi_score:28,color:"#f59e0b"},
+  {model:"IndicLLM",bn_loss:4.8,bn_dist:3.5,bn_simp:5.6,hi_loss:4.4,hi_dist:3.2,hi_simp:5.0,bn_score:49,hi_score:51,color:"#84cc16"},
+];
+const trainingPie = [
+  {name:"English",value:46,color:"#f59e0b"},{name:"German",value:6,color:"#14b8a6"},
+  {name:"Russian",value:5.5,color:"#8b5cf6"},{name:"Japanese",value:5,color:"#38bdf8"},
+  {name:"Hindi",value:1.4,color:"#84cc16"},{name:"Bengali",value:0.5,color:"#f43f5e"},{name:"Other",value:35.6,color:"#475569"}
+];
+const benchmarks = [
+  {name:"CulturalBench",human:92.4,best:61.5,worst:28.7},
+  {name:"Bengali NLP",human:88,best:52,worst:18},
+  {name:"Hindi NLI",human:90,best:64,worst:35},
+  {name:"Proverbs",human:95,best:58,worst:31}
+];
+const promptEffect = [
+  {type:"Direct",loss:7.8,dist:6.2,simp:8.1},
+  {type:"Contextual",loss:4.9,dist:3.5,simp:5.2},
+  {type:"Contrastive",loss:3.7,dist:2.8,simp:4.1},
+  {type:"Few-Shot Cultural",loss:2.9,dist:2.1,simp:3.4}
+];
+const simDB = {
+  bn1:{direct:"Maya means love or affection.",contextual:"Maya is a Bengali word meaning love, affection, or emotional attachment. In Bengali culture, it refers to a deep bond of caring and compassion one feels toward others. It is often used to describe the emotional pull someone feels.",contrastive:"While English 'love' primarily refers to romantic or familial affection, Bengali maya encompasses a broader emotional landscape. It includes compassion, attachment, a melancholic quality of bonding, and connects to the South Asian philosophical concept of worldly illusion — the idea that emotional bonds are both beautiful and transient."},
+  bn2:{direct:"Adda means chat or informal conversation.",contextual:"Adda is an informal social gathering where friends discuss everything from politics to art. It is an important part of Bengali culture, especially in Kolkata's coffee houses.",contrastive:"Unlike English 'chat' which implies casual small talk, adda is an institution. It carries intellectual weight, political history, and is considered essential to Bengali cultural identity. College Street's coffee house adda shaped generations of writers, filmmakers, and revolutionaries."},
+  hi1:{direct:"Jugaad translates to a hack or workaround.",contextual:"Jugaad is a Hindi word for finding creative, low-cost solutions to problems. It reflects Indian ingenuity and resourcefulness in the face of limited resources. It is widely used across India.",contrastive:"Unlike English 'hack' which implies a technical shortcut, jugaad embodies an entire cultural philosophy of survival and creativity born from scarcity. It can mean bending rules creatively, community-based improvisation, and carries both admiration for ingenuity and critique of systemic failures that necessitate it."},
+  hi2:{direct:"Viraha means separation or being apart.",contextual:"Viraha is a concept in Hindi and Sanskrit referring to the pain of separation from a loved one. It is commonly found in Bhakti poetry, especially describing Radha's longing for Krishna.",contrastive:"English 'separation' is a neutral, physical state. Viraha is an active, burning spiritual experience where absence paradoxically intensifies love. In Bhakti tradition, viraha is considered a higher form of devotion than union — the idea that longing itself is sacred and transformative."},
+};
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let activeTab = "overview";
+let activeLang = "both";
+let activeWord = null;
+let simWord = "bn1";
+let simPrompt = "direct";
+let simRunning = false;
+let simOutput = "";
+let simInterval = null;
+let charts = {};
+
+function getWords() {
+  if (activeLang === "bangla") return banglaWords;
+  if (activeLang === "hindi") return hindiWords;
+  return [...banglaWords, ...hindiWords];
+}
+
+function avgLoss(words) {
+  return (words.reduce((a, w) => a + (1 - w.captured / w.total) * 10, 0) / words.length).toFixed(1);
+}
+function severeCount(words) { return words.filter(w => w.distortion === "Severe").length; }
+function avgCRS(words) {
+  return (words.reduce((s, w) => s + (w.captured / w.total) * 100, 0) / words.length).toFixed(1);
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function render() {
+  const words = getWords();
+  document.getElementById("wordsCount").textContent = words.length + " words loaded";
+  const main = document.getElementById("mainContent");
+  // destroy old charts
+  Object.values(charts).forEach(c => { try { c.destroy(); } catch(e){} });
+  charts = {};
+
+  if (activeTab === "overview") renderOverview(main, words);
+  else if (activeTab === "words") renderWords(main, words);
+  else if (activeTab === "models") renderModels(main, words);
+  else if (activeTab === "simulator") renderSimulator(main);
+  else if (activeTab === "method") renderMethod(main);
+  else if (activeTab === "refs") renderRefs(main);
+}
+
+// ── OVERVIEW ──────────────────────────────────────────────────────────────────
+function renderOverview(main, words) {
+  const loss = avgLoss(words), severe = severeCount(words), crs = avgCRS(words);
+  main.innerHTML = `<div style="animation:fi .4s">
+    <div class="stat-grid">
+      ${statCard("Speakers","850M+","Bengali 300M + Hindi 550M","var(--amber)",0)}
+      ${statCard("Training Share","<2%","Bn+Hi in Common Crawl","var(--rose)",.07)}
+      ${statCard("Avg Loss",loss+"/10",words.length+" words","var(--violet)",.14)}
+      ${statCard("Severe",severe+"/"+words.length,"Severe distortions","var(--rose)",.21)}
+      ${statCard("Cultural Retention",crs+"%","Avg CRS across words","var(--sky)",.28)}
+    </div>
+    <div class="problem">
+      <h3>The Problem</h3>
+      <p>When an LLM translates <strong style="color:var(--t1)">মায়া</strong> as "love" or <strong style="color:var(--t1)">जुगाड़</strong> as "hack," it strips away layers of cultural meaning. This dashboard measures exactly how much is lost across <strong style="color:var(--rose)">semantic loss</strong>, <strong style="color:var(--amber)">cultural distortion</strong>, and <strong style="color:var(--violet)">simplification</strong> for 12 words from Bengali and Hindi.</p>
+    </div>
+    <div class="grid-2">
+      <div class="chart-card">
+        <div class="chart-title">Training Data Distribution</div>
+        <div class="pie-wrap">
+          <canvas id="pieChart" width="180" height="180"></canvas>
+          <div class="pie-legend">${trainingPie.map(d=>`<div class="legend-item"><div class="legend-dot" style="background:${d.color}"></div>${d.name} ${d.value}%</div>`).join("")}</div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Human vs LLM (%)</div>
+        <canvas id="barChart" height="220"></canvas>
+      </div>
+    </div>
+    <div class="scatter-card">
+      <div class="chart-title">Loss vs Distortion Map</div>
+      <div class="chart-sub">Each bubble = one word. X = semantic loss (0–10), Y = distortion (Mild/Moderate/Severe).</div>
+      <canvas id="scatterChart" height="200"></canvas>
+      <div class="scatter-legend">
+        <div class="scatter-leg-item"><div class="scatter-dot" style="background:var(--teal)"></div>Bengali</div>
+        <div class="scatter-leg-item"><div class="scatter-dot" style="background:var(--amber)"></div>Hindi</div>
+      </div>
+    </div>
+  </div>`;
+
+  // Pie
+  const pieCtx = document.getElementById("pieChart").getContext("2d");
+  charts.pie = new Chart(pieCtx, {
+    type:"doughnut",
+    data:{labels:trainingPie.map(d=>d.name),datasets:[{data:trainingPie.map(d=>d.value),backgroundColor:trainingPie.map(d=>d.color),borderWidth:0,hoverOffset:4}]},
+    options:{cutout:"64%",plugins:{legend:{display:false},tooltip:{backgroundColor:"#0c1018",borderColor:"#1c2a3a",borderWidth:1,titleColor:"#f1f5f9",bodyColor:"#94a3b8"}},animation:{duration:700}}
+  });
+
+  // Bar
+  const barCtx = document.getElementById("barChart").getContext("2d");
+  charts.bar = new Chart(barCtx, {
+    type:"bar",
+    data:{labels:benchmarks.map(b=>b.name),datasets:[
+      {label:"Human",data:benchmarks.map(b=>b.human),backgroundColor:"#14b8a6",borderRadius:3},
+      {label:"Best LLM",data:benchmarks.map(b=>b.best),backgroundColor:"#f59e0b",borderRadius:3},
+      {label:"Worst LLM",data:benchmarks.map(b=>b.worst),backgroundColor:"#f43f5e",borderRadius:3}
+    ]},
+    options:{responsive:true,scales:{x:{ticks:{color:"#64748b",font:{size:9}},grid:{display:false},border:{display:false}},y:{min:0,max:100,ticks:{color:"#475569",font:{size:9},stepSize:25},grid:{color:"#1c2a3a"},border:{display:false}}},plugins:{legend:{labels:{color:"#94a3b8",boxWidth:10,boxHeight:10,font:{size:9}}},tooltip:{backgroundColor:"#0c1018",borderColor:"#1c2a3a",borderWidth:1,titleColor:"#f1f5f9",bodyColor:"#94a3b8"}},animation:{duration:700}}
+  });
+
+  // Scatter
+  const bnScatter = banglaWords.filter(w => words.includes(w)).map(w => ({x:+((1-w.captured/w.total)*10).toFixed(1),y:w.distortion==="Severe"?8.5:w.distortion==="Moderate"?5:2,r:10,name:w.roman}));
+  const hiScatter = hindiWords.filter(w => words.includes(w)).map(w => ({x:+((1-w.captured/w.total)*10).toFixed(1),y:w.distortion==="Severe"?8.5:w.distortion==="Moderate"?5:2,r:10,name:w.roman}));
+  const scatterCtx = document.getElementById("scatterChart").getContext("2d");
+  charts.scatter = new Chart(scatterCtx, {
+    type:"bubble",
+    data:{datasets:[
+      {label:"Bengali",data:bnScatter,backgroundColor:"rgba(20,184,166,.8)",borderColor:"#14b8a6",borderWidth:1},
+      {label:"Hindi",data:hiScatter,backgroundColor:"rgba(245,158,11,.8)",borderColor:"#f59e0b",borderWidth:1}
+    ]},
+    options:{scales:{x:{min:0,max:10,title:{display:true,text:"Semantic Loss",color:"#64748b",font:{size:9}},ticks:{color:"#475569",font:{size:9}},grid:{color:"#1c2a3a"},border:{display:false}},y:{min:0,max:10,title:{display:true,text:"Distortion",color:"#64748b",font:{size:9}},ticks:{color:"#475569",font:{size:9},callback:v=>v===8.5?"Severe":v===5?"Moderate":v===2?"Mild":""},grid:{color:"#1c2a3a"},border:{display:false}}},plugins:{legend:{display:false},tooltip:{backgroundColor:"#0c1018",borderColor:"#1c2a3a",borderWidth:1,titleColor:"#f1f5f9",bodyColor:"#94a3b8",callbacks:{label:ctx=>`${ctx.raw.name}: loss ${ctx.raw.x}`}}},animation:{duration:700}}
+  });
+}
+
+function statCard(label, value, sub, color, delay) {
+  return `<div class="stat-card" style="animation-delay:${delay}s">
+    <div class="stat-top-bar" style="background:linear-gradient(90deg,${color},transparent)"></div>
+    <div class="stat-label">${label}</div>
+    <div class="stat-value" style="color:${color}">${value}</div>
+    <div class="stat-sub">${sub}</div>
+  </div>`;
+}
+
+// ── WORD EXPLORER ─────────────────────────────────────────────────────────────
+function renderWords(main, words) {
+  const cards = words.map((w, i) => {
+    const isBn = banglaWords.includes(w);
+    const isActive = activeWord === w.id;
+    const ratio = w.captured / w.total;
+    const dc = w.distortion === "Severe" ? "var(--rose)" : w.distortion === "Moderate" ? "var(--amber)" : "var(--teal)";
+    const borderC = isActive ? (isBn ? "var(--teal)" : "var(--amber)") : "var(--b1)";
+    const bgC = isActive ? "var(--s3)" : "var(--s2)";
+    const barC = ratio < 0.3 ? "var(--rose)" : ratio < 0.5 ? "var(--amber)" : "var(--teal)";
+    const scriptFont = isBn ? "'Noto Sans Bengali',sans-serif" : "'Noto Sans Devanagari',sans-serif";
+    let expanded = "";
+    if (isActive) {
+      const layerTags = w.layers.map((l, j) => {
+        const cap = j < Math.ceil(w.captured);
+        return `<span class="layer-tag ${cap ? "layer-yes" : "layer-no"}">${cap ? "✓" : "✗"} ${l}</span>`;
+      }).join("");
+      const exItems = w.ex.map(e => `<div class="example-item" style="border-left:2px solid ${isBn?"var(--teal)":"var(--amber)"}">${e}</div>`).join("");
+      expanded = `<div class="word-expanded">
+        <p class="actual-text">${w.actual}</p>
+        <div class="section-label">Semantic Layers</div>
+        <div class="layer-tags">${layerTags}</div>
+        <div class="section-label">Usage Examples</div>
+        <div class="examples">${exItems}</div>
+        <div class="score-trio">
+          <div class="score-box" style="background:var(--rose-d)"><div class="score-num" style="color:var(--rose)">${((1-ratio)*10).toFixed(1)}</div><div class="score-lbl" style="color:var(--rose)">Loss</div></div>
+          <div class="score-box" style="background:rgba(245,158,11,.08)"><div class="score-num" style="color:${dc};font-size:14px">${w.distortion}</div><div class="score-lbl" style="color:${dc}">Distortion</div></div>
+          <div class="score-box" style="background:var(--violet-d)"><div class="score-num" style="color:var(--violet)">${(ratio*100).toFixed(0)}%</div><div class="score-lbl" style="color:var(--violet)">Captured</div></div>
+        </div>
+      </div>`;
+    }
+    return `<div class="word-card ${isActive?(isBn?"active-bn":"active-hi"):""}" data-word="${w.id}" style="animation:su .4s ease ${i*.04}s both;border-color:${borderC};background:${bgC}">
+      <div class="word-header">
+        <div><div class="word-script" style="font-family:${scriptFont}">${w.script}</div><div class="word-roman">${w.roman}</div></div>
+        <div class="word-badges">
+          <span class="badge" style="background:${isBn?"var(--teal-d)":"var(--amber-d)"};color:${isBn?"var(--teal)":"var(--amber)"}">${isBn?"BN":"HI"}</span>
+          <span class="badge" style="background:${dc}1a;color:${dc}">${w.distortion}</span>
+        </div>
+      </div>
+      <div class="llm-line">LLM → <span class="llm-val">${w.llm}</span></div>
+      <div class="bar-row">
+        <div class="bar-meta"><span>Capture</span><span>${w.captured}/${w.total}</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${ratio*100}%;background:${barC}"></div></div>
+      </div>
+      ${expanded}
+    </div>`;
+  }).join("");
+
+  main.innerHTML = `<div style="animation:fi .4s">
+    <h2 style="font-family:var(--df);font-size:24px;margin-bottom:4px">Word Explorer</h2>
+    <p style="font-size:12px;color:var(--t2);margin-bottom:16px">Click any word to reveal hidden semantic layers and what LLMs miss.</p>
+    <div class="word-grid">${cards}</div>
+  </div>`;
+
+  main.querySelectorAll(".word-card").forEach(el => {
+    el.addEventListener("click", () => {
+      activeWord = activeWord === el.dataset.word ? null : el.dataset.word;
+      renderWords(document.getElementById("mainContent"), getWords());
+    });
+  });
+}
+
+// ── MODEL ARENA ───────────────────────────────────────────────────────────────
+function renderModels(main, words) {
+  const modelCards = modelData.map((m, i) => `
+    <div class="model-card" style="animation:su .4s ease ${i*.05}s both">
+      <div class="model-name" style="color:${m.color}">${m.model}</div>
+      ${miniBar("BN Loss", m.bn_loss, 10, "var(--rose)")}
+      ${miniBar("HI Loss", m.hi_loss, 10, "var(--rose)")}
+      ${miniBar("BN Score", m.bn_score, 60, "var(--teal)")}
+      ${miniBar("HI Score", m.hi_score, 60, "var(--amber)")}
+    </div>`).join("");
+
+  main.innerHTML = `<div style="animation:fi .4s">
+    <h2 style="font-family:var(--df);font-size:24px;margin-bottom:4px">Model Arena</h2>
+    <p style="font-size:12px;color:var(--t2);margin-bottom:16px">Compare LLMs across languages and prompt strategies.</p>
+    <div class="grid-2" style="margin-bottom:14px">
+      <div class="chart-card">
+        <div class="chart-title">Preservation Score: Bengali vs Hindi</div>
+        <canvas id="scoreBar" height="260"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Prompt Strategy Impact</div>
+        <div class="chart-sub">Few-shot cultural prompting reduces loss by up to 63%</div>
+        <canvas id="promptArea" height="240"></canvas>
+      </div>
+    </div>
+    <div class="chart-card" style="margin-bottom:14px">
+      <div class="chart-title">Failure Dimensions by Model</div>
+      <canvas id="radarBar" height="160"></canvas>
+    </div>
+    <div class="model-grid">${modelCards}</div>
+  </div>`;
+
+  // Score bar (horizontal)
+  const sbCtx = document.getElementById("scoreBar").getContext("2d");
+  charts.scoreBar = new Chart(sbCtx, {
+    type:"bar",
+    data:{labels:modelData.map(m=>m.model),datasets:[
+      {label:"Bengali %",data:modelData.map(m=>m.bn_score),backgroundColor:"#14b8a6",borderRadius:3},
+      {label:"Hindi %",data:modelData.map(m=>m.hi_score),backgroundColor:"#f59e0b",borderRadius:3}
+    ]},
+    options:{indexAxis:"y",responsive:true,scales:{x:{min:0,max:60,ticks:{color:"#64748b",font:{size:9}},grid:{color:"#1c2a3a"},border:{display:false}},y:{ticks:{color:"#94a3b8",font:{size:9}},grid:{display:false},border:{display:false}}},plugins:{legend:{labels:{color:"#94a3b8",boxWidth:10,boxHeight:10,font:{size:9}}},tooltip:{backgroundColor:"#0c1018",borderColor:"#1c2a3a",borderWidth:1,titleColor:"#f1f5f9",bodyColor:"#94a3b8"}},animation:{duration:700}}
+  });
+
+  // Prompt area
+  const paCtx = document.getElementById("promptArea").getContext("2d");
+  charts.promptArea = new Chart(paCtx, {
+    type:"line",
+    data:{labels:promptEffect.map(p=>p.type),datasets:[
+      {label:"Semantic Loss",data:promptEffect.map(p=>p.loss),borderColor:"#f43f5e",backgroundColor:"rgba(244,63,94,.08)",fill:true,tension:.4,pointRadius:4},
+      {label:"Distortion",data:promptEffect.map(p=>p.dist),borderColor:"#f59e0b",backgroundColor:"rgba(245,158,11,.08)",fill:true,tension:.4,pointRadius:4},
+      {label:"Simplification",data:promptEffect.map(p=>p.simp),borderColor:"#8b5cf6",backgroundColor:"rgba(139,92,246,.08)",fill:true,tension:.4,pointRadius:4}
+    ]},
+    options:{scales:{x:{ticks:{color:"#64748b",font:{size:9}},grid:{display:false},border:{display:false}},y:{min:0,max:10,ticks:{color:"#475569",font:{size:9}},grid:{color:"#1c2a3a"},border:{display:false}}},plugins:{legend:{labels:{color:"#94a3b8",boxWidth:10,boxHeight:10,font:{size:9}}},tooltip:{backgroundColor:"#0c1018",borderColor:"#1c2a3a",borderWidth:1,titleColor:"#f1f5f9",bodyColor:"#94a3b8"}},animation:{duration:700}}
+  });
+
+  // Radar-style grouped bar
+  const rbCtx = document.getElementById("radarBar").getContext("2d");
+  charts.radarBar = new Chart(rbCtx, {
+    type:"bar",
+    data:{labels:modelData.map(m=>m.model),datasets:[
+      {label:"BN Loss",data:modelData.map(m=>m.bn_loss),backgroundColor:"rgba(244,63,94,.7)",borderRadius:2},
+      {label:"HI Loss",data:modelData.map(m=>m.hi_loss),backgroundColor:"rgba(244,63,94,.4)",borderRadius:2},
+      {label:"BN Simp",data:modelData.map(m=>m.bn_simp),backgroundColor:"rgba(139,92,246,.7)",borderRadius:2},
+      {label:"HI Simp",data:modelData.map(m=>m.hi_simp),backgroundColor:"rgba(139,92,246,.4)",borderRadius:2},
+    ]},
+    options:{scales:{x:{ticks:{color:"#64748b",font:{size:9}},grid:{display:false},border:{display:false}},y:{min:0,max:10,ticks:{color:"#475569",font:{size:9}},grid:{color:"#1c2a3a"},border:{display:false}}},plugins:{legend:{labels:{color:"#94a3b8",boxWidth:10,boxHeight:10,font:{size:9}}},tooltip:{backgroundColor:"#0c1018",borderColor:"#1c2a3a",borderWidth:1,titleColor:"#f1f5f9",bodyColor:"#94a3b8"}},animation:{duration:700}}
+  });
+}
+
+function miniBar(label, value, max, color) {
+  return `<div class="mini-bar-row">
+    <div class="mini-bar-meta"><span>${label}</span><span>${value}${max===60?"%":"/10"}</span></div>
+    <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${(value/max)*100}%;background:${color}"></div></div>
+  </div>`;
+}
+
+// ── SIMULATOR ─────────────────────────────────────────────────────────────────
+function renderSimulator(main) {
+  const words = [
+    {id:"bn1",label:"মায়া maya",tag:"BN"},{id:"bn2",label:"আড্ডা adda",tag:"BN"},
+    {id:"hi1",label:"जुगाड़ jugaad",tag:"HI"},{id:"hi2",label:"विरह viraha",tag:"HI"}
+  ];
+  const prompts = [
+    {id:"direct",label:"Direct Translation"},{id:"contextual",label:"Contextual Explanation"},{id:"contrastive",label:"Contrastive Prompt"}
+  ];
+  const anMeta = {direct:{loss:"7.5",dist:"Severe",cap:"17%",msg:"⚠ Direct translation collapses all layers into a single word. Maximum loss."},contextual:{loss:"4.8",dist:"Moderate",cap:"42%",msg:"⬆ Contextual prompting recovers some layers but misses philosophical dimensions."},contrastive:{loss:"3.2",dist:"Mild",cap:"58%",msg:"✦ Contrastive prompting forces articulation of differences, recovering much more nuance."}};
+  const an = anMeta[simPrompt];
+
+  const wordBtns = words.map(w => `<button class="sim-btn ${simWord===w.id?"active-word":""}" data-word="${w.id}"><span style="font-size:9px;color:var(--t3);margin-right:5px">[${w.tag}]</span>${w.label}</button>`).join("");
+  const promptBtns = prompts.map(p => `<button class="sim-btn ${simPrompt===p.id?"active-prompt":""}" data-prompt="${p.id}">${p.label}</button>`).join("");
+
+  const analysis = simOutput && !simRunning ? `<div class="analysis">
+    <div class="output-label" style="margin-bottom:10px">Analysis</div>
+    <div class="score-trio">
+      <div class="score-box" style="background:var(--rose-d)"><div class="score-num" style="color:var(--rose)">${an.loss}</div><div class="score-lbl" style="color:var(--rose)">Loss</div></div>
+      <div class="score-box" style="background:var(--amber-d)"><div class="score-num" style="color:var(--amber);font-size:14px">${an.dist}</div><div class="score-lbl" style="color:var(--amber)">Distortion</div></div>
+      <div class="score-box" style="background:var(--violet-d)"><div class="score-num" style="color:var(--violet)">${an.cap}</div><div class="score-lbl" style="color:var(--violet)">Captured</div></div>
+    </div>
+    <p style="font-size:11px;color:var(--t3);margin-top:10px;line-height:1.6">${an.msg}</p>
+  </div>` : "";
+
+  main.innerHTML = `<div style="animation:fi .4s">
+    <h2 style="font-family:var(--df);font-size:24px;margin-bottom:4px">Live Translation Simulator</h2>
+    <p style="font-size:12px;color:var(--t2);margin-bottom:16px">See how prompting strategies change LLM output in real time.</p>
+    <div class="sim-layout">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="sim-panel">
+          <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Select Word</div>
+          ${wordBtns}
+        </div>
+        <div class="sim-panel">
+          <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Prompt Strategy</div>
+          ${promptBtns}
+        </div>
+        <button id="runBtn" class="run-btn" ${simRunning?"disabled":""} >${simRunning?"⟳ Generating...":"▶ Run Translation"}</button>
+      </div>
+      <div class="sim-output">
+        <div class="output-header">
+          <div class="output-label">LLM Output</div>
+          ${simRunning?'<div style="width:7px;height:7px;border-radius:50%;background:var(--teal);animation:pulse .8s infinite"></div>':""}
+        </div>
+        <div class="output-text" id="simOutputEl">
+          ${simOutput ? simOutput + (simRunning ? '<span class="cursor">▌</span>' : '') : '<span class="output-placeholder">Click "Run Translation" to see simulated output...</span>'}
+        </div>
+        ${analysis}
+      </div>
+    </div>
+  </div>`;
+
+  main.querySelectorAll("[data-word]").forEach(b => b.addEventListener("click", () => { simWord = b.dataset.word; simOutput = ""; renderSimulator(document.getElementById("mainContent")); }));
+  main.querySelectorAll("[data-prompt]").forEach(b => b.addEventListener("click", () => { simPrompt = b.dataset.prompt; simOutput = ""; renderSimulator(document.getElementById("mainContent")); }));
+  document.getElementById("runBtn")?.addEventListener("click", runSim);
+}
+
+function runSim() {
+  const r = simDB[simWord];
+  if (!r) { simOutput = "Select মায়া, আড্ডা, जुगाड़, or विरह for the live demo."; renderSimulator(document.getElementById("mainContent")); return; }
+  const text = r[simPrompt] || r.direct;
+  if (simInterval) clearInterval(simInterval);
+  simRunning = true; simOutput = "";
+  renderSimulator(document.getElementById("mainContent"));
+  let i = 0;
+  simInterval = setInterval(() => {
+    i++;
+    simOutput = text.slice(0, i);
+    const el = document.getElementById("simOutputEl");
+    if (el) el.innerHTML = simOutput + '<span class="cursor">▌</span>';
+    if (i >= text.length) {
+      clearInterval(simInterval);
+      simRunning = false;
+      renderSimulator(document.getElementById("mainContent"));
+    }
+  }, 16);
+}
+
+// ── METHODOLOGY ───────────────────────────────────────────────────────────────
+function renderMethod(main) {
+  const dims = [
+    {t:"Semantic Loss",ic:"🔍",c:"var(--rose)",d:"Missing meaning components",m:"0–10 from annotated reference"},
+    {t:"Cultural Distortion",ic:"🔄",c:"var(--amber)",d:"Wrong cultural frame applied",m:"None / Mild / Moderate / Severe"},
+    {t:"Simplification",ic:"📉",c:"var(--violet)",d:"Multi-layer → flat equivalent",m:"% of dimensions captured"}
+  ];
+  const dimCards = dims.map((d, i) => `
+    <div class="method-card" style="animation:su .5s ease ${i*.1}s both">
+      <div class="method-top" style="background:${d.c}"></div>
+      <div style="font-size:26px;margin-bottom:8px">${d.ic}</div>
+      <h4 style="font-family:var(--df);font-size:16px;color:${d.c};margin-bottom:6px">${d.t}</h4>
+      <p style="font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:10px">${d.d}</p>
+      <div style="padding:8px 10px;background:${d.c}11;border-radius:6px;font-size:10px;color:var(--t2)"><span style="color:${d.c};font-weight:600">Scoring:</span> ${d.m}</div>
+    </div>`).join("");
+
+  const modelBadges = modelData.map(m => `<div style="padding:10px 14px;background:var(--s2);border:1px solid var(--b1);border-radius:10px;font-size:12px;color:${m.color};font-weight:600">${m.model}</div>`).join("");
+
+  const timeline = [
+    {p:"Phase 1",t:"Literature Review & Word Selection",w:"Weeks 1–2",c:"var(--sky)"},
+    {p:"Phase 2",t:"Gold Standard Annotation",w:"Weeks 3–4",c:"var(--teal)"},
+    {p:"Phase 3",t:"LLM Data Collection",w:"Weeks 5–6",c:"var(--amber)"},
+    {p:"Phase 4",t:"Expert Scoring",w:"Weeks 7–8",c:"var(--violet)"},
+    {p:"Phase 5",t:"Analysis & Dashboard",w:"Weeks 9–11",c:"var(--rose)"},
+    {p:"Phase 6",t:"Paper Submission",w:"Week 12",c:"var(--lime)"}
+  ];
+  const timelineHtml = timeline.map((p, i) => `
+    <div class="timeline-item" style="background:${i%2===0?"var(--s2)":"transparent"};animation:su .3s ease ${i*.04}s both">
+      <div style="width:9px;height:9px;border-radius:50%;background:${p.c};box-shadow:0 0 8px ${p.c}55;flex-shrink:0"></div>
+      <div style="width:70px;font-size:9px;color:${p.c};font-weight:600;text-transform:uppercase">${p.p}</div>
+      <div style="flex:1;font-size:12px;color:var(--t1)">${p.t}</div>
+      <div style="font-size:11px;color:var(--t3)">${p.w}</div>
+    </div>`).join("");
+
+  main.innerHTML = `<div style="animation:fi .4s">
+    <h2 style="font-family:var(--df);font-size:24px;margin-bottom:16px">Research Methodology</h2>
+    <div class="method-trio">${dimCards}</div>
+    <h3 style="font-family:var(--df);font-size:17px;margin-bottom:10px">Models Tested</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin-bottom:24px">${modelBadges}</div>
+    <h3 style="font-family:var(--df);font-size:17px;margin-bottom:10px">Research Timeline</h3>
+    ${timelineHtml}
+  </div>`;
+}
+
+// ── REFERENCES ────────────────────────────────────────────────────────────────
+function renderRefs(main) {
+  const refs = [
+    {a:"Kabir et al.",y:2024,t:"BenLLM-Eval: LLMs on Bengali NLP",v:"arXiv:2309.13173"},
+    {a:"Li et al.",y:2024,t:"CultureLLM: Cultural Differences in LLMs",v:"NeurIPS 2024"},
+    {a:"Chiu et al.",y:2025,t:"CulturalBench: Cultural Knowledge Benchmark",v:"ACL 2025"},
+    {a:"Liu et al.",y:2024,t:"Multilingual LLMs as Culturally-Diverse Reasoners",v:"NAACL 2024"},
+    {a:"arXiv:2510.25967",y:2025,t:"Semantic Label Drift in Cross-Cultural Translation",v:"arXiv"},
+    {a:"LFAI Foundation",y:2024,t:"Translation Augmented Generation",v:"OSS Summit NA"},
+    {a:"Zehady et al.",y:2024,t:"BanglaLLaMA: LLaMA for Bangla",v:"arXiv:2410.21200"},
+    {a:"arXiv:2502.11187",y:2025,t:"TituLLMs: Bangla LLMs with Benchmarking",v:"arXiv"},
+    {a:"arXiv:2412.04497",y:2024,t:"LLMs for Low-Resource Languages",v:"arXiv"}
+  ];
+  const refHtml = refs.map((r, i) => `
+    <div class="ref-item" style="background:${i%2===0?"var(--s2)":"transparent"};animation:su .3s ease ${i*.03}s both">
+      <div class="ref-year">${r.y}</div>
+      <div><div class="ref-title">${r.t}</div><div class="ref-meta">${r.a} — <span style="color:var(--amber)">${r.v}</span></div></div>
+    </div>`).join("");
+
+  const datasets = [
+    {n:"CulturalBench",d:"1,696 Qs, 45 regions"},{n:"BenLLM-Eval",d:"7 tasks, 8 datasets"},
+    {n:"MAPS",d:"Proverbs, 6 languages"},{n:"NativQA",d:"Culturally-aligned queries"},
+    {n:"World Values Survey",d:"WVS-7 (2017–22)"},{n:"CultureLLM",d:"Fine-tuning framework"}
+  ];
+  const dsHtml = datasets.map(b => `<div class="dataset-card"><div style="font-size:11px;font-weight:600;color:var(--teal);margin-bottom:2px">${b.n}</div><div style="font-size:10px;color:var(--t3)">${b.d}</div></div>`).join("");
+
+  main.innerHTML = `<div style="animation:fi .4s">
+    <h2 style="font-family:var(--df);font-size:24px;margin-bottom:16px">References</h2>
+    ${refHtml}
+    <h3 style="font-family:var(--df);font-size:16px;margin-top:24px;margin-bottom:10px">Datasets</h3>
+    <div class="dataset-grid">${dsHtml}</div>
+  </div>`;
+}
+
+// ── EVENT LISTENERS ───────────────────────────────────────────────────────────
+document.getElementById("navTabs").addEventListener("click", e => {
+  const btn = e.target.closest(".tab-btn");
+  if (!btn) return;
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  activeTab = btn.dataset.tab;
+  activeWord = null;
+  simOutput = "";
+  if (simInterval) clearInterval(simInterval);
+  simRunning = false;
+  render();
+});
+
+document.querySelector(".lang-bar").addEventListener("click", e => {
+  const btn = e.target.closest(".pill");
+  if (!btn) return;
+  document.querySelectorAll(".pill").forEach(b => b.className = "pill");
+  activeLang = btn.dataset.lang;
+  btn.classList.add("active-" + activeLang);
+  activeWord = null;
+  render();
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
