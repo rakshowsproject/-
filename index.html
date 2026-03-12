@@ -2362,65 +2362,6 @@ body{background:#f5f0e8;font-family:'Courier Prime',monospace;min-height:100vh;d
 .demo-arrow{font-size:2rem;animation:bounce .8s ease infinite alternate;color:#8b1a1a;}
 @keyframes bounce{from{transform:translateY(0);}to{transform:translateY(-8px);}}
 
-// ============================
-// THEATER MARQUEE LOGIC
-// ============================
-(function() {
-  const facts = [
-    "Analyzed 10,197 Reddit posts using NLP to decode public sentiment.",
-    "Holds Three Postgraduate Degrees. Yes, Three.",
-    "Maintains a 3.73 GPA in MS Management & Business Analytics.",
-    "Built Predictive ML Models to identify customer churn before it happens.",
-    "Conducted 147 focus groups decoding consumer behavior.",
-    "Fluent in English at a C2 level. Articulate and analytical."
-  ];
-
-  let currentFactIndex = 0;
-  const factElement = document.getElementById('fact-text');
-  if(!factElement) return;
-
-  function updateFact() {
-    factElement.style.opacity = '0';
-    factElement.style.transform = 'scale(0.95)';
-    
-    setTimeout(() => {
-      factElement.innerText = facts[currentFactIndex];
-      factElement.style.opacity = '1';
-      factElement.style.transform = 'scale(1)';
-      currentFactIndex = (currentFactIndex + 1) % facts.length;
-    }, 500); 
-  }
-
-  updateFact();
-  setInterval(updateFact, 4000); 
-
-  const bulbContainer = document.getElementById('bulbs');
-  const bulbsHorizontal = 18; 
-  const bulbsVertical = 8;    
-
-  function createBulb(top, left, right, bottom, index) {
-    const bulb = document.createElement('div');
-    bulb.className = `bulb ${index % 2 === 0 ? 'even' : 'odd'}`;
-    if (top !== null) bulb.style.top = top;
-    if (bottom !== null) bulb.style.bottom = bottom;
-    if (left !== null) bulb.style.left = left;
-    if (right !== null) bulb.style.right = right;
-    bulbContainer.appendChild(bulb);
-  }
-
-  let bulbCount = 0;
-  for (let i = 0; i <= bulbsHorizontal; i++) {
-    const position = (i / bulbsHorizontal) * 100 + '%';
-    createBulb('0px', position, null, null, bulbCount++);
-    createBulb(null, position, null, '0px', bulbCount++);
-  }
-  for (let i = 1; i < bulbsVertical; i++) {
-    const position = (i / bulbsVertical) * 100 + '%';
-    createBulb(position, '0px', null, null, bulbCount++);
-    createBulb(position, null, '0px', null, bulbCount++);
-  }
-})();
-      
 /* ═══════════════════════════════════════════
    RAK CLIPPY WIDGET
 ═══════════════════════════════════════════ */
