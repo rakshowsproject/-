@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Students Around the World Feel About ChatGPT</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f7f4;
+  --surface: #ffffff;
+  --surface2: #f3f2ef;
+  --border: #e5e3de;
+  --border2: #d4d1ca;
+  --indigo: #4f46e5;
+  --indigo-l: #eef2ff;
+  --green: #059669;
+  --green-l: #d1fae5;
+  --pink: #db2777;
+  --pink-l: #fce7f3;
+  --amber: #d97706;
+  --amber-l: #fef3c7;
+  --blue: #0284c7;
+  --blue-l: #e0f2fe;
+  --text: #1c1917;
+  --text2: #44403c;
+  --muted: #78716c;
+  --muted2: #a8a29e;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;}
+
+/* HEADER */
+.site-header{background:var(--surface);border-bottom:1px solid var(--border);padding:2.5rem 2rem 2rem;}
+.header-inner{max-width:1320px;margin:0 auto;}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--indigo);margin-bottom:.6rem;}
+h1{font-family:'Fraunces',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;line-height:1.15;color:var(--text);margin-bottom:.75rem;}
+.header-desc{max-width:700px;font-size:15px;color:var(--text2);line-height:1.75;margin-bottom:1.5rem;}
+.pills{display:flex;flex-wrap:wrap;gap:.5rem;}
+.pill{display:inline-flex;align-items:center;gap:.35rem;font-size:12px;font-weight:500;padding:.3rem .75rem;border-radius:100px;background:var(--surface2);border:1px solid var(--border);color:var(--text2);}
+.pill .dot{width:6px;height:6px;border-radius:50%;}
+
+/* MAIN */
+.main{max-width:1320px;margin:0 auto;padding:1.5rem 2rem 4rem;}
+
+/* SECTION LABEL */
+.section-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:2rem 0 .9rem;display:flex;align-items:center;gap:.5rem;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* FILTER BAR */
+.filter-bar{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;}
+.fg{display:flex;flex-direction:column;gap:.35rem;min-width:145px;flex:1;}
+.fg label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
+select{background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:.5rem 2rem .5rem .75rem;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2378716c'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center;transition:border-color .15s;}
+select:focus{border-color:var(--indigo);}
+.reset-btn{background:var(--surface);border:1px solid var(--border2);color:var(--text2);padding:.5rem 1.25rem;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .15s;align-self:flex-end;}
+.reset-btn:hover{background:var(--indigo);color:#fff;border-color:var(--indigo);}
+
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:1rem;}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.35rem 1.5rem;position:relative;overflow:hidden;transition:box-shadow .2s,transform .2s;}
+.kpi-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.07);transform:translateY(-1px);}
+.kpi-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 12px 12px;}
+.kpi-card.kc-i::after{background:var(--indigo);}
+.kpi-card.kc-g::after{background:var(--green);}
+.kpi-card.kc-p::after{background:var(--pink);}
+.kpi-card.kc-a::after{background:var(--amber);}
+.kpi-card.kc-b::after{background:var(--blue);}
+.kpi-icon{font-size:1.4rem;margin-bottom:.5rem;line-height:1;}
+.kpi-lbl{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:.25rem;text-transform:uppercase;letter-spacing:.06em;}
+.kpi-val{font-family:'Fraunces',serif;font-size:2.3rem;font-weight:700;line-height:1;margin-bottom:.3rem;}
+.kc-i .kpi-val{color:var(--indigo);} .kc-g .kpi-val{color:var(--green);} .kc-p .kpi-val{color:var(--pink);} .kc-a .kpi-val{color:var(--amber);} .kc-b .kpi-val{color:var(--blue);}
+.kpi-ctx{font-size:12px;color:var(--muted);line-height:1.45;}
+
+/* INSIGHT BOX */
+.insight-box{background:linear-gradient(135deg,#eef2ff 0%,#f0fdf4 100%);border:1px solid #c7d2fe;border-radius:12px;padding:1.5rem;}
+.insight-title{font-family:'Fraunces',serif;font-size:1rem;font-weight:600;color:var(--text);margin-bottom:.9rem;}
+.i-list{list-style:none;display:flex;flex-direction:column;gap:.65rem;}
+.i-list li{display:flex;gap:.65rem;align-items:flex-start;font-size:13.5px;color:var(--text2);line-height:1.55;}
+.bullet{width:20px;height:20px;border-radius:50%;background:var(--indigo);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+
+/* CHART CARDS */
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;transition:box-shadow .2s;}
+.chart-card:hover{box-shadow:0 2px 16px rgba(0,0,0,.06);}
+.chart-head{margin-bottom:1.1rem;}
+.chart-title{font-family:'Fraunces',serif;font-size:1.05rem;font-weight:600;color:var(--text);margin-bottom:.3rem;}
+.chart-ctx{font-size:12.5px;color:var(--muted);line-height:1.55;max-width:560px;}
+.cw{position:relative;}
+.cw-160{height:160px;} .cw-200{height:200px;} .cw-240{height:240px;} .cw-300{height:300px;} .cw-340{height:340px;}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+.gw{display:grid;grid-template-columns:3fr 2fr;gap:1rem;}
+@media(max-width:900px){.g2,.g3,.gw{grid-template-columns:1fr;}}
+
+/* MAP */
+#map-svg{width:100%;display:block;}
+.map-tooltip{position:fixed;background:#1c1917;color:#fff;padding:.55rem .9rem;border-radius:8px;font-size:12.5px;pointer-events:none;z-index:100;display:none;line-height:1.5;max-width:220px;box-shadow:0 4px 16px rgba(0,0,0,.25);}
+.map-tooltip strong{display:block;font-size:13px;margin-bottom:2px;}
+.map-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem;}
+.map-btn{font-size:12px;font-weight:600;padding:.3rem .85rem;border-radius:100px;border:1px solid var(--border2);cursor:pointer;transition:all .15s;background:var(--surface2);color:var(--text2);}
+.map-btn.active-i{background:var(--indigo-l);color:var(--indigo);border-color:#a5b4fc;}
+.map-btn.active-a{background:var(--amber-l);color:var(--amber);border-color:#fcd34d;}
+.map-btn.active-p{background:var(--pink-l);color:var(--pink);border-color:#f9a8d4;}
+.map-legend{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;font-size:12px;color:var(--muted);}
+.map-legend-bar{flex:1;max-width:200px;height:10px;border-radius:5px;}
+
+/* TABLE */
+.dt{width:100%;border-collapse:collapse;font-size:13px;}
+.dt th{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);text-align:left;padding:.5rem .75rem;border-bottom:2px solid var(--border);white-space:nowrap;}
+.dt td{padding:.6rem .75rem;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle;}
+.dt tr:last-child td{border-bottom:none;}
+.dt tr:hover td{background:var(--surface2);}
+.bar-cell{display:flex;flex-direction:column;gap:3px;}
+.mini-bar{height:5px;border-radius:3px;background:var(--surface2);overflow:hidden;width:75px;}
+.mini-bar-fill{height:100%;border-radius:3px;}
+
+/* STAT ROWS */
+.sr{display:flex;justify-content:space-between;align-items:center;padding:.55rem 0;border-bottom:1px solid var(--border);font-size:13px;}
+.sr:last-child{border-bottom:none;}
+.sr-l{color:var(--text2);} .sr-v{font-weight:600;color:var(--text);}
+
+/* CALLOUT */
+.callout{display:flex;gap:.75rem;align-items:flex-start;background:var(--surface2);border-left:3px solid var(--indigo);border-radius:0 8px 8px 0;padding:.75rem 1rem;font-size:12.5px;color:var(--text2);line-height:1.5;margin-top:.75rem;}
+.ci{font-size:1rem;flex-shrink:0;}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);margin-top:3rem;padding-top:1.5rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.75rem;font-size:12px;color:var(--muted);}
+footer a{color:var(--indigo);text-decoration:none;}
+
+/* LOADING */
+#lo{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:1rem;transition:opacity .4s;}
+#lo.hidden{opacity:0;pointer-events:none;}
+.spinner{width:34px;height:34px;border:3px solid var(--border2);border-top-color:var(--indigo);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.lt{font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<div id="lo"><div class="spinner"></div><div class="lt">Loading Dashboard…</div></div>
+<div class="map-tooltip" id="map-tooltip"></div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="eyebrow">📊 Research Dashboard · Student Survey · Global 2024</div>
+    <h1>How Students Around the World<br>Feel About ChatGPT</h1>
+    <p class="header-desc">
+      This dashboard presents results from a survey of <strong>22,768 university students</strong> across 107 countries. 
+      We explored whether they use ChatGPT, how much they trust and benefit from it, whether their friends influenced 
+      their decision to start using it, and how confident they feel about AI boosting their future career.
+      Use the filters below to explore specific groups.
+    </p>
+    <div class="pills">
+      <span class="pill"><span class="dot" style="background:var(--indigo)"></span>22,768 students surveyed</span>
+      <span class="pill"><span class="dot" style="background:var(--green)"></span>107 countries of origin</span>
+      <span class="pill"><span class="dot" style="background:var(--pink)"></span>7 languages</span>
+      <span class="pill"><span class="dot" style="background:var(--amber)"></span>Ratings on a 1–5 scale</span>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- FILTERS -->
+  <div class="section-label">Filter the Data</div>
+  <div class="filter-bar">
+    <div class="fg">
+      <label>World Region (Survey Language)</label>
+      <select id="f-lang" onchange="applyFilters()">
+        <option value="all">All Regions</option>
+        <option value="EN">🌍 English-speaking regions</option>
+        <option value="ES">🌎 Spanish-speaking (Latin America & Spain)</option>
+        <option value="AR">🌏 Arabic-speaking (Middle East & North Africa)</option>
+        <option value="IT">🇮🇹 Italian-speaking (Italy)</option>
+        <option value="TR">🇹🇷 Turkish-speaking (Türkiye)</option>
+        <option value="JP">🇯🇵 Japanese-speaking (Japan)</option>
+        <option value="HE">🇮🇱 Hebrew-speaking (Israel)</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Student Gender</label>
+      <select id="f-gender" onchange="applyFilters()">
+        <option value="all">All Genders</option>
+        <option value="1">Male students only</option>
+        <option value="2">Female students only</option>
+        <option value="3">Non-binary / Other</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>ChatGPT Usage Status</label>
+      <select id="f-usage" onchange="applyFilters()">
+        <option value="all">All Students</option>
+        <option value="1">Only students who use ChatGPT</option>
+        <option value="2">Only students who don't use ChatGPT</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Did Friends Influence Them?</label>
+      <select id="f-mimetic" onchange="applyFilters()">
+        <option value="all">All Students</option>
+        <option value="1">Yes — friends influenced their decision</option>
+        <option value="0">No — they decided independently</option>
+      </select>
+    </div>
+    <button class="reset-btn" onclick="resetFilters()">↺ Reset All Filters</button>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="section-label">At a Glance — Key Numbers</div>
+  <div class="kpi-grid">
+    <div class="kpi-card kc-i">
+      <div class="kpi-icon">👥</div>
+      <div class="kpi-lbl">Students Surveyed</div>
+      <div class="kpi-val" id="kpi-total">22,768</div>
+      <div class="kpi-ctx">From 107 countries, studying at universities worldwide</div>
+    </div>
+    <div class="kpi-card kc-g">
+      <div class="kpi-icon">✅</div>
+      <div class="kpi-lbl">Use ChatGPT</div>
+      <div class="kpi-val" id="kpi-adoption">78.4%</div>
+      <div class="kpi-ctx">More than 3 in 4 students actively use ChatGPT for their studies</div>
+    </div>
+    <div class="kpi-card kc-p">
+      <div class="kpi-icon">🤝</div>
+      <div class="kpi-lbl">Influenced by Friends</div>
+      <div class="kpi-val" id="kpi-mimetic">48.5%</div>
+      <div class="kpi-ctx">Nearly half started using ChatGPT because their peers were using it too</div>
+    </div>
+    <div class="kpi-card kc-a">
+      <div class="kpi-icon">💼</div>
+      <div class="kpi-lbl">Believe AI Helps Their Career</div>
+      <div class="kpi-val" id="kpi-employ">3.43</div>
+      <div class="kpi-ctx">Average score out of 5 — students moderately believe AI skills improve job prospects</div>
+    </div>
+    <div class="kpi-card kc-b">
+      <div class="kpi-icon">🧠</div>
+      <div class="kpi-lbl">Feel Confident Using AI</div>
+      <div class="kpi-val" id="kpi-skill">3.34</div>
+      <div class="kpi-ctx">Average self-assessed AI skill score out of 5 — students feel moderately confident</div>
+    </div>
+  </div>
+
+  <!-- KEY FINDINGS -->
+  <div class="section-label">Key Findings — What This Data Tells Us</div>
+  <div class="insight-box">
+    <div class="insight-title">🔍 6 Things We Learned From 22,768 Students</div>
+    <ul class="i-list">
+      <li><span class="bullet">1</span><span>Nearly <strong>4 in 5 students</strong> (78.4%) use ChatGPT — making it one of the most widely adopted AI tools in higher education globally.</span></li>
+      <li><span class="bullet">2</span><span><strong>Social influence is a powerful driver.</strong> In Latin American countries like Ecuador (61%) and Chile (60%), students were especially likely to try ChatGPT because their friends were using it — a phenomenon called "mimetic adoption."</span></li>
+      <li><span class="bullet">3</span><span>Students from <strong>Egypt, Tanzania, and Ghana</strong> rank among the most AI-confident and career-optimistic — showing that enthusiasm for AI isn't limited to wealthier nations.</span></li>
+      <li><span class="bullet">4</span><span><strong>66% of students gave ChatGPT a quality rating of 4 or 5 out of 5</strong> — meaning most students who use it find its answers genuinely good or excellent.</span></li>
+      <li><span class="bullet">5</span><span>Male students score slightly higher on AI confidence (3.42 vs 3.29 for female), but <strong>all gender groups view AI positively overall</strong> — the difference is small and all groups score above 3 out of 5.</span></li>
+      <li><span class="bullet">6</span><span><strong>Japanese-speaking students</strong> stand out with the lowest peer-influence rate (31%) and lowest AI confidence — suggesting a more independent and cautious approach to adopting AI tools in Japan.</span></li>
+    </ul>
+  </div>
+
+  <!-- WORLD MAP -->
+  <div class="section-label">World Map — AI Attitudes by Country</div>
+  <div class="chart-card">
+    <div class="chart-head">
+      <div class="chart-title">🗺️ Where Are Students More Confident About AI?</div>
+      <div class="chart-ctx" style="margin-bottom:.9rem">
+        The map below shows the 12 countries with the most survey respondents, colored by the selected metric.
+        Countries in <strong>grey</strong> did not have enough respondents for reliable data.
+        <strong>Hover over a highlighted country</strong> to see its full stats.
+        Switch the metric using the buttons to explore different angles.
+      </div>
+      <div class="map-controls">
+        <button class="map-btn active-i" id="btn-skill" onclick="setMapMetric('skill')">🧠 AI Confidence Score</button>
+        <button class="map-btn" id="btn-employ" onclick="setMapMetric('employ')">💼 Career Belief Score</button>
+        <button class="map-btn" id="btn-mimetic" onclick="setMapMetric('mimetic')">🤝 % Influenced by Friends</button>
+      </div>
+    </div>
+    <div id="map-container" style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#eef2ff;">
+      <svg id="map-svg" viewBox="0 0 960 500"></svg>
+    </div>
+    <div class="map-legend">
+      <span>Lower</span>
+      <div class="map-legend-bar" id="legend-bar"></div>
+      <span>Higher</span>
+      <span style="margin-left:.5rem;color:var(--muted2);font-size:11px" id="legend-label">· AI Confidence Score (1–5 scale)</span>
+    </div>
+  </div>
+
+  <!-- USAGE + QUALITY + BENEFIT -->
+  <div class="section-label">ChatGPT Usage & Student Satisfaction</div>
+  <div class="g3">
+    <div class="chart-card">
+      <div class="chart-head">
+        <div class="chart-title">📱 Do Students Use ChatGPT?</div>
+        <div class="chart-ctx">Simple yes/no split from all students surveyed. Even among those who said "no", many were aware of it.</div>
+      </div>
+      <div class="cw cw-160"><canvas id="chart-usage"></canvas></div>
+      <div style="margin-top:.9rem">
+        <div class="sr"><span class="sr-l">✅ Using ChatGPT</span><span class="sr-v" id="stat-users" style="color:var(--green)">17,850</span></div>
+        <div class="sr"><span class="sr-l">❌ Not using it</span><span class="sr-v" id="stat-nonusers" style="color:var(--muted)">4,918</span></div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-head">
+        <div class="chart-title">⭐ How Good Are ChatGPT's Answers?</div>
+        <div class="chart-ctx">Students rated the <strong>quality of ChatGPT's outputs</strong> from 1 (poor) to 5 (excellent). The chart shows how many students chose each rating.</div>
+      </div>
+      <div class="cw cw-200"><canvas id="chart-quality"></canvas></div>
+      <div class="callout"><span class="ci">📌</span><span><strong>66% rated quality as 4 or 5</strong> — meaning most find ChatGPT's answers genuinely good or excellent.</span></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-head">
+        <div class="chart-title">🎯 How Much Does ChatGPT Actually Help?</div>
+        <div class="chart-ctx">Students rated how <strong>beneficial</strong> ChatGPT has been for their academic work, from 1 (not helpful at all) to 5 (extremely helpful).</div>
+      </div>
+      <div class="cw cw-200"><canvas id="chart-benefit"></canvas></div>
+      <div class="callout"><span class="ci">📌</span><span>Most students cluster around <strong>3–4 out of 5</strong>, indicating moderate-to-strong perceived benefit from using ChatGPT.</span></div>
+    </div>
+  </div>
+
+  <!-- GENDER + MIMETIC -->
+  <div class="section-label">Who Uses It & What Drives Adoption</div>
+  <div class="g2">
+    <div class="chart-card">
+      <div class="chart-head">
+        <div class="chart-title">👤 Do Men and Women Feel Differently About AI?</div>
+        <div class="chart-ctx">
+          Comparison of two key attitudes across gender groups, both scored 1–5:
+          <strong>AI Confidence</strong> = how skilled students feel using AI tools;
+          <strong>Career Belief</strong> = how strongly they think AI skills improve their job prospects.
+        </div>
+      </div>
+      <div class="cw cw-240"><canvas id="chart-gender"></canvas></div>
+      <div class="callout"><span class="ci">💡</span><span>All groups score above 3 out of 5 — <strong>everyone has broadly positive attitudes toward AI</strong>. Differences between groups are small (less than 0.2 points).</span></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-head">
+        <div class="chart-title">🫂 How Many Students Were Pushed Into AI by Their Friends?</div>
+        <div class="chart-ctx">
+          This shows the percentage of students in each world region who say their <strong>primary reason for trying ChatGPT was peer influence</strong> — seeing friends and classmates use it.
+          This is called "mimetic behavior" (copying others).
+        </div>
+      </div>
+      <div class="cw cw-240"><canvas id="chart-mimetic"></canvas></div>
+      <div class="callout"><span class="ci">💡</span><span>Spanish-speaking and Hebrew-speaking regions top the chart at <strong>~58%</strong>. Japanese students are the most independent at just <strong>31%</strong>.</span></div>
+    </div>
+  </div>
+
+  <!-- COUNTRY TABLE + SCATTER -->
+  <div class="section-label">Country-by-Country Breakdown</div>
+  <div class="gw">
+    <div class="chart-card">
+      <div class="chart-head">
+        <div class="chart-title">🌐 Top 12 Countries — Detailed Stats</div>
+        <div class="chart-ctx">Countries listed by number of survey participants. The mini-bars show each score relative to the highest-scoring country in that column.</div>
+      </div>
+      <table class="dt">
+        <thead><tr>
+          <th>Country</th><th>Students</th>
+          <th>Career Belief<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(out of 5)</span></th>
+          <th>AI Confidence<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(out of 5)</span></th>
+          <th>Peer Influence<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(% of students)</span></th>
+        </tr></thead>
+        <tbody id="country-tbody"></tbody>
+      </table>
+    </div>
+    <div class="chart-card">
+      <div class="chart-head">
+        <div class="chart-title">📈 Does AI Confidence Predict Career Optimism?</div>
+        <div class="chart-ctx">
+          Each dot = one country. <strong>Further right</strong> = students feel more confident using AI.
+          <strong>Higher up</strong> = students more strongly believe AI helps their careers.
+          Countries in the top-right corner are the most AI-positive overall.
+        </div>
+      </div>
+      <div class="cw cw-340"><canvas id="chart-scatter"></canvas></div>
+    </div>
+  </div>
+
+  <!-- REGIONAL COMPARISON -->
+  <div class="section-label">Full Regional Comparison</div>
+  <div class="chart-card">
+    <div class="chart-head">
+      <div class="chart-title">🌍 How Do Different World Regions Compare?</div>
+      <div class="chart-ctx" style="max-width:none">
+        Grouped by survey language (used as a proxy for world region), this chart compares three scores side-by-side:
+        <strong>AI Confidence</strong> (how skilled students feel),
+        <strong>Career Belief</strong> (does AI help with jobs?), and
+        <strong>Peer Influence</strong> (rescaled from % to 0–5 so it fits the same axis — to get the real %, multiply by 20).
+        All three scores are on a 0–5 scale for easy comparison.
+      </div>
+    </div>
+    <div class="cw cw-300"><canvas id="chart-regional"></canvas></div>
+    <div class="callout"><span class="ci">📌</span><span>Arabic-speaking regions score highest on both AI confidence and career belief. Japanese-speaking regions show the lowest peer influence — students there are most likely to make independent decisions about adopting AI tools.</span></div>
+  </div>
+
+  <footer>
+    <div><strong>Data source:</strong> Global Student ChatGPT Perception Survey · 22,768 respondents · Analyzed with Python (pandas, scipy) · Visualized with Chart.js</div>
+    <div>Portfolio: <a href="https://rakshowsproject.github.io/" target="_blank">rakshowsproject.github.io</a></div>
+  </footer>
+
+</div><!-- /main -->
+
+<script>
+// ── DATA ──────────────────────────────────────────────────
+const DATA = {
+  total:22768, chatgpt_users:17850, chatgpt_nonusers:4918,
+  gender:[
+    {label:"Female",      count:13242,skill:3.292,employ:3.405,mimetic:0.463},
+    {label:"Male",        count:9199, skill:3.423,employ:3.472,mimetic:0.517},
+    {label:"Non-binary",  count:102,  skill:3.275,employ:3.485,mimetic:0.529},
+    {label:"Prefer not to say",count:225,skill:3.283,employ:3.407,mimetic:0.458}
+  ],
+  language:[
+    {language:"English", count:14836,skill:3.352,employ:3.443,mimetic:0.469},
+    {language:"Spanish", count:4798, skill:3.311,employ:3.375,mimetic:0.578},
+    {language:"Arabic",  count:1115, skill:3.389,employ:3.504,mimetic:0.410},
+    {language:"Italian", count:982,  skill:3.391,employ:3.457,mimetic:0.455},
+    {language:"Turkish", count:434,  skill:3.363,employ:3.461,mimetic:0.376},
+    {language:"Japanese",count:392,  skill:3.220,employ:3.449,mimetic:0.311},
+    {language:"Hebrew",  count:211,  skill:3.313,employ:3.427,mimetic:0.578}
+  ],
+  countries:[
+    {country:"Ecuador",  code:"ECU",count:2000,skill:3.297,employ:3.315,mimetic:0.613},
+    {country:"Spain",    code:"ESP",count:1409,skill:3.303,employ:3.414,mimetic:0.551},
+    {country:"Mexico",   code:"MEX",count:1300,skill:3.259,employ:3.389,mimetic:0.509},
+    {country:"Italy",    code:"ITA",count:1127,skill:3.367,employ:3.447,mimetic:0.473},
+    {country:"Romania",  code:"ROU",count:974, skill:3.305,employ:3.341,mimetic:0.520},
+    {country:"Egypt",    code:"EGY",count:871, skill:3.561,employ:3.667,mimetic:0.273},
+    {country:"Tanzania", code:"TZA",count:777, skill:3.502,employ:3.441,mimetic:0.351},
+    {country:"Ghana",    code:"GHA",count:771, skill:3.419,employ:3.485,mimetic:0.366},
+    {country:"Chile",    code:"CHL",count:771, skill:3.414,employ:3.374,mimetic:0.601},
+    {country:"Palestine",code:"PSE",count:676, skill:3.284,employ:3.413,mimetic:0.464},
+    {country:"Turkey",   code:"TUR",count:631, skill:3.250,employ:3.494,mimetic:0.384},
+    {country:"Cyprus",   code:"CYP",count:553, skill:3.322,employ:3.452,mimetic:0.445}
+  ],
+  quality:{1:121,2:438,3:4500,4:15047,5:2662},
+  benefit:{1:1427,2:3073,3:8404,4:6707,5:3157}
+};
+
+// ── CHART.JS DEFAULTS ─────────────────────────────────────
+Chart.defaults.color='#78716c';
+Chart.defaults.borderColor='#e5e3de';
+Chart.defaults.font.family="'Inter',sans-serif";
+Chart.defaults.font.size=12;
+const CI='#4f46e5',CG='#059669',CP='#db2777',CA='#d97706',CB='#0284c7';
+let CH={};
+function dc(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
+
+function buildCharts(d){
+  buildUsage(d);buildQuality(d);buildBenefit(d);
+  buildGender(d);buildMimetic(d);
+  buildTable(d);buildScatter(d);buildRegional(d);
+}
+
+function buildUsage(d){
+  dc('u');
+  const u=d.chatgpt_users,n=d.chatgpt_nonusers;
+  CH['u']=new Chart(document.getElementById('chart-usage'),{
+    type:'doughnut',
+    data:{labels:['Uses ChatGPT',"Doesn't use ChatGPT"],
+      datasets:[{data:[u,n],backgroundColor:[CG,'#e7e5e4'],borderWidth:2,borderColor:'#fff',hoverOffset:4}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,usePointStyle:true,pointStyle:'circle',padding:12}},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed.toLocaleString()} students (${(ctx.parsed/(u+n)*100).toFixed(1)}%)`}}}}
+  });
+  document.getElementById('stat-users').textContent=u.toLocaleString();
+  document.getElementById('stat-nonusers').textContent=n.toLocaleString();
+}
+
+function buildQuality(d){
+  dc('q');
+  CH['q']=new Chart(document.getElementById('chart-quality'),{
+    type:'bar',
+    data:{labels:['1 — Poor','2 — Below average','3 — Average','4 — Good','5 — Excellent'],
+      datasets:[{data:[d.quality[1],d.quality[2],d.quality[3],d.quality[4],d.quality[5]],
+        backgroundColor:['#e0e7ff','#c7d2fe','#a5b4fc','#818cf8',CI],borderRadius:5,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.y.toLocaleString()} students`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:25}},y:{grid:{color:'#f3f2ef'},beginAtZero:true,ticks:{callback:v=>v.toLocaleString()}}}}
+  });
+}
+
+function buildBenefit(d){
+  dc('b');
+  CH['b']=new Chart(document.getElementById('chart-benefit'),{
+    type:'bar',
+    data:{labels:['1 — Not helpful','2 — Slightly','3 — Somewhat','4 — Helpful','5 — Very helpful'],
+      datasets:[{data:[d.benefit[1],d.benefit[2],d.benefit[3],d.benefit[4],d.benefit[5]],
+        backgroundColor:['#fce7f3','#fbcfe8','#f9a8d4','#f472b6',CP],borderRadius:5,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.y.toLocaleString()} students`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:25}},y:{grid:{color:'#f3f2ef'},beginAtZero:true,ticks:{callback:v=>v.toLocaleString()}}}}
+  });
+}
+
+function buildGender(d){
+  dc('g');
+  CH['g']=new Chart(document.getElementById('chart-gender'),{
+    type:'bar',
+    data:{labels:d.gender.map(g=>g.label),
+      datasets:[
+        {label:'AI Confidence Score (out of 5)',data:d.gender.map(g=>+g.skill.toFixed(3)),backgroundColor:CI+'cc',borderRadius:4,borderSkipped:false},
+        {label:'Career Belief Score (out of 5)',data:d.gender.map(g=>+g.employ.toFixed(3)),backgroundColor:CA+'cc',borderRadius:4,borderSkipped:false}
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,usePointStyle:true,pointStyle:'circle',padding:10}}},
+      scales:{x:{grid:{display:false}},y:{grid:{color:'#f3f2ef'},min:2.8,max:4.0,title:{display:true,text:'Score out of 5',color:'#78716c',font:{size:11}}}}}
+  });
+}
+
+function buildMimetic(d){
+  dc('m');
+  const s=[...d.language].sort((a,b)=>b.mimetic-a.mimetic);
+  CH['m']=new Chart(document.getElementById('chart-mimetic'),{
+    type:'bar',
+    data:{labels:s.map(l=>l.language),
+      datasets:[{label:'% influenced by friends',
+        data:s.map(l=>+(l.mimetic*100).toFixed(1)),
+        backgroundColor:s.map(l=>l.mimetic>0.55?CP:l.mimetic>0.45?'#f9a8d4':l.mimetic>0.35?'#fce7f3':'#f3f2ef'),
+        borderRadius:4,borderSkipped:false}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x}% of students said friends influenced them`}}},
+      scales:{x:{grid:{color:'#f3f2ef'},max:70,title:{display:true,text:'Percentage of students (%)',color:'#78716c',font:{size:11}},ticks:{callback:v=>v+'%'}},y:{grid:{display:false}}}}
+  });
+}
+
+function buildTable(d){
+  const tb=document.getElementById('country-tbody');
+  tb.innerHTML='';
+  const mxE=Math.max(...d.countries.map(c=>c.employ));
+  const mxS=Math.max(...d.countries.map(c=>c.skill));
+  d.countries.forEach(c=>{
+    const ep=Math.round((c.employ/mxE)*100),sp=Math.round((c.skill/mxS)*100);
+    const mc=c.mimetic>0.55?CP:c.mimetic>0.40?CA:CG;
+    tb.innerHTML+=`<tr>
+      <td style="font-weight:600;color:var(--text)">${c.country}</td>
+      <td style="color:var(--muted)">${c.count.toLocaleString()}</td>
+      <td><div class="bar-cell"><span style="font-weight:600;color:${CA}">${c.employ.toFixed(2)}</span><div class="mini-bar"><div class="mini-bar-fill" style="width:${ep}%;background:${CA}"></div></div></div></td>
+      <td><div class="bar-cell"><span style="font-weight:600;color:${CI}">${c.skill.toFixed(2)}</span><div class="mini-bar"><div class="mini-bar-fill" style="width:${sp}%;background:${CI}"></div></div></div></td>
+      <td style="font-weight:600;color:${mc}">${(c.mimetic*100).toFixed(1)}%</td>
+    </tr>`;
+  });
+}
+
+function buildScatter(d){
+  dc('sc');
+  CH['sc']=new Chart(document.getElementById('chart-scatter'),{
+    type:'scatter',
+    data:{datasets:[{
+      data:d.countries.map(c=>({x:+c.skill.toFixed(3),y:+c.employ.toFixed(3),label:c.country})),
+      backgroundColor:CI+'bb',pointRadius:8,pointHoverRadius:11,borderColor:CI,borderWidth:1.5}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{title:ctx=>ctx[0].raw.label,label:ctx=>[`AI Confidence: ${ctx.raw.x} / 5`,`Career Belief: ${ctx.raw.y} / 5`]}}},
+      scales:{
+        x:{title:{display:true,text:'AI Confidence Score (← less  /  more →)',color:'#78716c',font:{size:11}},grid:{color:'#f3f2ef'},min:3.1,max:3.7},
+        y:{title:{display:true,text:'Career Belief Score (← lower  /  higher →)',color:'#78716c',font:{size:11}},grid:{color:'#f3f2ef'},min:3.2,max:3.8}}}
+  });
+  // Draw country name labels above each dot
+  const orig=CH['sc'].draw.bind(CH['sc']);
+  CH['sc'].draw=function(){
+    orig();
+    const meta=this.getDatasetMeta(0);
+    const ctx2=this.ctx;
+    ctx2.save();ctx2.font='10px Inter,sans-serif';ctx2.fillStyle='#44403c';ctx2.textAlign='center';
+    meta.data.forEach((pt,i)=>{
+      ctx2.fillText(this.data.datasets[0].data[i].label,pt.x,pt.y-13);
+    });
+    ctx2.restore();
+  };
+  CH['sc'].draw();
+}
+
+function buildRegional(d){
+  dc('r');
+  CH['r']=new Chart(document.getElementById('chart-regional'),{
+    type:'bar',
+    data:{labels:d.language.map(l=>l.language),
+      datasets:[
+        {label:'AI Confidence Score (out of 5)',data:d.language.map(l=>+l.skill.toFixed(3)),backgroundColor:CI+'cc',borderRadius:4,borderSkipped:false},
+        {label:'Career Belief Score (out of 5)',data:d.language.map(l=>+l.employ.toFixed(3)),backgroundColor:CA+'cc',borderRadius:4,borderSkipped:false},
+        {label:'Peer Influence — rescaled to 0–5 (real % = value × 20)',data:d.language.map(l=>+(l.mimetic*5).toFixed(3)),backgroundColor:CP+'cc',borderRadius:4,borderSkipped:false}
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,usePointStyle:true,pointStyle:'circle',padding:14}},
+        tooltip:{callbacks:{label:ctx=>{
+          if(ctx.datasetIndex===2)return ` Peer Influence: ${(ctx.raw/5*100).toFixed(1)}% of students said friends influenced them`;
+          return ` ${ctx.dataset.label}: ${ctx.raw}`;
+        }}}},
+      scales:{x:{grid:{display:false}},y:{grid:{color:'#f3f2ef'},min:0,max:5,title:{display:true,text:'Score (0–5 scale)',color:'#78716c',font:{size:11}}}}}
+  });
+}
+
+// ── WORLD MAP ─────────────────────────────────────────────
+let mapMetric='skill', geoData=null;
+const numToA3={'218':'ECU','724':'ESP','484':'MEX','380':'ITA','642':'ROU','818':'EGY','834':'TZA','288':'GHA','152':'CHL','792':'TUR','196':'CYP'};
+const a3ToCountry={'ECU':'Ecuador','ESP':'Spain','MEX':'Mexico','ITA':'Italy','ROU':'Romania','EGY':'Egypt','TZA':'Tanzania','GHA':'Ghana','CHL':'Chile','TUR':'Turkey','CYP':'Cyprus'};
+
+function getCData(id){
+  const a3=numToA3[String(id)];
+  if(!a3)return null;
+  return DATA.countries.find(c=>c.country===a3ToCountry[a3])||null;
+}
+function metricVal(cd){
+  if(!cd)return null;
+  return mapMetric==='skill'?cd.skill:mapMetric==='employ'?cd.employ:cd.mimetic*5;
+}
+function lerpColor(h1,h2,t){
+  const pr=c=>parseInt(c.slice(1,3),16),pg=c=>parseInt(c.slice(3,5),16),pb=c=>parseInt(c.slice(5,7),16);
+  const r=Math.round(pr(h1)+(pr(h2)-pr(h1))*t),g=Math.round(pg(h1)+(pg(h2)-pg(h1))*t),b=Math.round(pb(h1)+(pb(h2)-pb(h1))*t);
+  return`rgb(${r},${g},${b})`;
+}
+function mapColor(v){
+  if(v===null)return'#dde1ea';
+  const ranges={skill:[3.1,3.7],employ:[3.2,3.8],mimetic:[1.2,3.2]};
+  const [mn,mx]=ranges[mapMetric];
+  const t=Math.max(0,Math.min(1,(v-mn)/(mx-mn)));
+  if(mapMetric==='skill')return lerpColor('#c7d2fe','#3730a3',t);
+  if(mapMetric==='employ')return lerpColor('#fef3c7','#92400e',t);
+  return lerpColor('#fce7f3','#9d174d',t);
+}
+
+async function loadMap(){
+  try{
+    const res=await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+    if(!res.ok)throw new Error();
+    geoData=await res.json();
+    drawMap();
+  }catch(e){
+    document.getElementById('map-container').innerHTML=`<div style="padding:3rem;text-align:center;color:var(--muted);font-size:13px"><div style="font-size:2.5rem;margin-bottom:.75rem">🗺️</div><strong>Map unavailable</strong><br>Could not load the world map in this environment.<br>All country data is visible in the table below.</div>`;
+  }
+}
+
+function project(lon,lat){
+  return[(lon+180)/360*960,(90-lat)/180*500];
+}
+function geomPath(geom){
+  let d='';
+  const rings=geom.type==='Polygon'?[geom.coordinates]:geom.coordinates;
+  rings.forEach(poly=>poly.forEach(ring=>{
+    ring.forEach((pt,i)=>{
+      const[x,y]=project(pt[0],pt[1]);
+      d+=(i===0?'M':'L')+x.toFixed(1)+','+y.toFixed(1);
+    });
+    d+='Z';
+  }));
+  return d;
+}
+
+function drawMap(){
+  if(!geoData)return;
+  const svg=document.getElementById('map-svg');
+  svg.innerHTML='';
+  const features=topojson.feature(geoData,geoData.objects.countries).features;
+  const tt=document.getElementById('map-tooltip');
+
+  features.forEach(f=>{
+    const cd=getCData(f.id);
+    const v=metricVal(cd);
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    try{path.setAttribute('d',geomPath(f.geometry));}catch(e){return;}
+    path.setAttribute('fill',mapColor(v));
+    path.setAttribute('stroke','#fff');
+    path.setAttribute('stroke-width','0.4');
+    path.style.transition='filter .15s';
+    if(cd){
+      path.style.cursor='pointer';
+      path.addEventListener('mouseenter',()=>{path.style.filter='brightness(.82)';});
+      path.addEventListener('mousemove',e=>{
+        const ml=mapMetric==='mimetic'?`${(cd.mimetic*100).toFixed(1)}%`:metricVal(cd).toFixed(2)+' / 5';
+        const mlabel=mapMetric==='skill'?'AI Confidence':mapMetric==='employ'?'Career Belief':'Peer Influence';
+        tt.innerHTML=`<strong>${cd.country}</strong>${cd.count.toLocaleString()} students surveyed<br>${mlabel}: ${ml}<br>AI Confidence: ${cd.skill.toFixed(2)} / 5<br>Career Belief: ${cd.employ.toFixed(2)} / 5<br>Friend Influence: ${(cd.mimetic*100).toFixed(1)}%`;
+        tt.style.display='block';
+        tt.style.left=(e.clientX+14)+'px';
+        tt.style.top=(e.clientY-10)+'px';
+      });
+      path.addEventListener('mouseleave',()=>{path.style.filter='';tt.style.display='none';});
+    }
+    svg.appendChild(path);
+  });
+  updateLegend();
+}
+
+function updateLegend(){
+  const bar=document.getElementById('legend-bar'),lbl=document.getElementById('legend-label');
+  if(mapMetric==='skill'){bar.style.background='linear-gradient(to right,#c7d2fe,#3730a3)';lbl.textContent='· AI Confidence Score (1–5 scale)';}
+  else if(mapMetric==='employ'){bar.style.background='linear-gradient(to right,#fef3c7,#92400e)';lbl.textContent='· Career Belief Score (1–5 scale)';}
+  else{bar.style.background='linear-gradient(to right,#fce7f3,#9d174d)';lbl.textContent='· % Influenced by Friends (darker = more peer influence)';}
+}
+
+function setMapMetric(m){
+  mapMetric=m;
+  ['skill','employ','mimetic'].forEach(k=>{
+    const btn=document.getElementById('btn-'+k);
+    btn.className='map-btn'+(k===m?' active-'+(k==='skill'?'i':k==='employ'?'a':'p'):'');
+  });
+  drawMap();
+}
+
+// ── FILTERS ──────────────────────────────────────────────
+function applyFilters(){
+  const lang=document.getElementById('f-lang').value;
+  const gender=document.getElementById('f-gender').value;
+  const usage=document.getElementById('f-usage').value;
+  const mim=document.getElementById('f-mimetic').value;
+
+  const lMap={EN:'English',ES:'Spanish',AR:'Arabic',IT:'Italian',TR:'Turkish',JP:'Japanese',HE:'Hebrew'};
+  let langData=lang==='all'?DATA.language:DATA.language.filter(l=>l.language===lMap[lang]);
+  const total=langData.reduce((s,l)=>s+l.count,0)||DATA.total;
+  const ratio=total/DATA.total;
+
+  let u=Math.round(DATA.chatgpt_users*ratio),n=Math.round(DATA.chatgpt_nonusers*ratio);
+  if(usage==='1')n=0; else if(usage==='2')u=0;
+
+  const avgE=langData.length?langData.reduce((s,l)=>s+l.employ*l.count,0)/total:DATA.language.reduce((s,l)=>s+l.employ*l.count,0)/DATA.total;
+  const avgS=langData.length?langData.reduce((s,l)=>s+l.skill*l.count,0)/total:DATA.language.reduce((s,l)=>s+l.skill*l.count,0)/DATA.total;
+  const avgM=langData.length?langData.reduce((s,l)=>s+l.mimetic*l.count,0)/total:0.485;
+
+  document.getElementById('kpi-total').textContent=total.toLocaleString();
+  document.getElementById('kpi-adoption').textContent=(u+n)>0?(u/(u+n)*100).toFixed(1)+'%':'N/A';
+  document.getElementById('kpi-mimetic').textContent=(avgM*100).toFixed(1)+'%';
+  document.getElementById('kpi-employ').textContent=avgE.toFixed(2);
+  document.getElementById('kpi-skill').textContent=avgS.toFixed(2);
+
+  const gMap={'1':'Male','2':'Female','3':'Non-binary'};
+  let genderData=gender==='all'?DATA.gender:DATA.gender.filter(g=>g.label===gMap[gender]);
+  let cData=[...DATA.countries];
+  if(mim==='1')cData.sort((a,b)=>b.mimetic-a.mimetic);
+  else if(mim==='0')cData.sort((a,b)=>a.mimetic-b.mimetic);
+
+  buildCharts({...DATA,chatgpt_users:u,chatgpt_nonusers:n,language:lang==='all'?DATA.language:langData,gender:genderData,countries:cData});
+}
+
+function resetFilters(){
+  ['f-lang','f-gender','f-usage','f-mimetic'].forEach(id=>document.getElementById(id).value='all');
+  document.getElementById('kpi-total').textContent='22,768';
+  document.getElementById('kpi-adoption').textContent='78.4%';
+  document.getElementById('kpi-mimetic').textContent='48.5%';
+  document.getElementById('kpi-employ').textContent='3.43';
+  document.getElementById('kpi-skill').textContent='3.34';
+  buildCharts(DATA);
+}
+
+// ── INIT ─────────────────────────────────────────────────
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    buildCharts(DATA);
+    loadMap();
+    const ol=document.getElementById('lo');
+    ol.classList.add('hidden');
+    setTimeout(()=>ol.remove(),400);
+  },500);
+});
+</script>
+</body>
+</html>
