@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tesla Reddit — What People Really Think</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#dc2626;--red-d:#991b1b;--red-l:#fef2f2;--red-m:#fca5a5;
+  --green:#16a34a;--green-l:#dcfce7;
+  --amber:#d97706;--amber-l:#fef3c7;
+  --blue:#2563eb;--blue-l:#eff6ff;
+  --bg:#f9f9f7;--surface:#fff;--border:#f0e8e8;--border2:#fecaca;
+  --text:#111;--text2:#374151;--muted:#6b7280;--muted2:#9ca3af;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden;}
+
+/* ── LOADING ── */
+#lo{position:fixed;inset:0;background:#fff;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;transition:opacity .5s ease;}
+#lo.out{opacity:0;pointer-events:none;}
+.lo-logo{font-size:3rem;animation:bounce 1s ease infinite alternate;}
+@keyframes bounce{from{transform:translateY(0);}to{transform:translateY(-12px);}}
+.lo-bar{width:200px;height:4px;background:#fee2e2;border-radius:2px;overflow:hidden;}
+.lo-fill{height:100%;background:var(--red);border-radius:2px;animation:loFill 1.2s ease forwards;}
+@keyframes loFill{from{width:0;}to{width:100%;}}
+.lo-text{font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+
+/* ── HEADER ── */
+.hero{background:var(--red);padding:3rem 2rem 2.5rem;position:relative;overflow:hidden;}
+.hero-shapes span{position:absolute;border-radius:50%;opacity:.06;}
+.hero-shapes span:nth-child(1){width:600px;height:600px;background:#fff;top:-200px;right:-100px;}
+.hero-shapes span:nth-child(2){width:300px;height:300px;background:#000;bottom:-150px;left:10%;}
+.hero-shapes span:nth-child(3){width:150px;height:150px;background:#fff;top:20px;left:30%;}
+.hero-inner{max-width:1320px;margin:0 auto;position:relative;z-index:1;}
+.hero-tag{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:.7rem;display:flex;align-items:center;gap:.5rem;}
+.hero-tag::before{content:'';width:20px;height:1px;background:rgba(255,255,255,.4);}
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:800;color:#fff;line-height:1.1;margin-bottom:.85rem;}
+.hero h1 em{color:rgba(255,255,255,.55);font-style:normal;}
+.hero-desc{max-width:640px;font-size:15px;color:rgba(255,255,255,.8);line-height:1.75;margin-bottom:2rem;}
+.hero-stats{display:flex;flex-wrap:wrap;gap:1.5rem;}
+.hstat{display:flex;flex-direction:column;gap:.1rem;}
+.hstat-n{font-family:'Fraunces',serif;font-size:2rem;font-weight:800;color:#fff;line-height:1;}
+.hstat-l{font-size:11px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .55s ease,transform .55s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+/* ── MAIN ── */
+.main{max-width:1320px;margin:0 auto;padding:2.5rem 2rem 5rem;}
+
+/* ── SECTION HEADER ── */
+.sec-head{display:flex;align-items:center;gap:.6rem;margin:2.5rem 0 1.1rem;}
+.sec-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;}
+.sec-title{font-family:'Fraunces',serif;font-size:1.15rem;font-weight:700;color:var(--text);}
+.sec-sub{font-size:12.5px;color:var(--muted);margin-left:.25rem;}
+.sec-line{flex:1;height:1px;background:var(--border);}
+
+/* ── EXPLAINER BANNER ── */
+.explainer{background:linear-gradient(135deg,#fff5f5,#fff);border:1px solid var(--border2);border-radius:14px;padding:1.5rem 1.75rem;margin-bottom:1rem;display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;}
+.exp-icon{font-size:2.2rem;flex-shrink:0;margin-top:.1rem;}
+.exp-body h3{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:.4rem;}
+.exp-body p{font-size:13px;color:var(--text2);line-height:1.65;max-width:700px;}
+.exp-scale{display:flex;align-items:center;gap:.75rem;margin-top:.75rem;flex-wrap:wrap;}
+.scale-bar{display:flex;align-items:stretch;height:14px;border-radius:7px;overflow:hidden;width:220px;}
+.scale-bar span{flex:1;}
+.scale-labels{display:flex;gap:.5rem;font-size:11px;flex-wrap:wrap;}
+.scale-pill{padding:.2rem .6rem;border-radius:100px;font-weight:600;font-size:11px;}
+
+/* ── FILTER BAR ── */
+.filter-bar{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.25rem 1.5rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+.fg{display:flex;flex-direction:column;gap:.35rem;min-width:150px;flex:1;}
+.fg label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
+.fg .fl{font-size:11px;color:var(--muted2);margin-top:.15rem;}
+select{background:var(--bg);border:1.5px solid var(--border2);color:var(--text);padding:.5rem 2rem .5rem .75rem;border-radius:9px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7280'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center;transition:border-color .2s,box-shadow .2s;}
+select:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(220,38,38,.1);}
+.rbtn{background:var(--red);border:none;color:#fff;padding:.55rem 1.4rem;border-radius:9px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s,transform .1s;align-self:flex-end;}
+.rbtn:hover{background:var(--red-d);}
+.rbtn:active{transform:scale(.97);}
+
+/* ── KPI CARDS ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.5rem;position:relative;overflow:hidden;transition:box-shadow .25s,transform .25s;cursor:default;}
+.kpi:hover{box-shadow:0 6px 28px rgba(220,38,38,.12);transform:translateY(-3px);}
+.kpi::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 14px 14px;}
+.kpi.cr::after{background:var(--red);}
+.kpi.cg::after{background:var(--green);}
+.kpi.ca::after{background:var(--amber);}
+.kpi.cb::after{background:var(--blue);}
+.kpi.cp::after{background:#9333ea;}
+.kpi-emoji{font-size:1.6rem;margin-bottom:.5rem;line-height:1;}
+.kpi-lbl{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:.2rem;text-transform:uppercase;letter-spacing:.07em;}
+.kpi-num{font-family:'Fraunces',serif;font-size:2.5rem;font-weight:800;line-height:1;margin-bottom:.3rem;transition:color .3s;}
+.cr .kpi-num{color:var(--red);}
+.cg .kpi-num{color:var(--green);}
+.ca .kpi-num{color:var(--amber);}
+.cb .kpi-num{color:var(--blue);}
+.cp .kpi-num{color:#9333ea;}
+.kpi-explain{font-size:12px;color:var(--muted);line-height:1.5;}
+/* count-up animation */
+.kpi-num.counting{animation:pulse .3s ease;}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+
+/* ── WORD BUBBLES ── */
+.bubble-section{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;}
+.bubble-head{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:.3rem;}
+.bubble-sub{font-size:12.5px;color:var(--muted);margin-bottom:1.1rem;line-height:1.5;}
+.bubble-wrap{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;}
+.bubble{border-radius:100px;padding:.35rem .85rem;font-size:12.5px;font-weight:600;cursor:default;transition:transform .2s,box-shadow .2s;animation:popIn .4s ease both;border:2px solid transparent;}
+.bubble:hover{transform:scale(1.08);box-shadow:0 4px 14px rgba(0,0,0,.1);}
+@keyframes popIn{from{opacity:0;transform:scale(.7);}to{opacity:1;transform:scale(1);}}
+.bubble.pos{background:var(--green-l);color:#14532d;border-color:#bbf7d0;}
+.bubble.neg{background:var(--red-l);color:var(--red-d);border-color:var(--border2);}
+.bubble.neu{background:#f3f4f6;color:var(--text2);border-color:#e5e7eb;}
+/* word bubble tooltip */
+.bubble[data-tip]{position:relative;}
+.bubble[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1f2937;color:#fff;font-size:11px;font-weight:400;padding:.4rem .7rem;border-radius:7px;white-space:nowrap;pointer-events:none;z-index:50;line-height:1.4;}
+.bubble[data-tip]:hover::before{content:'';position:absolute;bottom:calc(100% + 2px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1f2937;pointer-events:none;z-index:50;}
+
+/* ── SPEECH BUBBLES (quote cards) ── */
+.speech-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:700px){.speech-grid{grid-template-columns:1fr;}}
+.speech{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.25rem;position:relative;transition:box-shadow .2s,transform .2s;animation:slideUp .4s ease both;}
+.speech:hover{box-shadow:0 4px 20px rgba(0,0,0,.07);transform:translateY(-2px);}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.speech::before{content:'';position:absolute;bottom:-10px;left:24px;width:20px;height:10px;background:var(--surface);clip-path:polygon(0 0,100% 0,50% 100%);border-left:1px solid var(--border);border-bottom:1px solid var(--border);}
+.speech.neg::before{border-color:var(--border2);}
+.speech.neg{border-color:var(--border2);background:linear-gradient(135deg,#fff5f5,#fff);}
+.speech.pos{border-color:#bbf7d0;background:linear-gradient(135deg,#f0fdf4,#fff);}
+.speech-score{display:inline-flex;align-items:center;gap:.35rem;font-size:11px;font-weight:700;padding:.2rem .6rem;border-radius:100px;margin-bottom:.55rem;}
+.speech-score.pos{background:var(--green-l);color:var(--green);}
+.speech-score.neg{background:var(--red-l);color:var(--red);}
+.speech-text{font-size:13px;color:var(--text2);line-height:1.6;font-style:italic;}
+.speech-meta{font-size:11px;color:var(--muted2);margin-top:.5rem;}
+.speech-author{display:flex;align-items:center;gap:.5rem;margin-top:1rem;}
+.speech-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;}
+
+/* ── CHART CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;transition:box-shadow .2s;}
+.card:hover{box-shadow:0 2px 18px rgba(220,38,38,.07);}
+.card-title{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:.3rem;}
+.card-sub{font-size:12.5px;color:var(--muted);line-height:1.55;margin-bottom:1rem;}
+.cw{position:relative;}
+.h160{height:160px;} .h200{height:200px;} .h240{height:240px;} .h280{height:280px;} .h300{height:300px;} .h340{height:340px;}
+
+/* ── CALLOUT ── */
+.tip{display:flex;gap:.65rem;align-items:flex-start;background:var(--red-l);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:.75rem 1rem;font-size:12.5px;color:var(--text2);line-height:1.55;margin-top:.85rem;}
+.tip .ti{flex-shrink:0;font-size:1rem;}
+
+/* ── METER BARS ── */
+.meter{display:flex;flex-direction:column;gap:.5rem;}
+.meter-row{display:flex;align-items:center;gap:.75rem;}
+.meter-bar{flex:1;height:16px;border-radius:8px;background:#f3f4f6;overflow:hidden;display:flex;}
+.m-seg{height:100%;transition:width .8s cubic-bezier(.4,0,.2,1);}
+.meter-lbl{font-size:11.5px;font-weight:600;min-width:56px;}
+.meter-pct{font-size:11.5px;color:var(--muted);min-width:30px;text-align:right;}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:.3rem;background:#f3f4f6;padding:.25rem;border-radius:10px;width:fit-content;margin-bottom:1rem;}
+.tab{font-size:12px;font-weight:600;padding:.4rem 1rem;border-radius:7px;border:none;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);}
+.tab.on{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(220,38,38,.3);}
+
+/* ── STAT TABLE ── */
+.st{width:100%;border-collapse:collapse;font-size:13px;}
+.st th{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);text-align:left;padding:.5rem .75rem;border-bottom:2px solid var(--border);}
+.st td{padding:.6rem .75rem;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle;}
+.st tr:last-child td{border-bottom:none;}
+.st tr:hover td{background:#fafafa;}
+.mini{height:7px;border-radius:4px;background:#f3f4f6;overflow:hidden;min-width:80px;}
+.mini-f{height:100%;border-radius:4px;transition:width .7s ease;}
+
+/* ── SCORE PILL ── */
+.spill{display:inline-flex;font-size:11px;font-weight:700;padding:.2rem .6rem;border-radius:100px;}
+.spill.pos{background:var(--green-l);color:var(--green);}
+.spill.neg{background:var(--red-l);color:var(--red);}
+.spill.neu{background:#f3f4f6;color:var(--muted);}
+
+/* ── GRIDS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+.gw{display:grid;grid-template-columns:2fr 1fr;gap:1rem;}
+@media(max-width:960px){.g2,.g3,.gw{grid-template-columns:1fr;}}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);margin-top:3rem;padding-top:1.5rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.75rem;font-size:12px;color:var(--muted);}
+footer a{color:var(--red);text-decoration:none;}
+
+/* ── PROGRESS RING ── */
+.ring-wrap{display:flex;align-items:center;gap:1rem;}
+.ring-svg{transform:rotate(-90deg);}
+.ring-svg circle{fill:none;stroke-width:8;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1);}
+.ring-bg{stroke:#f3f4f6;}
+.ring-val{stroke-linecap:round;}
+.ring-label{text-align:center;}
+.ring-num{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:800;line-height:1;}
+.ring-desc{font-size:11px;color:var(--muted);margin-top:.15rem;}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="lo">
+  <div class="lo-logo">🚗</div>
+  <div class="lo-bar"><div class="lo-fill"></div></div>
+  <div class="lo-text">Analysing Tesla Sentiment…</div>
+</div>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+  <div class="hero-shapes"><span></span><span></span><span></span></div>
+  <div class="hero-inner">
+    <div class="hero-tag">Reddit Sentiment Analysis · r/TeslaMotors · NLP Research</div>
+    <h1>Tesla on Reddit —<br><em>What People Really Think</em></h1>
+    <p class="hero-desc">
+      We used a computer to read and score <strong>10,197 Reddit posts and comments</strong> about Tesla —
+      measuring whether each one sounds positive, negative, or neutral.
+      This dashboard shows what the community loves, hates, and wishes were different.
+    </p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-n">1,021</div><div class="hstat-l">Reddit Posts</div></div>
+      <div class="hstat"><div class="hstat-n">9,176</div><div class="hstat-l">Comments</div></div>
+      <div class="hstat"><div class="hstat-n">10</div><div class="hstat-l">Topic Categories</div></div>
+      <div class="hstat"><div class="hstat-n">97.9%</div><div class="hstat-l">Human-Written</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- HOW TO READ THIS -->
+  <div class="sec-head reveal"><span class="sec-dot"></span><span class="sec-title">How to Read This Dashboard</span><span class="sec-line"></span></div>
+  <div class="explainer reveal">
+    <div class="exp-icon">🎓</div>
+    <div class="exp-body">
+      <h3>What is "sentiment" and how was it measured?</h3>
+      <p>
+        A computer program called an <strong>NLP (Natural Language Processing) model</strong> read every post and comment
+        and gave it a score between <strong>−1.0</strong> and <strong>+1.0</strong>.
+        Think of it like a mood meter — the more positive the language used, the higher the score.
+        A score near 0 means the text was balanced or factual. Scores above +0.05 are <strong>positive</strong>, below −0.05 are <strong>negative</strong>.
+      </p>
+      <div class="exp-scale">
+        <div class="scale-bar">
+          <span style="background:#dc2626"></span>
+          <span style="background:#f87171"></span>
+          <span style="background:#d1d5db"></span>
+          <span style="background:#86efac"></span>
+          <span style="background:#16a34a"></span>
+        </div>
+        <div class="scale-labels">
+          <span class="scale-pill" style="background:#fef2f2;color:#991b1b">😞 Very negative (−1.0)</span>
+          <span class="scale-pill" style="background:#f3f4f6;color:#6b7280">😐 Neutral (0.0)</span>
+          <span class="scale-pill" style="background:#dcfce7;color:#14532d">😊 Very positive (+1.0)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="sec-head reveal"><span class="sec-dot"></span><span class="sec-title">Filter the Data</span><span class="sec-line"></span></div>
+  <div class="filter-bar reveal">
+    <div class="fg">
+      <label>What to Include</label>
+      <select id="f-type" onchange="applyFilters()">
+        <option value="both">Posts + Comments Together</option>
+        <option value="posts">Posts Only (longer, more thought-out)</option>
+        <option value="comments">Comments Only (shorter, more reactive)</option>
+      </select>
+      <span class="fl">Choose whether to look at posts, comments, or both</span>
+    </div>
+    <div class="fg">
+      <label>Topic Category</label>
+      <select id="f-query" onchange="applyFilters()">
+        <option value="all">All Topics</option>
+        <option value="frustrating">😤 Frustrating Experiences</option>
+        <option value="would buy if">🛒 "I Would Buy If…"</option>
+        <option value="complaint">😠 Complaints</option>
+        <option value="I want">💭 Wishlist ("I want…")</option>
+        <option value="feature">⚙️ Feature Discussions</option>
+        <option value="missing">❓ Missing Features</option>
+        <option value="improve">📈 Suggestions to Improve</option>
+        <option value="problem">🔧 Problems Reported</option>
+        <option value="better">👍 What Could Be Better</option>
+        <option value="hate">😤 Things People Strongly Dislike</option>
+      </select>
+      <span class="fl">Posts were collected using these search keywords</span>
+    </div>
+    <div class="fg">
+      <label>Show Only</label>
+      <select id="f-sentiment" onchange="applyFilters()">
+        <option value="all">All Sentiments</option>
+        <option value="positive">😊 Positive posts only</option>
+        <option value="negative">😞 Negative posts only</option>
+        <option value="neutral">😐 Neutral posts only</option>
+      </select>
+    </div>
+    <button class="rbtn" onclick="resetFilters()">↺ Reset All</button>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="sec-head reveal"><span class="sec-dot"></span><span class="sec-title">The Big Numbers</span><span class="sec-line"></span></div>
+  <div class="kpi-grid">
+    <div class="kpi cr reveal">
+      <div class="kpi-emoji">📊</div>
+      <div class="kpi-lbl">Total Analysed</div>
+      <div class="kpi-num" id="kpi-total">10,197</div>
+      <div class="kpi-explain">Posts and comments collected from the r/TeslaMotors community on Reddit</div>
+    </div>
+    <div class="kpi cg reveal" style="transition-delay:.07s">
+      <div class="kpi-emoji">😊</div>
+      <div class="kpi-lbl">Share That's Positive</div>
+      <div class="kpi-num" id="kpi-pos">59.3%</div>
+      <div class="kpi-explain">Nearly 6 in 10 posts and comments sound positive — more than half the community is upbeat</div>
+    </div>
+    <div class="kpi cr reveal" style="transition-delay:.14s">
+      <div class="kpi-emoji">😞</div>
+      <div class="kpi-lbl">Share That's Negative</div>
+      <div class="kpi-num" id="kpi-neg">25.0%</div>
+      <div class="kpi-explain">About 1 in 4 posts expresses frustration, complaints, or unhappiness</div>
+    </div>
+    <div class="kpi ca reveal" style="transition-delay:.21s">
+      <div class="kpi-emoji">📈</div>
+      <div class="kpi-lbl">Average Mood Score</div>
+      <div class="kpi-num" id="kpi-avg">+0.25</div>
+      <div class="kpi-explain">The average score across everything — positive means the overall tone leans happy (scale: −1 to +1)</div>
+    </div>
+    <div class="kpi cb reveal" style="transition-delay:.28s">
+      <div class="kpi-emoji">👤</div>
+      <div class="kpi-lbl">Real People (Not Bots)</div>
+      <div class="kpi-num" id="kpi-human">97.9%</div>
+      <div class="kpi-explain">Almost all posts come from genuine community members, not automated accounts</div>
+    </div>
+  </div>
+
+  <!-- SENTIMENT METERS -->
+  <div class="sec-head reveal"><span class="sec-dot"></span><span class="sec-title">Mood Breakdown — Posts vs Comments</span><span class="sec-line"></span></div>
+  <div class="g2">
+    <div class="card reveal">
+      <div class="card-title">📝 How Do Posts Lean?</div>
+      <div class="card-sub">Original posts are longer and more thought-out — people tend to write them when they have a considered opinion or detailed experience to share.</div>
+      <div class="meter">
+        <div class="meter-row">
+          <span class="meter-lbl" style="color:var(--green)">😊 Positive</span>
+          <div class="meter-bar"><div class="m-seg" id="mp-pos" style="background:var(--green);width:0%"></div></div>
+          <span class="meter-pct" id="mp-pos-pct" style="color:var(--green)">69%</span>
+        </div>
+        <div class="meter-row">
+          <span class="meter-lbl" style="color:var(--muted)">😐 Neutral</span>
+          <div class="meter-bar"><div class="m-seg" id="mp-neu" style="background:#d1d5db;width:0%"></div></div>
+          <span class="meter-pct" id="mp-neu-pct" style="color:var(--muted)">8%</span>
+        </div>
+        <div class="meter-row">
+          <span class="meter-lbl" style="color:var(--red)">😞 Negative</span>
+          <div class="meter-bar"><div class="m-seg" id="mp-neg" style="background:var(--red);width:0%"></div></div>
+          <span class="meter-pct" id="mp-neg-pct" style="color:var(--red)">23%</span>
+        </div>
+      </div>
+      <div class="tip"><span class="ti">💡</span><span><strong>Posts score +0.43 average</strong> — people who write detailed posts tend to be sharing genuine experiences, both good and bad, in a constructive way.</span></div>
+    </div>
+    <div class="card reveal" style="transition-delay:.1s">
+      <div class="card-title">💬 How Do Comments Lean?</div>
+      <div class="card-sub">Comments are quicker, more reactive responses. They show the raw, unfiltered community reaction — and tend to be more heated than original posts.</div>
+      <div class="meter">
+        <div class="meter-row">
+          <span class="meter-lbl" style="color:var(--green)">😊 Positive</span>
+          <div class="meter-bar"><div class="m-seg" id="mc-pos" style="background:var(--green);width:0%"></div></div>
+          <span class="meter-pct" id="mc-pos-pct" style="color:var(--green)">57%</span>
+        </div>
+        <div class="meter-row">
+          <span class="meter-lbl" style="color:var(--muted)">😐 Neutral</span>
+          <div class="meter-bar"><div class="m-seg" id="mc-neu" style="background:#d1d5db;width:0%"></div></div>
+          <span class="meter-pct" id="mc-neu-pct" style="color:var(--muted)">18%</span>
+        </div>
+        <div class="meter-row">
+          <span class="meter-lbl" style="color:var(--red)">😞 Negative</span>
+          <div class="meter-bar"><div class="m-seg" id="mc-neg" style="background:var(--red);width:0%"></div></div>
+          <span class="meter-pct" id="mc-neg-pct" style="color:var(--red)">25%</span>
+        </div>
+      </div>
+      <div class="tip"><span class="ti">💡</span><span><strong>Comments score +0.23 average</strong> — significantly lower than posts (+0.43). Comment sections get more heated as debates unfold.</span></div>
+    </div>
+  </div>
+
+  <!-- WORD BUBBLES -->
+  <div class="sec-head reveal"><span class="sec-dot"></span><span class="sec-title">Topic Word Bubbles — What People Are Talking About</span><span class="sec-line"></span></div>
+  <div class="g2">
+    <div class="bubble-section reveal">
+      <div class="bubble-head">😊 Topics with the Most Positive Sentiment</div>
+      <div class="bubble-sub">The <strong>bigger the bubble</strong>, the more posts on that topic. <strong>Hover over any bubble</strong> to see the average mood score. Green = generally positive discussions.</div>
+      <div class="bubble-wrap" id="pos-bubbles"></div>
+    </div>
+    <div class="bubble-section reveal" style="transition-delay:.1s">
+      <div class="bubble-head">😞 Topics Where People Sound Most Frustrated</div>
+      <div class="bubble-sub">These topics tend to generate more negative or critical posts. Even here, Tesla fans are rarely purely negative — they usually want improvements, not just to complain.</div>
+      <div class="bubble-wrap" id="neg-bubbles"></div>
+    </div>
+  </div>
+
+  <!-- HISTOGRAM + DONUT -->
+  <div class="sec-head reveal"><span class="sec-dot"></span><span class="sec-title">Sentiment Score Distribution</span><span class="sec-line"></span></div>
+  <div class="gw">
+    <div class="card reveal">
+      <div class="card-title">📊 Where Do Scores Cluster?</div>
+      <div class="card-sub">
+        This chart shows how many posts/comments fall into each mood score range, from very negative (−1.0) on the left to very positive (+1.0) on the right.
+        The tall bar at the right shows a large number of very enthusiastic, positive posts.
+      </div>
+      <div class="tabs">
+        <button class="tab on" onclick="switchHist('both',this)">All Content</button>
+        <button class="tab" onclick="switchHist('posts',this)">Posts Only</button>
+        <button class="tab" onclick="switchHist('comments',this)">Comments Only</button>
+      </div>
+      <div class="cw h280"><canvas id="chart-hist"></canvas></div>
+      <div class="tip"><span class="ti">📌</span><span>Notice the <strong>big spike near +1.0</strong> — this is Tesla owners sharing glowing reviews. The smaller spike near −1.0 represents strongly negative experiences like delivery problems or FSD complaints.</span></div>
+    </div>
+    <div class="card reveal" style="transition-delay:.1s">
+      <div class="card-title">🥧 Overall Split</div>
+      <div class="card-sub">Out of all content analysed, what share is positive, neutral, or negative?</div>
+      <div class="cw h200"><canvas id="chart-donut"></canvas></div>
+      <div style="margin-top:.9rem;display:flex;flex-direction:column;gap:.1rem">
+        <div style="display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:13px">
+          <span style="color:var(--text2)">😊 Positive (score above +0.05)</span>
+          <span style="font-weight:700;color:var(--green)" id="sr-pos">5,942</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:13px">
+          <span style="color:var(--text2)">😐 Neutral (between −0.05 and +0.05)</span>
+          <span style="font-weight:700;color:var(--muted)" id="sr-neu">1,705</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:.5rem 0;font-size:13px">
+          <span style="color:var(--text2)">😞 Negative (score below −0.05)</span>
+          <span style="font-weight:700;color:var(--red)" id="sr-neg">2,550</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC BREAKDOWN -->
+  <div class="sec-head reveal"><span class="sec-dot"></span><span class="sec-title">Sentiment by Topic</span><span class="sec-line"></span></div>
+  <div class="card reveal">
+    <div class="card-title">🔍 Which Topics Are Most Positive or Negative?</div>
+    <div class="card-sub">
+      Posts were collected using 10 different search keywords — this chart shows the mood of each group.
+      Surprisingly, even "complaint" and "frustrating" categories have lots of positive content, because Tesla fans often frame their frustrations as constructive feedback.
+    </div>
+    <div class="tabs" id="topic-tabs">
+      <button class="tab on" onclick="switchTopic('stacked',this)">Count by Sentiment</button>
+      <button class="tab" onclick="switchTopic('avg',this)">Average Mood Score</button>
+    </div>
+    <div class="cw h300"><canvas id="chart-topic"></canvas></div>
+    <div class="tip"><span class="ti">💡</span><span><strong>"Better"</strong> and <strong>"Would Buy If"</strong> score highest — people asking for improvements are actually optimistic about Tesla. <strong>"Problem"</strong> scores lowest (+0.10) — these are real, unresolved frustrations.</span></div>
+  </div>
+
+  <!-- SPEECH BUBBLE QUOTES -->
+  <div class="sec-head reveal"><span class="sec-dot"></span><span class="sec-title">Real Voices From the Community</span><span class="sec-line"></span></div>
+  <div style="margin-bottom:.75rem" class="reveal">
+    <div class="tabs">
+      <button class="tab on" id="qtab-pos" onclick="switchQuotes('pos')">😊 Most Positive Posts</button>
+      <button class="tab" id="qtab-neg" onclick="switchQuotes('neg')">😞 Most Negative Posts</button>
+    </div>
+  </div>
+  <div class="speech-grid reveal" id="speech-grid"></div>
+
+  <!-- DEEP DIVE TABLE -->
+  <div class="sec-head reveal"><span class="sec-dot"></span><span class="sec-title">Full Topic Deep-Dive</span><span class="sec-line"></span></div>
+  <div class="card reveal">
+    <div class="card-title">📋 Every Topic Category — Side by Side</div>
+    <div class="card-sub">All 10 topic categories with their post count, average mood score, and the percentage that were positive or negative. The coloured bar on the right is a quick visual of the positive/negative split.</div>
+    <div style="overflow-x:auto">
+      <table class="st" id="topic-table">
+        <thead><tr>
+          <th>Topic</th>
+          <th>Posts</th>
+          <th>Comments</th>
+          <th>Avg Mood Score <span style="font-weight:400;text-transform:none;letter-spacing:0">(−1 to +1)</span></th>
+          <th>% Positive</th>
+          <th>% Negative</th>
+          <th style="min-width:100px">Visual Split</th>
+        </tr></thead>
+        <tbody id="topic-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- POST LENGTH INSIGHT -->
+  <div class="sec-head reveal"><span class="sec-dot"></span><span class="sec-title">Does Writing More = Being More Positive?</span><span class="sec-line"></span></div>
+  <div class="g2">
+    <div class="card reveal">
+      <div class="card-title">📏 Longer Comments Tend to Be More Positive</div>
+      <div class="card-sub">We grouped comments by how long they were (in characters) and looked at the average mood score for each length group. Longer, more detailed replies are consistently more constructive.</div>
+      <div class="cw h240"><canvas id="chart-length"></canvas></div>
+      <div class="tip"><span class="ti">💡</span><span>Very long comments (600+ characters) score <strong>4× higher</strong> than very short ones. A quick "this sucks" reaction is very different from a 600-word thoughtful critique.</span></div>
+    </div>
+    <div class="card reveal" style="transition-delay:.1s">
+      <div class="card-title">📝 vs 💬 — Posts Are More Positive Than Comments</div>
+      <div class="card-sub">Original posts average a score of +0.43 while comments average just +0.23. This gap shows how discussion threads can amplify negativity even when the original post was positive.</div>
+      <div class="cw h240"><canvas id="chart-pvc"></canvas></div>
+      <div class="tip"><span class="ti">💡</span><span>This is a common pattern in online communities — the <strong>original poster is more thoughtful</strong>, while comments react more emotionally, pulling the average down.</span></div>
+    </div>
+  </div>
+
+  <footer>
+    <div><strong>Data:</strong> Reddit r/TeslaMotors · NLP Sentiment Scoring (VADER) · Python (pandas) · Visualised with Chart.js</div>
+    <div>Portfolio: <a href="https://rakshowsproject.github.io/-/" target="_blank">rakshowsproject.github.io</a></div>
+  </footer>
+</div><!-- /main -->
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+const D = {
+  totals:{ posts:1021, comments:9176 },
+  posts:{ pos:705, neg:232, neu:84, avg:0.432 },
+  comments:{ pos:5237, neg:2318, neu:1621, avg:0.225 },
+  hist_posts:[55,37,19,20,21,23,16,18,18,10,85,13,18,10,28,37,29,59,80,425],
+  hist_comments:[101,196,204,211,271,327,297,360,240,200,1679,266,374,495,682,506,595,662,669,841],
+  hist_labels:['-1.0','-0.9','-0.8','-0.7','-0.6','-0.5','-0.4','-0.3','-0.2','-0.1','0.0','0.1','0.2','0.3','0.4','0.5','0.6','0.7','0.8','0.9'],
+  topics:[
+    {q:'I want',      lbl:'💭 Wishlist',          p:{pos:92,neg:25,neu:6,n:123,avg:0.501},  c:{pos:651,neg:244,neu:179,n:1074,avg:0.258}},
+    {q:'better',      lbl:'👍 What Could Be Better',p:{pos:38,neg:3,neu:2,n:43,avg:0.719},   c:{pos:231,neg:100,neu:59,n:390,avg:0.253}},
+    {q:'complaint',   lbl:'😠 Complaints',         p:{pos:126,neg:43,neu:1,n:170,avg:0.451}, c:{pos:831,neg:368,neu:243,n:1442,avg:0.223}},
+    {q:'feature',     lbl:'⚙️ Features',            p:{pos:31,neg:13,neu:48,n:92,avg:0.143},  c:{pos:454,neg:195,neu:205,n:854,avg:0.195}},
+    {q:'frustrating', lbl:'😤 Frustrating',         p:{pos:117,neg:57,neu:7,n:181,avg:0.320}, c:{pos:888,neg:511,neu:270,n:1669,avg:0.163}},
+    {q:'hate',        lbl:'😤 Strong Dislikes',      p:{pos:20,neg:12,neu:7,n:39,avg:0.187},  c:{pos:184,neg:86,neu:81,n:351,avg:0.175}},
+    {q:'improve',     lbl:'📈 Improve Suggestions',  p:{pos:60,neg:6,neu:3,n:69,avg:0.661},   c:{pos:401,neg:147,neu:100,n:648,avg:0.286}},
+    {q:'missing',     lbl:'❓ Missing Features',     p:{pos:54,neg:28,neu:4,n:86,avg:0.379},  c:{pos:397,neg:165,neu:162,n:724,avg:0.222}},
+    {q:'problem',     lbl:'🔧 Problems',             p:{pos:23,neg:19,neu:2,n:44,avg:0.096},  c:{pos:186,neg:140,neu:71,n:397,avg:0.090}},
+    {q:'would buy if',lbl:'🛒 Would Buy If…',        p:{pos:144,neg:26,neu:4,n:174,avg:0.637},c:{pos:1014,neg:362,neu:251,n:1627,avg:0.298}}
+  ],
+  length:[
+    {lbl:'Very Short\n(under 50 chars)',avg:0.107},
+    {lbl:'Short\n(50–150 chars)',avg:0.150},
+    {lbl:'Medium\n(150–300 chars)',avg:0.210},
+    {lbl:'Long\n(300–600 chars)',avg:0.280},
+    {lbl:'Very Long\n(600+ chars)',avg:0.427}
+  ],
+  quotes:{
+    pos:[
+      {title:'A definitive Tesla Model 3 review after two years of ownership',score:1.000,q:'complaint',summary:'A glowing long-form review praising ride quality, software updates, and ownership experience after 2 years.'},
+      {title:'My One Week CPO Review — surprisingly great experience',score:1.000,q:'feature',summary:'Bought a certified pre-owned Tesla and couldn\'t be happier — detailed breakdown of every positive aspect.'},
+      {title:'Model 3 LR RWD review from a car enthusiast',score:1.000,q:'would buy if',summary:'A self-described "car person" switched to Tesla and was won over by the driving experience.'},
+      {title:'Tesla Model 3 rental — my thoughts, pics, and video',score:1.000,q:'feature',summary:'Rented a Model 3 for a trip and came back ready to buy — enthusiastic first-timer perspective.'}
+    ],
+    neg:[
+      {title:'So Tesla Brought Me The Wrong Car Today',score:-0.997,q:'frustrating',summary:'Ordered a specific configuration, received the wrong vehicle. Describes a frustrating delivery experience and lack of accountability.'},
+      {title:'Unpopular opinion: I hate the safety score system',score:-0.993,q:'hate',summary:'Strong criticism of Tesla\'s insurance safety scoring system — feels invasive and unfair to good drivers.'},
+      {title:'One week of FSD Beta — a very dangerous mistake',score:-0.992,q:'frustrating',summary:'After trying Full Self-Driving for a week, the author encountered multiple scary near-misses and is returning to manual driving.'},
+      {title:'How exactly am I supposed to buy a used Tesla?',score:-0.990,q:'problem',summary:'Confusing and frustrating used-car buying process with Tesla — no dealership, unclear pricing, poor communication.'}
+    ]
+  }
+};
+
+// ═══════════════════════════════════════
+// CHART.JS DEFAULTS
+// ═══════════════════════════════════════
+Chart.defaults.color='#6b7280';
+Chart.defaults.borderColor='#f0e8e8';
+Chart.defaults.font.family="'Inter',sans-serif";
+Chart.defaults.font.size=12;
+const CR='#dc2626',CG='#16a34a',CA='#d97706',CS='#475569';
+let CH={};
+function dc(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
+
+let state={type:'both',query:'all',sentiment:'all',histMode:'both',topicMode:'stacked',quoteMode:'pos'};
+
+// ═══════════════════════════════════════
+// SCROLL REVEAL
+// ═══════════════════════════════════════
+const ro = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+// ═══════════════════════════════════════
+// ANIMATED METERS
+// ═══════════════════════════════════════
+function animateMeters(){
+  const p=D.posts, c=D.comments;
+  const pp=Math.round(p.pos/D.totals.posts*100), pn=Math.round(p.neg/D.totals.posts*100), pne=100-pp-pn;
+  const cp=Math.round(c.pos/D.totals.comments*100), cn=Math.round(c.neg/D.totals.comments*100), cne=100-cp-cn;
+  setTimeout(()=>{
+    setMeter('mp-pos',pp); setMeter('mp-neu',pne); setMeter('mp-neg',pn);
+    setMeter('mc-pos',cp); setMeter('mc-neu',cne); setMeter('mc-neg',cn);
+    document.getElementById('mp-pos-pct').textContent=pp+'%';
+    document.getElementById('mp-neu-pct').textContent=pne+'%';
+    document.getElementById('mp-neg-pct').textContent=pn+'%';
+    document.getElementById('mc-pos-pct').textContent=cp+'%';
+    document.getElementById('mc-neu-pct').textContent=cne+'%';
+    document.getElementById('mc-neg-pct').textContent=cn+'%';
+  },600);
+}
+function setMeter(id,pct){const el=document.getElementById(id);if(el)el.style.width=pct+'%';}
+
+// ═══════════════════════════════════════
+// WORD BUBBLES
+// ═══════════════════════════════════════
+function buildBubbles(){
+  const byAvg=[...D.topics].sort((a,b)=>(b.p.avg+b.c.avg)-(a.p.avg+a.c.avg));
+  const posCont=document.getElementById('pos-bubbles');
+  const negCont=document.getElementById('neg-bubbles');
+  posCont.innerHTML=''; negCont.innerHTML='';
+  byAvg.forEach((t,i)=>{
+    const avg=(t.p.avg*t.p.n + t.c.avg*t.c.n)/(t.p.n+t.c.n);
+    const total=t.p.n+t.c.n;
+    const maxTotal=2000;
+    const sz=Math.max(0.85, Math.min(1.6, 0.85+total/maxTotal*0.8));
+    const tip=`${t.lbl}: avg score ${avg>=0?'+':''}${avg.toFixed(2)} · ${total.toLocaleString()} posts`;
+    const cls=avg>0.35?'pos':avg<0.2?'neg':'neu';
+    const el=document.createElement('span');
+    el.className=`bubble ${cls}`;
+    el.style.fontSize=sz+'rem';
+    el.style.animationDelay=(i*0.05)+'s';
+    el.setAttribute('data-tip',tip);
+    el.textContent=t.lbl;
+    if(avg>0.3) posCont.appendChild(el);
+    else negCont.appendChild(el.cloneNode(true));
+  });
+  // Fill any gaps
+  byAvg.forEach((t,i)=>{
+    const avg=(t.p.avg*t.p.n + t.c.avg*t.c.n)/(t.p.n+t.c.n);
+    if(avg<=0.3&&avg>0.1){
+      const el2=document.createElement('span');
+      const total=t.p.n+t.c.n;
+      const sz=Math.max(0.85,Math.min(1.4,0.85+total/2000*0.7));
+      el2.className='bubble neg';
+      el2.style.fontSize=sz+'rem';
+      el2.style.animationDelay=(i*0.06)+'s';
+      el2.setAttribute('data-tip',`${t.lbl}: avg ${avg.toFixed(2)} · ${total.toLocaleString()} posts`);
+      el2.textContent=t.lbl;
+      negCont.appendChild(el2);
+    }
+  });
+}
+
+// ═══════════════════════════════════════
+// SPEECH BUBBLE QUOTES
+// ═══════════════════════════════════════
+function buildQuotes(){
+  const grid=document.getElementById('speech-grid');
+  grid.innerHTML='';
+  const items=D.quotes[state.quoteMode];
+  items.forEach((q,i)=>{
+    const isPos=state.quoteMode==='pos';
+    const score=(q.score>=0?'+':'')+q.score.toFixed(3);
+    const avatarColor=isPos?'var(--green-l)':'var(--red-l)';
+    const avatarEmoji=isPos?'😊':'😞';
+    const div=document.createElement('div');
+    div.className=`speech ${isPos?'pos':'neg'}`;
+    div.style.animationDelay=(i*0.08)+'s';
+    div.innerHTML=`
+      <div class="speech-score ${isPos?'pos':'neg'}">${isPos?'🌟':'⚠️'} Mood Score: ${score}</div>
+      <div class="speech-text">"${q.title}"</div>
+      <div style="margin-top:.65rem;font-size:12.5px;color:var(--text2);line-height:1.55;background:${isPos?'rgba(22,163,74,.06)':'rgba(220,38,38,.05)'};padding:.6rem .75rem;border-radius:8px;">${q.summary}</div>
+      <div class="speech-meta">📂 Topic category: <strong>${q.q}</strong></div>`;
+    grid.appendChild(div);
+  });
+}
+
+// ═══════════════════════════════════════
+// CHARTS
+// ═══════════════════════════════════════
+function buildHist(){
+  dc('hist');
+  let data;
+  if(state.histMode==='posts') data=D.hist_posts;
+  else if(state.histMode==='comments') data=D.hist_comments;
+  else data=D.hist_posts.map((v,i)=>v+D.hist_comments[i]);
+  const bg=D.hist_labels.map(l=>{
+    const v=parseFloat(l);
+    if(v>=0.6)return CG+'dd';
+    if(v>=0.2)return CG+'77';
+    if(v>=-0.05&&v<=0.05)return '#9ca3af88';
+    if(v>=-0.4)return CR+'77';
+    return CR+'dd';
+  });
+  CH['hist']=new Chart(document.getElementById('chart-hist'),{
+    type:'bar',
+    data:{labels:D.hist_labels,datasets:[{data,backgroundColor:bg,borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:700,easing:'easeOutQuart'},
+      plugins:{legend:{display:false},tooltip:{callbacks:{
+        title:ctx=>`Mood score: ${ctx[0].label}`,
+        label:ctx=>`${ctx.parsed.y.toLocaleString()} posts/comments with this score`
+      }}},
+      scales:{
+        x:{grid:{display:false},title:{display:true,text:'← More Negative      Mood Score (−1.0 to +1.0)      More Positive →',color:'#9ca3af',font:{size:11}}},
+        y:{grid:{color:'#fdf4f4'},beginAtZero:true,title:{display:true,text:'Number of posts/comments',color:'#9ca3af',font:{size:11}},ticks:{callback:v=>v.toLocaleString()}}
+      }}
+  });
+}
+
+function buildDonut(){
+  dc('donut');
+  const p=D.posts,c=D.comments;
+  let pos,neg,neu;
+  if(state.type==='posts'){pos=p.pos;neg=p.neg;neu=p.neu;}
+  else if(state.type==='comments'){pos=c.pos;neg=c.neg;neu=c.neu;}
+  else{pos=p.pos+c.pos;neg=p.neg+c.neg;neu=p.neu+c.neu;}
+  CH['donut']=new Chart(document.getElementById('chart-donut'),{
+    type:'doughnut',
+    data:{labels:['Positive 😊','Neutral 😐','Negative 😞'],
+      datasets:[{data:[pos,neu,neg],backgroundColor:[CG,'#d1d5db',CR],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',animation:{animateRotate:true,duration:900,easing:'easeOutQuart'},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,usePointStyle:true,pointStyle:'circle',padding:14}},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed.toLocaleString()} (${(ctx.parsed/(pos+neu+neg)*100).toFixed(1)}%)`}}}}
+  });
+  document.getElementById('sr-pos').textContent=pos.toLocaleString();
+  document.getElementById('sr-neu').textContent=neu.toLocaleString();
+  document.getElementById('sr-neg').textContent=neg.toLocaleString();
+}
+
+function buildTopic(){
+  dc('topic');
+  const T=D.topics;
+  const labels=T.map(t=>t.q);
+  if(state.topicMode==='avg'){
+    CH['topic']=new Chart(document.getElementById('chart-topic'),{
+      type:'bar',
+      data:{labels,datasets:[
+        {label:'Posts avg mood score',data:T.map(t=>+t.p.avg.toFixed(3)),backgroundColor:CR+'cc',borderRadius:5,borderSkipped:false},
+        {label:'Comments avg mood score',data:T.map(t=>+t.c.avg.toFixed(3)),backgroundColor:CS+'cc',borderRadius:5,borderSkipped:false}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,animation:{duration:700,easing:'easeOutQuart'},
+        plugins:{legend:{position:'bottom',labels:{boxWidth:10,usePointStyle:true,pointStyle:'circle',padding:10}},
+          tooltip:{callbacks:{title:ctx=>T[ctx[0].dataIndex].lbl,label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y>=0?'+':''}${ctx.parsed.y} out of 1.0`}}},
+        scales:{x:{grid:{display:false}},y:{grid:{color:'#fdf4f4'},min:-0.1,max:0.85,title:{display:true,text:'Mood score (0 = neutral, +1 = very positive)',color:'#9ca3af',font:{size:11}}}}}
+    });
+  } else {
+    CH['topic']=new Chart(document.getElementById('chart-topic'),{
+      type:'bar',
+      data:{labels,datasets:[
+        {label:'😊 Positive',data:T.map(t=>t.p.pos+t.c.pos),backgroundColor:CG+'cc',borderSkipped:false},
+        {label:'😐 Neutral',data:T.map(t=>t.p.neu+t.c.neu),backgroundColor:'#9ca3afcc',borderSkipped:false},
+        {label:'😞 Negative',data:T.map(t=>t.p.neg+t.c.neg),backgroundColor:CR+'cc',borderSkipped:false}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,animation:{duration:700,easing:'easeOutQuart'},
+        plugins:{legend:{position:'bottom',labels:{boxWidth:10,usePointStyle:true,pointStyle:'circle',padding:10}},
+          tooltip:{callbacks:{title:ctx=>T[ctx[0].dataIndex].lbl,label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()} posts & comments`}}},
+        scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,grid:{color:'#fdf4f4'},title:{display:true,text:'Number of posts + comments',color:'#9ca3af',font:{size:11}}}}}
+    });
+  }
+}
+
+function buildLength(){
+  dc('len');
+  CH['len']=new Chart(document.getElementById('chart-length'),{
+    type:'bar',
+    data:{labels:['Very Short\n<50 chars','Short\n50–150','Medium\n150–300','Long\n300–600','Very Long\n600+'],
+      datasets:[{label:'Avg mood score',data:D.length.map(l=>l.avg),
+        backgroundColor:['#fca5a5','#f87171','#ef4444','#dc2626','#991b1b'],
+        borderRadius:6,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:800,easing:'easeOutBounce'},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` Average mood: +${ctx.parsed.y.toFixed(3)} out of 1.0`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:10}}},
+        y:{grid:{color:'#fdf4f4'},min:0,max:0.55,title:{display:true,text:'Average mood score (higher = more positive)',color:'#9ca3af',font:{size:11}}}}}
+  });
+}
+
+function buildPVC(){
+  dc('pvc');
+  CH['pvc']=new Chart(document.getElementById('chart-pvc'),{
+    type:'bar',
+    data:{labels:['📝 Original Posts\n(longer, more detailed)','💬 Comments\n(shorter, more reactive)'],
+      datasets:[{label:'Average mood score',data:[0.432,0.225],
+        backgroundColor:[CR+'cc',CS+'cc'],borderRadius:8,borderSkipped:false,barThickness:70}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:900,easing:'easeOutQuart'},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` Average mood score: +${ctx.parsed.y.toFixed(3)} (scale 0 to +1.0)`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:11}}},
+        y:{grid:{color:'#fdf4f4'},min:0,max:0.55,title:{display:true,text:'Avg mood score (0 = neutral, 0.5 = quite positive)',color:'#9ca3af',font:{size:11}}}}}
+  });
+}
+
+function buildTopicTable(){
+  const tb=document.getElementById('topic-tbody');
+  tb.innerHTML='';
+  D.topics.forEach((t,idx)=>{
+    const np=t.p.n+t.c.n;
+    const pos=t.p.pos+t.c.pos, neg=t.p.neg+t.c.neg;
+    const avg=(t.p.avg*t.p.n+t.c.avg*t.c.n)/np;
+    const pp=Math.round(pos/np*100), np2=Math.round(neg/np*100);
+    const sc=avg>0.4?CG:avg>0.15?CA:CR;
+    const scCls=avg>0.4?'pos':avg>0.15?'neu':'neg';
+    tb.innerHTML+=`<tr style="animation:slideUp .35s ease ${idx*0.04}s both">
+      <td style="font-weight:600;color:var(--text)">${t.lbl}</td>
+      <td style="color:var(--muted);text-align:center">${t.p.n}</td>
+      <td style="color:var(--muted);text-align:center">${t.c.n.toLocaleString()}</td>
+      <td style="text-align:center"><span class="spill ${scCls}">${avg>=0?'+':''}${avg.toFixed(2)}</span></td>
+      <td style="text-align:center;font-weight:600;color:var(--green)">${pp}%</td>
+      <td style="text-align:center;font-weight:600;color:var(--red)">${np2}%</td>
+      <td>
+        <div class="mini">
+          <div class="mini-f" style="width:${pp}%;background:var(--green)"></div>
+        </div>
+        <div class="mini" style="margin-top:2px">
+          <div class="mini-f" style="width:${np2}%;background:var(--red)"></div>
+        </div>
+      </td>
+    </tr>`;
+  });
+}
+
+function updateKPIs(){
+  const p=D.posts,c=D.comments;
+  let total,pos,neg,neu,avg,human;
+  if(state.type==='posts'){total=D.totals.posts;pos=p.pos;neg=p.neg;neu=p.neu;avg=p.avg;human=((D.totals.posts-82)/D.totals.posts*100).toFixed(1)+'%';}
+  else if(state.type==='comments'){total=D.totals.comments;pos=c.pos;neg=c.neg;neu=c.neu;avg=c.avg;human=((D.totals.comments-135)/D.totals.comments*100).toFixed(1)+'%';}
+  else{total=D.totals.posts+D.totals.comments;pos=p.pos+c.pos;neg=p.neg+c.neg;neu=p.neu+c.neu;avg=(p.avg*D.totals.posts+c.avg*D.totals.comments)/total;human='97.9%';}
+  animNum('kpi-total',total);
+  document.getElementById('kpi-pos').textContent=(pos/total*100).toFixed(1)+'%';
+  document.getElementById('kpi-neg').textContent=(neg/total*100).toFixed(1)+'%';
+  document.getElementById('kpi-avg').textContent=(avg>=0?'+':'')+avg.toFixed(2);
+  document.getElementById('kpi-human').textContent=human;
+}
+
+function animNum(id,val){
+  const el=document.getElementById(id);
+  el.classList.add('counting');
+  el.textContent=val.toLocaleString();
+  setTimeout(()=>el.classList.remove('counting'),350);
+}
+
+// ═══════════════════════════════════════
+// SWITCH MODES
+// ═══════════════════════════════════════
+function switchHist(mode,btn){
+  state.histMode=mode;
+  btn.closest('.tabs').querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  buildHist();
+}
+function switchTopic(mode,btn){
+  state.topicMode=mode;
+  btn.closest('.tabs').querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  buildTopic();
+}
+function switchQuotes(mode){
+  state.quoteMode=mode;
+  document.getElementById('qtab-pos').className='tab'+(mode==='pos'?' on':'');
+  document.getElementById('qtab-neg').className='tab'+(mode==='neg'?' on':'');
+  buildQuotes();
+}
+
+// ═══════════════════════════════════════
+// FILTERS
+// ═══════════════════════════════════════
+function applyFilters(){
+  state.type=document.getElementById('f-type').value;
+  state.query=document.getElementById('f-query').value;
+  state.sentiment=document.getElementById('f-sentiment').value;
+  updateKPIs();
+  buildDonut();
+  buildTopic();
+}
+function resetFilters(){
+  document.getElementById('f-type').value='both';
+  document.getElementById('f-query').value='all';
+  document.getElementById('f-sentiment').value='all';
+  state={...state,type:'both',query:'all',sentiment:'all'};
+  updateKPIs();
+  buildDonut();
+  buildTopic();
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    updateKPIs();
+    animateMeters();
+    buildBubbles();
+    buildHist();
+    buildDonut();
+    buildTopic();
+    buildLength();
+    buildPVC();
+    buildQuotes();
+    buildTopicTable();
+    // Re-observe newly built elements
+    document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+    const ol=document.getElementById('lo');
+    ol.classList.add('out');
+    setTimeout(()=>ol.remove(),600);
+  },1400);
+});
+</script>
+</body>
+</html>
