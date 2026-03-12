@@ -2242,5 +2242,682 @@ document.querySelectorAll('nav a').forEach(link => {
   });
 });
 </script>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RAK Clippy Widget — Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── DEMO PAGE ── */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#f5f0e8;font-family:'Courier Prime',monospace;min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;}
+.demo-note{background:#fff;border:2px solid #2c2c2c;padding:1rem 1.5rem;font-size:13px;color:#555;text-align:center;max-width:400px;border-radius:2px;}
+.demo-note strong{color:#2c2c2c;font-family:'Special Elite',cursive;}
+.demo-arrow{font-size:2rem;animation:bounce .8s ease infinite alternate;color:#8b1a1a;}
+@keyframes bounce{from{transform:translateY(0);}to{transform:translateY(-8px);}}
+
+/* ═══════════════════════════════════════════
+   RAK CLIPPY WIDGET
+═══════════════════════════════════════════ */
+
+/* FLOATING BUTTON */
+#rak-trigger{
+  position:fixed;
+  bottom:28px;
+  right:28px;
+  width:72px;
+  height:72px;
+  border-radius:50%;
+  background:#1a1a1a;
+  border:3px solid #c8a96e;
+  cursor:pointer;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:4px 4px 0 #c8a96e, 0 8px 32px rgba(0,0,0,.35);
+  transition:transform .2s ease, box-shadow .2s ease;
+  animation:rakFloat 3s ease-in-out infinite;
+  overflow:hidden;
+}
+#rak-trigger:hover{
+  transform:scale(1.08) rotate(-3deg);
+  box-shadow:6px 6px 0 #c8a96e, 0 12px 40px rgba(0,0,0,.4);
+}
+@keyframes rakFloat{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-6px);}
+}
+#rak-trigger svg{width:44px;height:44px;}
+
+/* PULSE RING */
+#rak-trigger::before{
+  content:'';
+  position:absolute;
+  inset:-8px;
+  border-radius:50%;
+  border:2px solid #c8a96e;
+  animation:rakPulse 2.5s ease-out infinite;
+  opacity:0;
+}
+@keyframes rakPulse{
+  0%{transform:scale(.85);opacity:.6;}
+  100%{transform:scale(1.3);opacity:0;}
+}
+
+/* NOTIFICATION DOT */
+#rak-dot{
+  position:absolute;
+  top:4px;right:4px;
+  width:14px;height:14px;
+  background:#8b1a1a;
+  border-radius:50%;
+  border:2px solid #1a1a1a;
+  animation:dotBlink 2s ease infinite;
+}
+@keyframes dotBlink{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+/* MAIN PANEL */
+#rak-panel{
+  position:fixed;
+  bottom:112px;
+  right:28px;
+  width:360px;
+  background:#faf6ee;
+  border:2px solid #2c2c2c;
+  border-radius:2px;
+  box-shadow:6px 6px 0 #2c2c2c, 0 20px 60px rgba(0,0,0,.3);
+  z-index:9998;
+  font-family:'Courier Prime',monospace;
+  transform:scale(.85) translateY(20px);
+  transform-origin:bottom right;
+  opacity:0;
+  pointer-events:none;
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  max-height:80vh;
+  display:flex;
+  flex-direction:column;
+}
+#rak-panel.open{
+  transform:scale(1) translateY(0);
+  opacity:1;
+  pointer-events:all;
+}
+
+/* PANEL HEADER */
+.rak-header{
+  background:#1a1a1a;
+  padding:.85rem 1rem;
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+  flex-shrink:0;
+  position:relative;
+}
+.rak-avatar{
+  width:48px;height:48px;
+  border-radius:50%;
+  border:2px solid #c8a96e;
+  background:#2c2c2c;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;
+  flex-shrink:0;
+  position:relative;
+  overflow:hidden;
+}
+.rak-avatar-face{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:1px;
+}
+/* SVG face drawn in JS */
+.rak-header-text{flex:1;}
+.rak-name{
+  font-family:'Special Elite',cursive;
+  font-size:.85rem;
+  color:#c8a96e;
+  letter-spacing:.05em;
+}
+.rak-title{
+  font-size:.7rem;
+  color:#888;
+  margin-top:.1rem;
+  font-style:italic;
+}
+.rak-status{
+  display:flex;align-items:center;gap:.35rem;
+  font-size:.65rem;color:#6db56d;margin-top:.2rem;
+}
+.rak-status::before{content:'';width:6px;height:6px;border-radius:50%;background:#6db56d;display:inline-block;animation:dotBlink 2s infinite;}
+.rak-close{
+  position:absolute;top:8px;right:10px;
+  background:none;border:none;
+  color:#666;font-size:1rem;cursor:pointer;
+  font-family:'Courier Prime',monospace;
+  transition:color .15s;
+  line-height:1;
+}
+.rak-close:hover{color:#c8a96e;}
+
+/* DECORATIVE STRIPE */
+.rak-stripe{
+  height:5px;
+  background:repeating-linear-gradient(90deg,#8b1a1a 0,#8b1a1a 12px,#c8a96e 12px,#c8a96e 24px,#1a1a1a 24px,#1a1a1a 36px);
+  flex-shrink:0;
+}
+
+/* CHAT AREA */
+.rak-chat{
+  flex:1;
+  overflow-y:auto;
+  padding:.9rem 1rem;
+  display:flex;
+  flex-direction:column;
+  gap:.75rem;
+  min-height:180px;
+  max-height:320px;
+}
+.rak-chat::-webkit-scrollbar{width:4px;}
+.rak-chat::-webkit-scrollbar-track{background:#f0ebe0;}
+.rak-chat::-webkit-scrollbar-thumb{background:#c8a96e;border-radius:2px;}
+
+/* MESSAGES */
+.msg{
+  display:flex;
+  flex-direction:column;
+  animation:msgIn .35s cubic-bezier(.34,1.4,.64,1) both;
+}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px)scale(.95);}to{opacity:1;transform:none;}}
+.msg-bubble{
+  padding:.65rem .85rem;
+  border-radius:2px;
+  font-size:.78rem;
+  line-height:1.6;
+  max-width:88%;
+  position:relative;
+}
+.msg.rak .msg-bubble{
+  background:#1a1a1a;
+  color:#f0ebe0;
+  border:1px solid #c8a96e;
+  align-self:flex-start;
+  border-bottom-left-radius:0;
+}
+.msg.rak .msg-bubble::before{
+  content:'"';
+  font-family:'IM Fell English',serif;
+  font-size:2rem;
+  color:#c8a96e;
+  opacity:.4;
+  position:absolute;
+  top:-4px;left:6px;
+  line-height:1;
+}
+.msg.user .msg-bubble{
+  background:#8b1a1a;
+  color:#fff;
+  align-self:flex-end;
+  border-bottom-right-radius:0;
+  font-size:.75rem;
+}
+.msg-time{
+  font-size:.6rem;
+  color:#999;
+  margin-top:.25rem;
+  font-style:italic;
+}
+.msg.rak .msg-time{align-self:flex-start;margin-left:.25rem;}
+.msg.user .msg-time{align-self:flex-end;margin-right:.25rem;}
+
+/* TYPING INDICATOR */
+.typing{display:flex;gap:.3rem;align-items:center;padding:.5rem .65rem;}
+.typing span{width:6px;height:6px;border-radius:50%;background:#c8a96e;animation:type .9s ease infinite;}
+.typing span:nth-child(2){animation-delay:.15s;}
+.typing span:nth-child(3){animation-delay:.3s;}
+@keyframes type{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
+
+/* QUICK REPLIES */
+.rak-quick{
+  padding:.6rem 1rem .5rem;
+  display:flex;
+  flex-wrap:wrap;
+  gap:.4rem;
+  flex-shrink:0;
+  border-top:1px solid #e8e0d0;
+  background:#faf6ee;
+}
+.qbtn{
+  font-family:'Courier Prime',monospace;
+  font-size:.68rem;
+  padding:.3rem .65rem;
+  background:#fff;
+  border:1.5px solid #2c2c2c;
+  border-radius:2px;
+  cursor:pointer;
+  color:#2c2c2c;
+  transition:all .15s;
+  box-shadow:2px 2px 0 #2c2c2c;
+  white-space:nowrap;
+}
+.qbtn:hover{background:#1a1a1a;color:#c8a96e;box-shadow:1px 1px 0 #c8a96e;transform:translate(1px,1px);}
+.qbtn:active{transform:translate(2px,2px);box-shadow:none;}
+
+/* INPUT AREA */
+.rak-input-row{
+  display:flex;
+  gap:.5rem;
+  padding:.65rem 1rem .75rem;
+  flex-shrink:0;
+  border-top:1.5px solid #2c2c2c;
+  background:#f0ebe0;
+}
+#rak-input{
+  flex:1;
+  background:#faf6ee;
+  border:1.5px solid #2c2c2c;
+  padding:.45rem .65rem;
+  font-family:'Courier Prime',monospace;
+  font-size:.78rem;
+  color:#1a1a1a;
+  outline:none;
+  border-radius:2px;
+  transition:border-color .15s;
+}
+#rak-input:focus{border-color:#c8a96e;}
+#rak-input::placeholder{color:#aaa;font-style:italic;}
+#rak-send{
+  background:#8b1a1a;
+  border:1.5px solid #2c2c2c;
+  color:#fff;
+  padding:.45rem .75rem;
+  cursor:pointer;
+  font-family:'Special Elite',cursive;
+  font-size:.75rem;
+  border-radius:2px;
+  box-shadow:2px 2px 0 #2c2c2c;
+  transition:all .15s;
+}
+#rak-send:hover{background:#6b1212;transform:translate(-1px,-1px);box-shadow:3px 3px 0 #2c2c2c;}
+#rak-send:active{transform:translate(1px,1px);box-shadow:1px 1px 0 #2c2c2c;}
+
+/* FOOTER STAMP */
+.rak-footer{
+  text-align:center;
+  font-size:.6rem;
+  color:#bbb;
+  padding:.3rem;
+  font-style:italic;
+  background:#f0ebe0;
+  border-top:1px dashed #d0c8b8;
+  flex-shrink:0;
+}
+
+/* TOOLTIP ON TRIGGER */
+#rak-tooltip{
+  position:fixed;
+  bottom:108px;
+  right:28px;
+  background:#1a1a1a;
+  color:#c8a96e;
+  font-family:'Special Elite',cursive;
+  font-size:.72rem;
+  padding:.45rem .8rem;
+  border:1px solid #c8a96e;
+  border-radius:2px;
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(6px);
+  transition:all .25s ease;
+  z-index:9997;
+  box-shadow:3px 3px 0 #c8a96e;
+}
+#rak-tooltip.show{opacity:1;transform:translateY(0);}
+#rak-tooltip::after{
+  content:'';
+  position:absolute;
+  bottom:-7px;right:26px;
+  border:6px solid transparent;
+  border-top-color:#c8a96e;
+}
+</style>
+</head>
+<body>
+
+<div class="demo-note">
+  <strong>RAK-Clippy Widget — Demo Page</strong><br><br>
+  The floating character lives in the <strong>bottom-right corner</strong>.<br>
+  Click him to chat. Copy the <code>&lt;!-- RAK CLIPPY --&gt;</code> section into your <code>index.html</code>.
+</div>
+<div class="demo-arrow">↘</div>
+
+<!-- ═══════════════════════════════════════
+     RAK CLIPPY — PASTE THIS INTO index.html
+════════════════════════════════════════ -->
+
+<!-- TOOLTIP -->
+<div id="rak-tooltip">It looks like you need a great hire… 🎩</div>
+
+<!-- TRIGGER BUTTON -->
+<button id="rak-trigger" aria-label="Chat with RAK" onclick="rakToggle()">
+  <div id="rak-dot"></div>
+  <!-- Wes Anderson–style illustrated face -->
+  <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Hat -->
+    <rect x="8" y="7" width="28" height="4" rx="1" fill="#c8a96e"/>
+    <rect x="12" y="3" width="20" height="5" rx="1" fill="#c8a96e"/>
+    <rect x="14" y="7" width="16" height="1" fill="#8b6914"/>
+    <!-- Head -->
+    <ellipse cx="22" cy="24" rx="12" ry="13" fill="#f5d5a8"/>
+    <!-- Eyes -->
+    <rect x="15" y="20" width="4" height="4" rx="1" fill="#1a1a1a"/>
+    <rect x="25" y="20" width="4" height="4" rx="1" fill="#1a1a1a"/>
+    <rect x="16" y="21" width="1.5" height="1.5" fill="#fff" opacity=".7"/>
+    <rect x="26" y="21" width="1.5" height="1.5" fill="#fff" opacity=".7"/>
+    <!-- Eyebrows — very serious -->
+    <rect x="14" y="18" width="6" height="1.5" rx=".5" fill="#3a2a1a"/>
+    <rect x="24" y="18" width="6" height="1.5" rx=".5" fill="#3a2a1a"/>
+    <!-- Moustache -->
+    <path d="M17 30 Q19 28 22 30 Q25 28 27 30" stroke="#3a2a1a" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    <!-- Mouth — thin, dignified -->
+    <rect x="19" y="31" width="6" height="1" rx=".5" fill="#3a2a1a"/>
+    <!-- Collar -->
+    <path d="M13 36 L18 32 L22 35 L26 32 L31 36" stroke="#c8a96e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <!-- Monocle -->
+    <circle cx="27" cy="22" r="4" stroke="#c8a96e" stroke-width="1" fill="none" opacity=".6"/>
+    <line x1="30" y1="24" x2="32" y2="26" stroke="#c8a96e" stroke-width=".8" opacity=".6"/>
+  </svg>
+</button>
+
+<!-- MAIN PANEL -->
+<div id="rak-panel">
+  <div class="rak-header">
+    <div class="rak-avatar">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+        <rect width="48" height="48" fill="#2c2c2c"/>
+        <rect x="8" y="8" width="32" height="5" rx="1" fill="#c8a96e"/>
+        <rect x="13" y="4" width="22" height="6" rx="1" fill="#c8a96e"/>
+        <rect x="15" y="8" width="18" height="1.5" fill="#8b6914"/>
+        <ellipse cx="24" cy="30" rx="13" ry="13" fill="#f5d5a8"/>
+        <rect x="16" y="26" width="5" height="5" rx="1" fill="#1a1a1a"/>
+        <rect x="27" y="26" width="5" height="5" rx="1" fill="#1a1a1a"/>
+        <rect x="17" y="27" width="2" height="2" fill="#fff" opacity=".7"/>
+        <rect x="28" y="27" width="2" height="2" fill="#fff" opacity=".7"/>
+        <rect x="15" y="23" width="7" height="2" rx="1" fill="#3a2a1a"/>
+        <rect x="26" y="23" width="7" height="2" rx="1" fill="#3a2a1a"/>
+        <path d="M19 37 Q21 34 24 37 Q27 34 29 37" stroke="#3a2a1a" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <rect x="20" y="38.5" width="8" height="1.5" rx=".75" fill="#3a2a1a"/>
+        <circle cx="29" cy="28" r="5" stroke="#c8a96e" stroke-width="1.2" fill="none" opacity=".65"/>
+        <line x1="33" y1="31" x2="35" y2="33" stroke="#c8a96e" stroke-width="1" opacity=".65"/>
+      </svg>
+    </div>
+    <div class="rak-header-text">
+      <div class="rak-name">R.A.K. — Personal Envoy</div>
+      <div class="rak-title">Royal Advisor to the Portfolio of Rakibul Shovon</div>
+      <div class="rak-status">Available for consultation</div>
+    </div>
+    <button class="rak-close" onclick="rakToggle()" aria-label="Close">✕</button>
+  </div>
+  <div class="rak-stripe"></div>
+  <div class="rak-chat" id="rak-chat"></div>
+  <div class="rak-quick" id="rak-quick"></div>
+  <div class="rak-input-row">
+    <input id="rak-input" placeholder="Ask about Rakibul…" onkeydown="if(event.key==='Enter')rakSend()" maxlength="200"/>
+    <button id="rak-send" onclick="rakSend()">SEND</button>
+  </div>
+  <div class="rak-footer">Powered by genuine talent & mild grandiosity · RAK © 2025</div>
+</div>
+
+<script>
+// ═══════════════════════════════════
+// RAK KNOWLEDGE BASE
+// ═══════════════════════════════════
+const RAK = {
+  name: "Rakibul Shovon",
+  role: "Data Analyst & Business Analytics Specialist",
+  location: "Milwaukee, Wisconsin, USA",
+  origin: "Dhaka, Bangladesh",
+  email: "rhshovon@uwm.edu",
+  portfolio: "https://rakshowsproject.github.io/-",
+  linkedin: "https://linkedin.com/in/rakibulshovon",
+
+  education: [
+    { deg:"MS in Management & Business Analytics", school:"University of Wisconsin–Milwaukee", gpa:"3.73/4.0", year:"2023–2025" },
+    { deg:"MBA", school:"North South University, Dhaka", gpa:"3.39/4.0", year:"2020–2021" },
+    { deg:"MA in Applied Linguistics", school:"Jahangirnagar University", gpa:"3.18/4.0", year:"2018–2019" }
+  ],
+
+  skills: ["Python","R","SQL","Tableau","Power BI","NLP","Machine Learning","Sentiment Analysis","SPSS","Econometrics","Behavioral Modeling","Excel","Statistical Analysis","Survey Design","Time-Series Analysis"],
+
+  projects: [
+    { name:"Tesla Sentiment Analysis", desc:"Analysed 10,197 Reddit posts using NLP to decode public opinion on Tesla — revealing that even complaint threads skew positive." },
+    { name:"ChatGPT Perception Study", desc:"Surveyed 22,768 students across 107 countries to map how AI is reshaping career expectations and academic confidence globally." },
+    { name:"Orange Telecom Churn Model", desc:"Built a predictive ML model to identify at-risk customers before they cancel — turning data into retention strategy." },
+    { name:"Social Media Purchase Analysis", desc:"Decoded the hidden link between social media behaviour and buying decisions using behavioral analytics." }
+  ],
+
+  experience: [
+    { role:"Graduate Teaching Assistant", org:"UW-Milwaukee, Lubar College of Business", note:"Taught 150+ students per semester. Delivered full lectures on marketing strategy and consumer behavior." },
+    { role:"Coordination Affairs Officer", org:"North South University", note:"Managed 500+ confidential academic records and supported institutional planning." },
+    { role:"Qualitative Research Assistant", org:"Nielsen Bangladesh", note:"Conducted 147 focus groups and 50+ in-depth interviews for telecom and FMCG brands." }
+  ],
+
+  research: ["Algorithmic Recommendation Systems","Mimetic Desire","Behavioral Choice Architecture","Digital Consumer Behavior","Hidden Markov Modeling","Misinformation Susceptibility"],
+
+  funFacts: [
+    "Originally from Dhaka, Bangladesh — now conquering Milwaukee one dataset at a time.",
+    "Has three postgraduate degrees. Three. Most people struggle with one.",
+    "Conducted 147 focus groups at Nielsen — he's interviewed more people than most journalists do in a career.",
+    "Taught marketing to 150+ students per semester. He doesn't just analyse consumer behavior — he teaches it.",
+    "His research interests include Mimetic Desire and Hidden Markov Modeling, which sounds like either advanced mathematics or a very compelling spy novel.",
+    "Fluent in Bengali and English at C2 level — that's the highest possible. Articulate in two languages, devastating in both.",
+    "GPA of 3.73 at UW-Milwaukee. Not perfect — he was busy building dashboards that actually matter."
+  ],
+
+  seeking: "A data analyst, NLP researcher, or business analytics role where rigorous quantitative skills meet genuine curiosity about human behavior. Open to research, industry, and consulting positions.",
+
+  pitch: "Rakibul is what happens when you give a behavioral scientist a Python environment and a genuine curiosity about why people do what they do. Three postgraduate degrees, real industry experience at Nielsen, academic credibility at UW-Milwaukee, and projects that would impress a hiring committee — or at minimum, make them feel slightly inadequate."
+};
+
+// ═══════════════════════════════════
+// RESPONSE ENGINE
+// ═══════════════════════════════════
+const RESPONSES = [
+  {
+    keys:['hello','hi','hey','good','morning','afternoon'],
+    reply:() => `Ah. A visitor. How refreshingly unexpected.\n\nI am R.A.K. — Royal Advisor and Personal Envoy to the portfolio of one <strong>Rakibul Shovon</strong>. A man of considerable talent, three postgraduate degrees, and an almost unreasonable number of skills.\n\nHow may I direct your attention today?`
+  },
+  {
+    keys:['who','rakibul','shovon','about','person','candidate'],
+    reply:() => `Rakibul Shovon. Data scientist. Behavioral analyst. Educator. Researcher.\n\nCurrently based in <strong>Milwaukee, Wisconsin</strong>, completing an MS in Management & Business Analytics at UW-Milwaukee with a <strong>GPA of 3.73</strong>. Originally from Dhaka, Bangladesh — which is to say, he has already navigated one of the world's most complex cities. Your open position will seem delightfully manageable by comparison.\n\nShall I continue? There is, frankly, quite a lot to cover.`
+  },
+  {
+    keys:['skill','tech','stack','know','language','tool','python','sql','tableau','r '],
+    reply:() => `His technical arsenal, since you asked:\n\n<strong>Python · R · SQL · Tableau · Power BI · NLP · Machine Learning · SPSS · Econometrics · Behavioral Modeling · Statistical Analysis · Time-Series Analysis · Survey Design</strong>\n\nHe doesn't merely list these skills on a CV. He has deployed them on real projects producing real insights. The Tesla sentiment analysis alone processed over 10,000 Reddit posts. Not a simulation. Actual data. Actual findings.`
+  },
+  {
+    keys:['project','tesla','chatgpt','churn','social','work','built','dashboard','analysis'],
+    reply:() => {
+      const p = RAK.projects[Math.floor(Math.random()*RAK.projects.length)];
+      return `Allow me to highlight one of his finer works:\n\n<strong>${p.name}</strong>\n${p.desc}\n\nThere are ${RAK.projects.length} such projects in total. Each one represents a genuine intellectual investment, not merely a checkbox on a portfolio. Would you like to hear about the others?`;
+    }
+  },
+  {
+    keys:['education','degree','university','study','gpa','grade','school','uwm','wisconsin'],
+    reply:() => `Three postgraduate degrees. I mention this because it bears repeating.\n\n• <strong>MS Management & Business Analytics</strong> — UW-Milwaukee (GPA 3.73)\n• <strong>MBA</strong> — North South University, Dhaka (GPA 3.39)\n• <strong>MA Applied Linguistics</strong> — Jahangirnagar University\n\nThe breadth here is not accidental. It reflects a mind that refuses to be contained by a single discipline. He approaches analytics the way a scholar approaches a text — with rigour, with curiosity, and with the intention of extracting something meaningful.`
+  },
+  {
+    keys:['experience','work','job','nielsen','teaching','assistant','career','past'],
+    reply:() => `His professional history, curated for your consideration:\n\nAt <strong>Nielsen Bangladesh</strong>, he conducted 147 focus groups and over 50 in-depth interviews. That is not a typo.\n\nAt <strong>UW-Milwaukee</strong>, he independently delivered lectures to 150+ students per semester on marketing strategy and consumer behavior. He didn't attend academia. He ran it.\n\nAt <strong>North South University</strong>, he managed 500+ confidential academic records with the precision of a Swiss timepiece.\n\nThe pattern, you'll notice, is consistent: wherever Rakibul goes, things run better.`
+  },
+  {
+    keys:['hire','job','looking','open','role','position','recruit','available','opportunity'],
+    reply:() => `You've arrived at the most important question.\n\nRakibul is <strong>actively seeking</strong> a role in data analytics, NLP research, or business intelligence — ideally somewhere his behavioral science background and technical toolkit can do something genuinely interesting.\n\nHe is not merely looking for a job. He is looking for a problem worth solving. If your organisation has one, I suggest you contact him with some urgency.\n\n📧 <strong>rhshovon@uwm.edu</strong>`
+  },
+  {
+    keys:['research','interest','topic','behavior','algorithm','markov','mimetic'],
+    reply:() => `His research interests, if you're the intellectual type:\n\n${RAK.research.slice(0,4).join(' · ')}\n\nIn plain terms: he studies <strong>why people make decisions online</strong>, how algorithms shape behavior, and how digital environments manipulate (or inform) consumer choice. Two manuscripts are currently in preparation for 2026.\n\nThis is not a hobbyist's curiosity. It is a researcher's obsession.`
+  },
+  {
+    keys:['contact','email','reach','linkedin','connect','message','phone'],
+    reply:() => `To reach Rakibul Shovon directly:\n\n📧 <strong>rhshovon@uwm.edu</strong>\n🔗 <strong>LinkedIn:</strong> Rakibul Shovon\n🌐 <strong>Portfolio:</strong> rakshowsproject.github.io\n📍 Milwaukee, Wisconsin\n\nI would recommend acting with reasonable haste. Talent at this level does not remain available indefinitely.`
+  },
+  {
+    keys:['fun','fact','interesting','surprise','tell me','something','different','unique'],
+    reply:() => RAK.funFacts[Math.floor(Math.random()*RAK.funFacts.length)]
+  },
+  {
+    keys:['why','should','impress','convince','reason','good','best','strong'],
+    reply:() => `An excellent question, and I appreciate your directness.\n\n${RAK.pitch}\n\nBut don't take my word for it. The portfolio speaks. The numbers speak. Three postgraduate degrees, a 3.73 GPA, 147 focus groups, 10,000+ Reddit posts analysed, and dashboards built that would make a senior analyst mildly envious.\n\nThe question isn't why you should consider Rakibul. The question is whether you can afford not to.`
+  },
+  {
+    keys:['language','english','bengali','speak','fluent'],
+    reply:() => `Fluent in <strong>Bengali</strong> (mother tongue) and <strong>English</strong> at C2 level — the highest classification possible. That means he writes, presents, and communicates with the precision of someone who takes language seriously.\n\nFor context: most professionals claim to be "fluent." Rakibul has the certification to prove it.`
+  }
+];
+
+const FALLBACKS = [
+  `Ah. You've asked something outside my current briefing.\n\nNevertheless, I can tell you with considerable confidence that Rakibul Shovon is exceptionally qualified, rigorously educated, and available for hire. Perhaps that is the answer you were looking for all along?`,
+  `A perceptive query. I confess it exceeds the parameters of my briefing.\n\nWhat I <em>can</em> tell you is this: the man has a 3.73 GPA, three degrees, and the patience to process 10,000 Reddit posts about Tesla. He can handle whatever you're asking.`,
+  `Interesting. I don't have a prepared answer for that.\n\nHowever, I will note that Rakibul's capacity for figuring things out is, by all accounts, quite extraordinary. That's rather the point of hiring him.`,
+  `You've stumped me. Temporarily.\n\nBut if you're here, you're presumably considering Rakibul Shovon for something. And that, my friend, is already an excellent decision. Try asking me about his projects, skills, or background.`
+];
+
+const QUICK_OPTIONS = [
+  { label:"Who is Rakibul?", q:"Who is Rakibul?" },
+  { label:"Skills & tools", q:"What are his skills?" },
+  { label:"Projects", q:"Tell me about his projects" },
+  { label:"Experience", q:"Tell me about his work experience" },
+  { label:"Why hire him?", q:"Why should I hire Rakibul?" },
+  { label:"Contact", q:"How do I contact him?" }
+];
+
+// ═══════════════════════════════════
+// WIDGET LOGIC
+// ═══════════════════════════════════
+let isOpen = false;
+let hasOpened = false;
+let tooltipTimer;
+
+function rakToggle(){
+  isOpen = !isOpen;
+  const panel = document.getElementById('rak-panel');
+  const dot = document.getElementById('rak-dot');
+  panel.classList.toggle('open', isOpen);
+  if(isOpen && !hasOpened){
+    hasOpened = true;
+    dot.style.display = 'none';
+    hideTooltip();
+    setTimeout(()=>rakGreet(), 400);
+  }
+}
+
+function rakGreet(){
+  addMessage('rak', `Good day. I am R.A.K. — Royal Advisor and Personal Envoy to the portfolio of <strong>Rakibul Shovon</strong>.\n\nA man of three postgraduate degrees, a 3.73 GPA, and an almost theatrical commitment to rigorous data analysis.\n\n<em>How may I direct your attention?</em>`);
+  setTimeout(()=>buildQuickReplies(), 700);
+}
+
+function buildQuickReplies(){
+  const wrap = document.getElementById('rak-quick');
+  wrap.innerHTML = '';
+  QUICK_OPTIONS.forEach((o,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'qbtn';
+    btn.textContent = o.label;
+    btn.style.animationDelay = (i*0.05)+'s';
+    btn.onclick = () => { userSays(o.q); };
+    wrap.appendChild(btn);
+  });
+}
+
+function userSays(text){
+  addMessage('user', text);
+  document.getElementById('rak-quick').innerHTML = '';
+  showTyping();
+  const delay = 900 + Math.random()*700;
+  setTimeout(()=>{ removeTyping(); rakRespond(text); }, delay);
+}
+
+function rakSend(){
+  const input = document.getElementById('rak-input');
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+  userSays(text);
+}
+
+function rakRespond(text){
+  const lower = text.toLowerCase();
+  let reply = null;
+  for(const r of RESPONSES){
+    if(r.keys.some(k => lower.includes(k))){
+      reply = r.reply();
+      break;
+    }
+  }
+  if(!reply) reply = FALLBACKS[Math.floor(Math.random()*FALLBACKS.length)];
+  addMessage('rak', reply);
+  // Show a subset of quick replies after response
+  setTimeout(()=>{
+    const wrap = document.getElementById('rak-quick');
+    wrap.innerHTML = '';
+    const subset = QUICK_OPTIONS.filter(o=>!lower.includes(o.q.split(' ')[2]?.toLowerCase()||'')).slice(0,4);
+    subset.forEach(o=>{
+      const btn = document.createElement('button');
+      btn.className='qbtn';btn.textContent=o.label;
+      btn.onclick=()=>{userSays(o.q);};
+      wrap.appendChild(btn);
+    });
+  }, 400);
+}
+
+function addMessage(who, text){
+  const chat = document.getElementById('rak-chat');
+  const now = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  const div = document.createElement('div');
+  div.className = `msg ${who}`;
+  div.innerHTML = `<div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div><div class="msg-time">${now}</div>`;
+  chat.appendChild(div);
+  setTimeout(()=>chat.scrollTo({top:chat.scrollHeight,behavior:'smooth'}), 50);
+}
+
+let typingEl = null;
+function showTyping(){
+  const chat = document.getElementById('rak-chat');
+  typingEl = document.createElement('div');
+  typingEl.className = 'msg rak';
+  typingEl.innerHTML = `<div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  chat.appendChild(typingEl);
+  chat.scrollTo({top:chat.scrollHeight,behavior:'smooth'});
+}
+function removeTyping(){
+  if(typingEl){ typingEl.remove(); typingEl=null; }
+}
+
+// Tooltip teaser
+function showTooltip(){
+  const teasers = [
+    "It looks like you need a great hire… 🎩",
+    "Psst. Have you considered Rakibul? 🎩",
+    "I have some rather compelling data… 🎩",
+    "Allow me to make an introduction. 🎩"
+  ];
+  const t = document.getElementById('rak-tooltip');
+  t.textContent = teasers[Math.floor(Math.random()*teasers.length)];
+  t.classList.add('show');
+  tooltipTimer = setTimeout(hideTooltip, 3500);
+}
+function hideTooltip(){
+  clearTimeout(tooltipTimer);
+  document.getElementById('rak-tooltip').classList.remove('show');
+}
+
+// Show tooltip after 4s, then every 25s
+setTimeout(()=>{ if(!hasOpened) showTooltip(); }, 4000);
+setInterval(()=>{ if(!hasOpened && !isOpen) showTooltip(); }, 25000);
+</script>
+</body>
+</html>
 </body>
 </html>
